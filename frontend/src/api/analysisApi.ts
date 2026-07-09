@@ -1,0 +1,2 @@
+// Calls POST /analyze.
+export {};

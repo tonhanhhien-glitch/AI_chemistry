@@ -1,0 +1,3 @@
+# Prompt template used to ask Claude to flag any statement that contradicts the supplied backend facts.
+# TODO: write the Vietnamese prompt template.
+# Placeholders available: {molecule_name}, {formula}, {lewis_facts}, {vsepr_facts}, {level}

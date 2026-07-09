@@ -1,0 +1,3 @@
+# Prompt template for intermediate-level Vietnamese explanations.
+# TODO: write the Vietnamese prompt template.
+# Placeholders available: {molecule_name}, {formula}, {lewis_facts}, {vsepr_facts}, {level}

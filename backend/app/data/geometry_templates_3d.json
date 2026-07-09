@@ -1,0 +1,4 @@
+{
+  "_description": "Static idealized 3D coordinate templates per VSEPR geometry, used when RDKit/PubChem 3D generation fails.",
+  "geometries": {}
+}

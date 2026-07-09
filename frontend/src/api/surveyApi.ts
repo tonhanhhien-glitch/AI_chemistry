@@ -1,0 +1,2 @@
+// Calls POST /survey.
+export {};

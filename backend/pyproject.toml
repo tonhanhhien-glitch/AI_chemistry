@@ -1,0 +1,8 @@
+[project]
+name = "vsepr-ai-backend"
+version = "0.1.0"
+description = "FastAPI backend for the VSEPR-AI teaching webapp."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
