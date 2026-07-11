@@ -1,0 +1,4 @@
+{
+  "_description": "Hand-verified molecules/ions with known-correct Lewis and VSEPR results, checked before PubChem/RDKit fallback.",
+  "molecules": []
+}
