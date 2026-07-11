@@ -1,10 +1,16 @@
-from flask import Flask, render_template
+from fastapi import FastAPI
 
-app = Flask(__name__)
+from routers.formula_router import router as formula_router
+from routers.health_router import router as health_router
+from routers.info_router import router as info_router
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+# Tạo ứng dụng FastAPI
+app = FastAPI(
+    title="AI Chemistry API",
+    version="1.0.0",
+    description="Backend hỗ trợ dạy và học cấu trúc Lewis, VSEPR và mô hình 3D."
+)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+app.include_router(formula_router)
+app.include_router(health_router)
+app.include_router(info_router)
