@@ -1,5 +1,7 @@
-// Top-level app shell: layout chrome plus the router outlet.
+import { RouterProvider } from "react-router-dom";
+
+import { router } from "./router";
+
 export default function App() {
-  // TODO: implement App
-  return null;
+  return <RouterProvider router={router} />;
 }

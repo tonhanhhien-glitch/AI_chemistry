@@ -2,21 +2,21 @@
 
 ## Setup
 
-- [ ] Create `backend/` folder.
+- [x] Create `backend/` folder.
 - [ ] Initialize Python environment.
-- [ ] Install FastAPI.
-- [ ] Install Uvicorn.
-- [ ] Install Pydantic.
+- [x] Install FastAPI.
+- [x] Install Uvicorn.
+- [x] Install Pydantic.
 - [ ] Install RDKit.
 - [ ] Install PubChemPy.
 - [ ] Install Anthropic SDK.
 - [ ] Install python-dotenv.
-- [ ] Install pytest.
-- [ ] Create `app/main.py`.
-- [ ] Create `/health` endpoint.
-- [ ] Configure CORS for frontend.
-- [ ] Create `.env.example`.
-- [ ] Add Dockerfile for backend.
+- [x] Install pytest.
+- [x] Create `app/main.py`.
+- [x] Create `/api/v1/health` endpoint.
+- [x] Configure CORS for frontend.
+- [x] Create `.env.example`.
+- [x] Add Dockerfile for backend.
 
 ## Chemistry Scope Definition
 
@@ -41,16 +41,16 @@
 
 ## Formula Parser (`app/services/formula_parser.py`)
 
-- [ ] Parse neutral formulas: `H2O`, `NH3`, `CO2`.
-- [ ] Parse charged ions: `NH4+`, `SO4^2-`, `NO3-`.
-- [ ] Normalize formulas.
-- [ ] Extract element symbols.
-- [ ] Extract atom counts.
-- [ ] Extract formal charge.
-- [ ] Reject malformed formulas.
-- [ ] Reject unsupported elements.
-- [ ] Return user-friendly Vietnamese error messages.
-- [ ] Write parser unit tests.
+- [x] Parse neutral formulas: `H2O`, `NH3`, `CO2`.
+- [x] Parse charged ions: `NH4+`, `SO4^2-`, `NO3-`.
+- [x] Normalize formulas.
+- [x] Extract element symbols.
+- [x] Extract atom counts.
+- [x] Extract formal charge.
+- [x] Reject malformed formulas.
+- [x] Reject unsupported elements.
+- [x] Return user-friendly Vietnamese error messages.
+- [x] Write parser unit tests.
 
 ## Molecule Resolver (`app/services/molecule_resolver.py`)
 
@@ -135,7 +135,8 @@
 
 ## API Endpoints (`app/api/v1/`)
 
-- [ ] `GET /health` — return backend status and version number.
+- [x] `GET /api/v1/health` — return backend status and version number.
+- [x] `GET /api/v1/formula?formula=` — parse a strict flat formula.
 - [ ] `GET /api/v1/molecules/examples` — return curated example molecules.
 - [ ] `GET /api/v1/molecules/search?q=` — search by formula or name, return possible matches.
 - [ ] `POST /api/v1/analyze` — parse, resolve, Lewis, VSEPR, 3D, properties, optional AI explanation.
@@ -147,14 +148,14 @@
 
 ## Testing (`tests/`)
 
-- [ ] Test formula parser.
+- [x] Test formula parser.
 - [ ] Test molecule resolver.
 - [ ] Test PubChem connection.
 - [ ] Test RDKit generation.
 - [ ] Test Lewis output.
 - [ ] Test VSEPR output.
 - [ ] Test AI prompt.
-- [ ] Test API response schema.
+- [x] Test API response schema.
 - [ ] Test full pipeline.
 - [ ] Build golden molecule test set.
 - [ ] Ask chemistry expert to validate golden set.
