@@ -51,7 +51,7 @@ def parse_formula(formula: str) -> ParsedFormula:
 
     normalized_formula = formula.strip()
     if not normalized_formula:
-        raise FormulaParseError("Công thức hóa học không được để trống.")
+        raise FormulaParseError("Chemical formula cannot be empty.")
 
     body, charge = _extract_charge(normalized_formula)
     if not body:

@@ -19,7 +19,7 @@
 - [ ] Create Footer.
 - [ ] Create PageContainer.
 - [ ] Create responsive layout.
-- [ ] Add Vietnamese UI labels.
+- [ ] Add UI labels.
 - [ ] Add mobile-friendly design.
 - [ ] Add loading states.
 - [ ] Add error states.
@@ -92,7 +92,7 @@
 
 ## AI Explanation Panel (`src/components/explanation/ExplanationPanel.tsx`)
 
-- [ ] Display Vietnamese explanation.
+- [ ] Display  explanation.
 - [ ] Add explanation level selector.
 - [ ] Add sections: Lewis structure, AXnEm notation, electron geometry, molecular geometry, structure-property relationship, learning note.
 - [ ] Add AI disclaimer.
@@ -131,7 +131,7 @@
 - [ ] Show bond angle.
 - [ ] Show example molecule.
 - [ ] Add simple diagrams or icons.
-- [ ] Add Vietnamese teaching notes.
+- [ ] Add  teaching notes.
 
 ## Feedback UI (`src/components/feedback/FeedbackForm.tsx`)
 

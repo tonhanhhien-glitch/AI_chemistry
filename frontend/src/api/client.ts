@@ -25,9 +25,9 @@ export function getApiErrorMessage(error: unknown): string {
       return body.detail.message;
     }
     if (error.code === "ECONNABORTED") {
-      return "Yêu cầu đã hết thời gian chờ. Vui lòng thử lại.";
+      return "The request timed out. Please try again.";
     }
   }
 
-  return "Không thể kết nối tới máy chủ. Vui lòng thử lại.";
+  return "Unable to connect to the server. Please try again.";
 }

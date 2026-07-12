@@ -6,7 +6,7 @@ class FormulaParseError(ValueError):
 
     code = "INVALID_FORMULA"
 
-    def __init__(self, message: str = "Công thức hóa học không hợp lệ.") -> None:
+    def __init__(self, message: str = "Invalid chemical formula.") -> None:
         super().__init__(message)
         self.message = message
 
@@ -17,7 +17,7 @@ class UnsupportedElementError(FormulaParseError):
     code = "UNSUPPORTED_ELEMENT"
 
     def __init__(self, element: str) -> None:
-        super().__init__(f"Nguyên tố '{element}' hiện chưa được hỗ trợ.")
+        super().__init__(f"Element '{element}' is not currently supported.")
 
 
 class UnsupportedFormulaSyntaxError(FormulaParseError):

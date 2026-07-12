@@ -1,2 +1,2 @@
-// Central map of backend error codes to user-facing Vietnamese messages.
+// Central map of backend error codes to user-facing messages.
 export {};

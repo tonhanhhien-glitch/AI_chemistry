@@ -31,7 +31,7 @@
 - [ ] Ask chemistry expert to review outputs.
 - [ ] Check AI explanations for hallucinations.
 - [ ] Check mobile compatibility.
-- [ ] Check Vietnamese text display.
+- [ ] Check text display.
 - [ ] Check performance.
 - [ ] Check browser compatibility.
 

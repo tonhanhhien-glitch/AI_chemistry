@@ -42,7 +42,7 @@ Validation response (422):
 {
   "detail": {
     "code": "UNSUPPORTED_FORMULA_SYNTAX",
-    "message": "Công thức hóa học không hợp lệ."
+    "message": "Invalid chemical formula."
   }
 }
 ```

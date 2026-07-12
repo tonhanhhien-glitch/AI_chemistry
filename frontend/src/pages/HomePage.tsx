@@ -5,13 +5,13 @@ export default function HomePage() {
     <main className="page page--centered">
       <section className="hero">
         <p className="eyebrow">VSEPR-AI</p>
-        <h1>Kiểm tra công thức hóa học</h1>
+        <h1>Check a chemical formula</h1>
         <p className="lede">
-          Bản nền ổn định này phân tích công thức bằng quy tắc xác định và hiển
-          thị số nguyên tử cùng điện tích.
+          This stable baseline analyzes formulas using deterministic rules and
+          displays atom counts and charge.
         </p>
         <Link className="button button--link" to="/analysis">
-          Bắt đầu phân tích
+          Start analysis
         </Link>
       </section>
     </main>

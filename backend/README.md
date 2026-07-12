@@ -49,7 +49,7 @@
 - [x] Extract formal charge.
 - [x] Reject malformed formulas.
 - [x] Reject unsupported elements.
-- [x] Return user-friendly Vietnamese error messages.
+- [x] Return user-friendly error messages.
 - [x] Write parser unit tests.
 
 ## Molecule Resolver (`app/services/molecule_resolver.py`)
@@ -121,7 +121,7 @@
 - [ ] Add explanation levels: Basic, Intermediate, Advanced.
 - [ ] Send only verified backend facts to Claude API.
 - [ ] Prevent AI from changing chemistry conclusions.
-- [ ] Generate Vietnamese explanation.
+- [ ] Generate English/Vietnamese explanation.
 - [ ] Explain Lewis structure.
 - [ ] Explain AXnEm notation.
 - [ ] Explain electron geometry.

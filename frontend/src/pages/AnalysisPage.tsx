@@ -19,7 +19,7 @@ export default function AnalysisPage() {
     setResult(null);
 
     if (!formula.trim()) {
-      setError("Vui lòng nhập công thức hóa học.");
+      setError("Please enter a chemical formula.");
       return;
     }
 
@@ -35,33 +35,33 @@ export default function AnalysisPage() {
 
   return (
     <main className="page">
-      <nav className="top-nav" aria-label="Điều hướng chính">
+      <nav className="top-nav" aria-label="Main navigation">
         <Link to="/">VSEPR-AI</Link>
-        <span>Phân tích công thức</span>
+        <span>Formula analysis</span>
       </nav>
 
       <section className="analysis-layout">
         <div className="card input-card">
-          <p className="eyebrow">Bước đầu tiên</p>
-          <h1>Nhập công thức</h1>
+          <p className="eyebrow">First step</p>
+          <h1>Enter a formula</h1>
           <p>
-            Hỗ trợ công thức phẳng như NaCl, XeF4 và ion đơn giản như SO4^2-.
+            Supports flat formulas such as NaCl and XeF4, and simple ions such as SO4^2-.
           </p>
 
           <form onSubmit={handleSubmit}>
-            <label htmlFor="formula">Công thức hóa học</label>
+            <label htmlFor="formula">Chemical formula</label>
             <div className="form-row">
               <input
                 id="formula"
                 name="formula"
                 value={formula}
                 onChange={(event) => setFormula(event.target.value)}
-                placeholder="Ví dụ: NaCl"
+                placeholder="Example: NaCl"
                 autoComplete="off"
                 aria-describedby={error ? "formula-error" : undefined}
               />
               <button type="submit" disabled={isLoading}>
-                {isLoading ? "Đang phân tích…" : "Phân tích"}
+                {isLoading ? "Analyzing…" : "Analyze"}
               </button>
             </div>
           </form>
@@ -74,28 +74,28 @@ export default function AnalysisPage() {
         </div>
 
         <div className="card result-card" aria-live="polite">
-          <p className="eyebrow">Kết quả</p>
+          <p className="eyebrow">Result</p>
           {!result && !isLoading && (
-            <p className="empty-state">Kết quả sẽ xuất hiện tại đây.</p>
+            <p className="empty-state">The result will appear here.</p>
           )}
-          {isLoading && <p className="empty-state">Đang gửi yêu cầu…</p>}
+          {isLoading && <p className="empty-state">Sending request…</p>}
           {result && (
             <>
               <dl className="summary">
                 <div>
-                  <dt>Công thức</dt>
+                  <dt>Formula</dt>
                   <dd>{result.formula}</dd>
                 </div>
                 <div>
-                  <dt>Điện tích</dt>
+                  <dt>Charge</dt>
                   <dd>{result.charge > 0 ? `+${result.charge}` : result.charge}</dd>
                 </div>
               </dl>
               <table>
                 <thead>
                   <tr>
-                    <th>Nguyên tố</th>
-                    <th>Số lượng</th>
+                    <th>Element</th>
+                    <th>Count</th>
                   </tr>
                 </thead>
                 <tbody>

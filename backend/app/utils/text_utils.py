@@ -1,1 +1,1 @@
-"""Text normalization helpers (formula string cleanup, Vietnamese text helpers)."""
+"""Text normalization helpers (formula string cleanup, text helpers)."""

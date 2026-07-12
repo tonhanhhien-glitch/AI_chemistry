@@ -5,9 +5,9 @@ export default function NotFoundPage() {
     <main className="page page--centered">
       <section className="card not-found">
         <p className="eyebrow">404</p>
-        <h1>Không tìm thấy trang</h1>
-        <p>Đường dẫn bạn yêu cầu không tồn tại.</p>
-        <Link to="/">Quay về trang chủ</Link>
+        <h1>Page not found</h1>
+        <p>The requested path does not exist.</p>
+        <Link to="/">Return to home</Link>
       </section>
     </main>
   );
