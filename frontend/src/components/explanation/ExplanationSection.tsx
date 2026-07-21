@@ -1,5 +1,3 @@
-// Single labeled section within the explanation panel.
-export default function ExplanationSection() {
-  // TODO: implement ExplanationSection
-  return null;
+export default function ExplanationSection({ title, children }: { title: string; children: string }) {
+  return <section className="explanation-section"><h3>{title}</h3><p>{children}</p></section>;
 }

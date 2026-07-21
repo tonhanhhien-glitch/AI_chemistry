@@ -1,5 +1,3 @@
-// Footer with attribution and links.
 export default function Footer() {
-  // TODO: implement Footer
-  return null;
+  return <footer className="site-footer"><p><strong>VSEPRLab</strong> · Công cụ học tập Lewis–VSEPR bằng quy tắc xác định.</p><p>Giải thích AI chỉ diễn giải dữ kiện đã kiểm tra; mô hình 3D dự phòng có tính minh hoạ.</p></footer>;
 }

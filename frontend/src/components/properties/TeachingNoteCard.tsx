@@ -1,5 +1,3 @@
-// Card showing curated teaching notes for the molecule.
-export default function TeachingNoteCard() {
-  // TODO: implement TeachingNoteCard
-  return null;
+export default function TeachingNoteCard({ note }: { note: string }) {
+  return <aside className="teaching-note"><span aria-hidden="true">✦</span><div><strong>Mẹo học</strong><p>{note}</p></div></aside>;
 }

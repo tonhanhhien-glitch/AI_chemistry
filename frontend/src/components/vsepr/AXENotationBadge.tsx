@@ -1,5 +1,3 @@
-// Small badge component displaying the AXnEm notation string.
-export default function AXENotationBadge() {
-  // TODO: implement AXENotationBadge
-  return null;
+export default function AXENotationBadge({ notation }: { notation: string }) {
+  return <span className="ax-badge" aria-label={`Ký hiệu VSEPR ${notation}`}>{notation}</span>;
 }

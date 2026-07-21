@@ -1,5 +1,4 @@
-// Callout explaining resonance structures when present.
-export default function ResonanceNote() {
-  // TODO: implement ResonanceNote
-  return null;
+export default function ResonanceNote({ forms, note }: { forms: number; note: string | null }) {
+  if (forms <= 1 && !note) return null;
+  return <aside className="callout"><strong>↔ {forms} công thức cộng hưởng tương đương</strong><p>{note}</p></aside>;
 }

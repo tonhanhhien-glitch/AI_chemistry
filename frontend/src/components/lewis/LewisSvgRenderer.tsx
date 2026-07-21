@@ -1,5 +1,6 @@
-// Low-level SVG renderer for atoms, bonds, and lone pairs.
-export default function LewisSvgRenderer() {
-  // TODO: implement LewisSvgRenderer
-  return null;
+import type { LewisStructure } from "../../types/lewis";
+
+export default function LewisSvgRenderer({ structure }: { structure: LewisStructure }) {
+  const byId = Object.fromEntries(structure.atoms.map((atom) => [atom.id, atom]));
+  return <svg className="lewis-svg" viewBox="0 0 320 280" role="img" aria-label="Công thức Lewis"><g className="bonds">{structure.bonds.flatMap((bond) => { const a = byId[bond.atom1_id]; const b = byId[bond.atom2_id]; const dx = b.x - a.x; const dy = b.y - a.y; const length = Math.hypot(dx, dy) || 1; const ox = -dy / length * 5; const oy = dx / length * 5; const offsets = bond.order === 1 ? [0] : bond.order === 2 ? [-0.7, 0.7] : [-1, 0, 1]; return offsets.map((offset, index) => <line key={`${bond.id}-${index}`} x1={a.x + ox * offset} y1={a.y + oy * offset} x2={b.x + ox * offset} y2={b.y + oy * offset} />); })}</g>{structure.atoms.map((atom) => <g key={atom.id} className="lewis-atom"><circle cx={atom.x} cy={atom.y} r="20" /><text x={atom.x} y={atom.y + 6}>{atom.element}</text>{atom.formal_charge !== 0 && <text className="charge" x={atom.x + 18} y={atom.y - 17}>{atom.formal_charge > 0 ? `+${atom.formal_charge}` : atom.formal_charge}</text>}{Array.from({ length: atom.lone_pairs }).flatMap((_, pair) => { const angle = -Math.PI / 2 + pair * 2 * Math.PI / Math.max(atom.lone_pairs, 1); const cx = atom.x + Math.cos(angle) * 31; const cy = atom.y + Math.sin(angle) * 31; const px = -Math.sin(angle) * 3; const py = Math.cos(angle) * 3; return [<circle className="electron" key={`${atom.id}-${pair}-a`} cx={cx + px} cy={cy + py} r="2.2" />, <circle className="electron" key={`${atom.id}-${pair}-b`} cx={cx - px} cy={cy - py} r="2.2" />]; })}</g>)}</svg>;
 }

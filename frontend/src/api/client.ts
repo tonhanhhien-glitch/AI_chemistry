@@ -1,33 +1,34 @@
 import axios, { AxiosError } from "axios";
 
+export interface ApiErrorDetail {
+  code: string;
+  message: string;
+  candidates?: Array<{ id: string; formula: string; name_vi: string }>;
+}
+
 interface ApiErrorBody {
-  detail?: string | {
-    code?: string;
-    message?: string;
-  };
+  detail?: string | Partial<ApiErrorDetail>;
 }
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1",
-  timeout: 10_000,
-  headers: {
-    Accept: "application/json",
-  },
+  timeout: 15_000,
+  headers: { Accept: "application/json", "Content-Type": "application/json" },
 });
 
-export function getApiErrorMessage(error: unknown): string {
+export function getApiErrorDetail(error: unknown): ApiErrorDetail {
   if (error instanceof AxiosError) {
     const body = error.response?.data as ApiErrorBody | undefined;
-    if (typeof body?.detail === "string") {
-      return body.detail;
-    }
-    if (body?.detail?.message) {
-      return body.detail.message;
-    }
-    if (error.code === "ECONNABORTED") {
-      return "The request timed out. Please try again.";
-    }
+    if (typeof body?.detail === "string") return { code: "API_ERROR", message: body.detail };
+    if (body?.detail?.message) return {
+      code: body.detail.code || "API_ERROR", message: body.detail.message,
+      candidates: body.detail.candidates,
+    };
+    if (error.code === "ECONNABORTED") return { code: "TIMEOUT", message: "Yêu cầu đã hết thời gian chờ. Vui lòng thử lại." };
   }
+  return { code: "NETWORK_ERROR", message: "Không thể kết nối tới máy chủ. Các ví dụ cần backend chạy cục bộ." };
+}
 
-  return "Unable to connect to the server. Please try again.";
+export function getApiErrorMessage(error: unknown): string {
+  return getApiErrorDetail(error).message;
 }

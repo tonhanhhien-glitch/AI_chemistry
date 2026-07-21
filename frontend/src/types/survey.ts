@@ -1,4 +1,6 @@
-// Shape of a pre-test/post-test/Likert survey submission.
 export interface SurveySubmission {
-  // TODO: define fields to match backend schema
+  session_id?: string;
+  consent: boolean;
+  phase: "pre" | "post" | "likert";
+  answers: Record<string, number | string | boolean>;
 }

@@ -1,5 +1,3 @@
-// Inline validation/error message shown under the formula input.
-export default function InputValidationMessage() {
-  // TODO: implement InputValidationMessage
-  return null;
+export default function InputValidationMessage({ message }: { message?: string }) {
+  return message ? <p className="error-message" role="alert">{message}</p> : null;
 }

@@ -1,5 +1,7 @@
-// Shared page wrapper providing consistent padding/max-width.
-export default function PageContainer() {
-  // TODO: implement PageContainer
-  return null;
+import type { ReactNode } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+
+export default function PageContainer({ children }: { children: ReactNode }) {
+  return <><Header /><main className="page-shell">{children}</main><Footer /></>;
 }

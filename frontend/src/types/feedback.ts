@@ -1,4 +1,13 @@
-// Shape of a feedback form submission.
 export interface FeedbackSubmission {
-  // TODO: define fields to match backend schema
+  session_id?: string;
+  molecule_id?: string;
+  rating: number;
+  category: "clarity" | "usefulness" | "chemistry_error" | "other";
+  comment?: string;
+}
+
+export interface PersistenceResponse {
+  accepted: boolean;
+  session_id: string;
+  message_vi: string;
 }

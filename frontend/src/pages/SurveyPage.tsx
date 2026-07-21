@@ -1,5 +1,8 @@
-// Pre-test/post-test and Likert survey forms for the classroom evaluation.
+import { useState } from "react";
+import PageContainer from "../components/layout/PageContainer";
+import { useSurvey } from "../hooks/useSurvey";
+
 export default function SurveyPage() {
-  // TODO: implement SurveyPage
-  return null;
+  const [consent, setConsent] = useState(false); const [phase, setPhase] = useState<"pre" | "post" | "likert">("pre"); const [q1, setQ1] = useState(3); const [q2, setQ2] = useState(3); const { submit, message, isLoading } = useSurvey();
+  return <PageContainer><header className="page-intro"><p className="eyebrow">Nghiên cứu giáo dục</p><h1>Khảo sát ẩn danh</h1><p>Không thu tên, mã sinh viên hoặc email. Chỉ lưu mã phiên ngẫu nhiên, giai đoạn và câu trả lời cần thiết.</p></header><section className="consent-card"><h2>Thông tin đồng thuận & quyền riêng tư</h2><p>Tham gia là tự nguyện. Bạn có thể dừng trước khi gửi. Dữ liệu dùng để đánh giá hiệu quả học tập và giáo viên chỉ xuất qua token bảo vệ.</p><label className="check-control"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} /> Tôi đã đọc và đồng ý tham gia ẩn danh.</label></section><form className="survey-form" onSubmit={(event) => { event.preventDefault(); if (consent) void submit({ session_id: localStorage.getItem("vsepr-session") || undefined, consent, phase, answers: { domain_confidence: q1, geometry_confidence: q2 } }); }}><label>Giai đoạn<select value={phase} onChange={(event) => setPhase(event.target.value as typeof phase)}><option value="pre">Bài kiểm tra trước</option><option value="post">Bài kiểm tra sau</option><option value="likert">Thang Likert trải nghiệm</option></select></label><label>Tôi tự tin đếm miền electron <output>{q1}/5</output><input type="range" min="1" max="5" value={q1} onChange={(event) => setQ1(Number(event.target.value))} /></label><label>Tôi tự tin suy ra hình học phân tử <output>{q2}/5</output><input type="range" min="1" max="5" value={q2} onChange={(event) => setQ2(Number(event.target.value))} /></label><button disabled={!consent || isLoading}>{isLoading ? "Đang gửi…" : "Gửi khảo sát ẩn danh"}</button>{!consent && <small>Cần đánh dấu đồng thuận trước khi gửi.</small>}{message && <p role="status" className="success-message">{message}</p>}</form></PageContainer>;
 }
