@@ -48,8 +48,8 @@ def test_ambiguity_api_envelope(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_explanation_contradictions_are_detected() -> None:
     record = molecule_resolver.get_record("h2o")
-    valid, problems = validate_explanation_text("H2O được ghi AX2E2, bent, tetrahedral, góc 104.5°.", record)
+    valid, problems = validate_explanation_text("H2O có 8 electron hoá trị, tổng điện tích hình thức bằng 0, 2 miền liên kết, 2 miền cặp electron tự do; AX2E2, bent, tetrahedral, góc 104.5°.", record)
     assert valid and not problems
-    valid, problems = validate_explanation_text("H2O được ghi AX4, linear, góc 180°.", record)
+    valid, problems = validate_explanation_text("H2O có 7 electron hoá trị, tổng điện tích hình thức bằng 1, 4 miền liên kết, 0 miền cặp electron tự do; AX4, linear, góc 180°.", record)
     assert not valid
-    assert {"contradictory_ax_en", "contradictory_geometry", "contradictory_angle"}.issubset(problems)
+    assert {"missing_or_contradictory_charge", "missing_or_contradictory_bonding_domains", "contradictory_ax_en", "contradictory_geometry", "contradictory_angle"}.issubset(problems)

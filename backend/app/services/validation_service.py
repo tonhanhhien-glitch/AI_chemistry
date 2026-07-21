@@ -15,6 +15,30 @@ def validate_explanation_text(text: str, record: dict[str, Any]) -> tuple[bool, 
     normalized = text.casefold()
     if record["formula"].casefold() not in normalized:
         problems.append("missing_formula")
+    electron_counts = {
+        int(value)
+        for value in re.findall(
+            r"(\d+)\s+(?:electron hoá trị|valence electrons)", normalized
+        )
+    }
+    if electron_counts != {record["total_valence_electrons"]}:
+        problems.append("missing_or_contradictory_valence_total")
+    charge_values = {
+        int(value)
+        for value in re.findall(
+            r"(?:điện tích hình thức|formal charges?)[^.\d+-]{0,30}"
+            r"(?:bằng|sum(?:ming)? to)?\s*([+-]?\d+)",
+            normalized,
+        )
+    }
+    if charge_values != {record["charge"]}:
+        problems.append("missing_or_contradictory_charge")
+    bonding = {int(value) for value in re.findall(r"(\d+)\s+(?:miền liên kết|bonding domains?)", normalized)}
+    lone_pairs = {int(value) for value in re.findall(r"(\d+)\s+(?:miền (?:cặp electron )?tự do|lone-pair domains?)", normalized)}
+    if bonding != {record["bonding_domains"]}:
+        problems.append("missing_or_contradictory_bonding_domains")
+    if lone_pairs != {record["lone_pair_domains"]}:
+        problems.append("missing_or_contradictory_lone_pair_domains")
     notations = set(re.findall(r"AX\d(?:E\d)?", text, flags=re.IGNORECASE))
     if notations and {item.upper() for item in notations} != {record["ax_en"].upper()}:
         problems.append("contradictory_ax_en")
