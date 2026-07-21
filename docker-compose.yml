@@ -1,18 +1,28 @@
 services:
   backend:
     build: ./backend
+    environment:
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+      DATA_DIR: /data
+      CACHE_DIR: /app/app/cache
+      TEACHER_EXPORT_TOKEN: ${TEACHER_EXPORT_TOKEN:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ENABLE_CLAUDE: ${ENABLE_CLAUDE:-false}
+      ENABLE_PUBCHEM: ${ENABLE_PUBCHEM:-false}
+      ENABLE_RDKIT: ${ENABLE_RDKIT:-false}
+    volumes:
+      - study-data:/data
     ports:
       - "8000:8000"
-    env_file:
-      - backend/.env
-    volumes:
-      - ./backend/app:/app/app
-
   frontend:
-    build: ./frontend
-    ports:
-      - "5173:5173"
-    env_file:
-      - frontend/.env
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: /api/v1
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+volumes:
+  study-data:

@@ -28,6 +28,10 @@ npm-debug.log*
 
 # Runtime data
 backend/app/cache/*.json
+backend/app/cache/*.lock
 !backend/app/cache/README.md
+backend/app/runtime_data/
+backend/runtime_data/
+*.jsonl
 *.db
 *.sqlite3

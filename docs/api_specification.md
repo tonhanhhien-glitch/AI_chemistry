@@ -1,78 +1,52 @@
 # API specification
 
-The implemented API is served by `backend/app/main.py` under `/api/v1`.
-Malformed domain input returns HTTP 422; the API does not encode failures in an
-HTTP 200 response.
+Base path: /api/v1. OpenAPI: /docs. Chemistry errors use:
 
-## Health
+    { "detail": { "code": "UNSUPPORTED_MOLECULE", "message": "...", "candidates": [] } }
 
-`GET /api/v1/health`
+FastAPI request-shape errors retain its standard 422 response. Inputs are capped at 80 characters where applicable.
 
-Success response (200):
+## Endpoints
 
-```json
-{
-  "status": "ok",
-  "version": "0.1.0"
-}
-```
+- GET /health — service status/version.
+- GET /formula?formula=SO4%5E2- — strict syntax, inventory, charge only.
+- GET /molecules/examples — curated summaries.
+- GET /molecules/search?q=nuoc — formula/name/alias search.
+- POST /analyze — complete versioned pipeline.
+- POST /explain — regenerate prose from an existing curated molecule ID.
+- GET /rules/vsepr — all 13 supported rules.
+- GET /rules/examples — curated rule examples.
+- POST /feedback — anonymous rating/report.
+- POST /survey — consented anonymous pre/post/Likert response.
+- GET /teacher/export?kind=survey — CSV with X-Teacher-Token.
 
-## Parse a formula
+## Analyze
 
-`GET /api/v1/formula?formula=SO4%5E2-`
+Request:
 
-The required `formula` query parameter should be URL encoded by the client.
+    {
+      "formula": "H2O",
+      "include_explanation": true,
+      "explanation_level": "intermediate",
+      "language": "vi"
+    }
 
-Success response (200):
+Use molecule_id instead of formula after candidate selection. The response schema_version is 1.0 and contains molecule, lewis, vsepr, properties, structure3d, explanation, and notices. Lewis atoms have stable IDs and 2D coordinates; 3D uses an atom/bond coordinate schema with source and is_illustrative.
 
-```json
-{
-  "formula": "SO4^2-",
-  "atoms": {
-    "S": 1,
-    "O": 4
-  },
-  "charge": -2
-}
-```
+Examples of controlled results: CO2 → AX2/linear/180°; H2O → AX2E2/bent/~104.5°; ClF3 → AX3E2/T-shaped; XeF4 → AX4E2/square planar.
 
-Validation response (422):
+## Formula grammar
 
-```json
-{
-  "detail": {
-    "code": "UNSUPPORTED_FORMULA_SYNTAX",
-    "message": "Invalid chemical formula."
-  }
-}
-```
+Flat canonical symbols with optional positive counts. Supported charges: +, -, ^n+, ^n-. Repeated symbols accumulate. Parentheses, hydrates/dot notation, isotopes, coefficients, and incorrect capitalization are rejected rather than partially parsed.
 
-Stable domain error codes are `INVALID_FORMULA`,
-`UNSUPPORTED_FORMULA_SYNTAX`, and `UNSUPPORTED_ELEMENT`. FastAPI may return
-its standard 422 validation shape when the query parameter itself is missing.
+Parsing does not infer identity: CH3COOH can parse while remaining unsupported by the curated analysis set. Stable codes include INVALID_FORMULA, UNSUPPORTED_FORMULA_SYNTAX, UNSUPPORTED_ELEMENT, UNSUPPORTED_MOLECULE, AMBIGUOUS_MOLECULE, and CHEMISTRY_VALIDATION_ERROR.
 
-## Supported grammar
+## Anonymous writes
 
-The parser supports flat formulas made of canonical element symbols followed by
-an optional positive count without a leading zero. A missing count means one.
-It preserves element capitalization and accumulates repeated elements, so
-`CH3COOH` becomes `C: 2, H: 4, O: 2`.
+Feedback requires rating 1–5 and a controlled category; comment max is 1000. Survey requires consent=true, phase pre/post/likert, and at most 30 answer keys. A missing or invalid session ID is replaced by a random UUID. Do not send names or student numbers.
 
-Supported charge suffixes are:
+Export returns UTF-8 CSV and prefixes spreadsheet-formula-like cells. If TEACHER_EXPORT_TOKEN is empty, export remains forbidden.
 
-- `+` or `-` for magnitude one, such as `NH4+` and `NO3-`
-- `^` followed by a positive magnitude and sign, such as `SO4^2-` and
-  `PO4^3-`
+## Language and sources
 
-Parentheses, hydrates/dot notation, isotopes, leading-zero counts, misplaced
-coefficients, and multiple charge suffixes are unsupported. Incorrectly
-capitalized input such as `nacl` is rejected rather than repaired.
-
-## Parser scope and chemistry scope
-
-Parsing answers only whether the string has valid supported syntax and returns
-its atom inventory and net charge. It does not decide whether a molecule is
-appropriate for later Lewis or VSEPR teaching. For example, `CH3COOH` parses
-correctly because repeated-element counting is parser behavior. Transition-metal
-symbols and elements outside the current main-group allowlist, including `Fe`,
-are rejected at this stage.
+Vietnamese is the default explanation language; English is optional. Property rows declare curated, computed, or PubChem reference provenance. Claude and idealized 3D outputs carry explicit disclaimers.
