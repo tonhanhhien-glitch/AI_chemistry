@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.get("/formula", response_model=FormulaParseResponse)
 def get_formula(
-    formula: str = Query(..., description="Chemical formula, for example SO4^2-"),
+    formula: str = Query(..., max_length=80, description="Công thức, ví dụ SO4^2-"),
 ) -> FormulaParseResponse:
     try:
         parsed = parse_formula(formula)

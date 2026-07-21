@@ -1,3 +1,2 @@
-# Prompt template used to ask Claude to flag any statement that contradicts the supplied backend facts.
-# TODO: write the prompt template.
-# Placeholders available: {molecule_name}, {formula}, {lewis_facts}, {vsepr_facts}, {level}
+Đối chiếu phần giải thích với gói dữ kiện bất biến. Kiểm tra công thức, điện tích, tổng electron, miền liên kết, miền cặp tự do, AXnEm, hình học miền electron, hình học phân tử và góc.
+Không đánh giá văn phong. Trả danh sách mã mâu thuẫn; trả danh sách rỗng nếu mọi dữ kiện phù hợp.

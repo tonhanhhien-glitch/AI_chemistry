@@ -1,4 +1,86 @@
 {
-  "_description": "Example molecules grouped by geometry type for the Examples page.",
-  "examples": []
+  "_description": "Curated examples grouped by molecular geometry in the API and UI.",
+  "schema_version": "1.0",
+  "examples": [
+    {
+      "molecule_id": "co2",
+      "formula": "CO2",
+      "geometry_vi": "thẳng"
+    },
+    {
+      "molecule_id": "bf3",
+      "formula": "BF3",
+      "geometry_vi": "tam giác phẳng"
+    },
+    {
+      "molecule_id": "so2",
+      "formula": "SO2",
+      "geometry_vi": "gấp khúc"
+    },
+    {
+      "molecule_id": "h2o",
+      "formula": "H2O",
+      "geometry_vi": "gấp khúc"
+    },
+    {
+      "molecule_id": "nh3",
+      "formula": "NH3",
+      "geometry_vi": "chóp tam giác"
+    },
+    {
+      "molecule_id": "ch4",
+      "formula": "CH4",
+      "geometry_vi": "tứ diện"
+    },
+    {
+      "molecule_id": "nh4-plus",
+      "formula": "NH4+",
+      "geometry_vi": "tứ diện"
+    },
+    {
+      "molecule_id": "pcl5",
+      "formula": "PCl5",
+      "geometry_vi": "lưỡng tháp tam giác"
+    },
+    {
+      "molecule_id": "sf4",
+      "formula": "SF4",
+      "geometry_vi": "bập bênh"
+    },
+    {
+      "molecule_id": "clf3",
+      "formula": "ClF3",
+      "geometry_vi": "chữ T"
+    },
+    {
+      "molecule_id": "xef2",
+      "formula": "XeF2",
+      "geometry_vi": "thẳng"
+    },
+    {
+      "molecule_id": "sf6",
+      "formula": "SF6",
+      "geometry_vi": "bát diện"
+    },
+    {
+      "molecule_id": "brf5",
+      "formula": "BrF5",
+      "geometry_vi": "chóp vuông"
+    },
+    {
+      "molecule_id": "xef4",
+      "formula": "XeF4",
+      "geometry_vi": "vuông phẳng"
+    },
+    {
+      "molecule_id": "no3-minus",
+      "formula": "NO3-",
+      "geometry_vi": "tam giác phẳng"
+    },
+    {
+      "molecule_id": "co3-2minus",
+      "formula": "CO3^2-",
+      "geometry_vi": "tam giác phẳng"
+    }
+  ]
 }

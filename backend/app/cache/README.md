@@ -1,5 +1,5 @@
-# Runtime Cache
+# Bộ nhớ đệm chạy cục bộ
 
-Files in this folder are populated at runtime by the corresponding services (PubChem lookups, AI explanations, 3D structures). They start as empty JSON objects and are safe to reset.
+Các tệp JSON trong thư mục này chỉ chứa dữ liệu tham chiếu có thể tái tạo. Lỗi JSON được xử lý như cache miss; ghi cache dùng tệp tạm và thay thế nguyên tử.
 
-TODO: write this document.
+Không lưu API key, nội dung khảo sát hoặc phản hồi tại đây. Dữ liệu nghiên cứu nằm trong DATA_DIR và bị bỏ qua bởi Git.

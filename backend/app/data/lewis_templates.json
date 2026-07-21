@@ -1,4 +1,70 @@
 {
-  "_description": "Pre-built Lewis structure templates for curated molecules that don't need to be derived at runtime.",
-  "templates": {}
+  "_description": "Index of curated Lewis templates. Full atom/bond/electron records live only in curated_molecules.json to avoid drift.",
+  "schema_version": "1.0",
+  "templates": {
+    "co2": {
+      "record_id": "co2",
+      "source": "curated_molecules.json"
+    },
+    "bf3": {
+      "record_id": "bf3",
+      "source": "curated_molecules.json"
+    },
+    "so2": {
+      "record_id": "so2",
+      "source": "curated_molecules.json"
+    },
+    "h2o": {
+      "record_id": "h2o",
+      "source": "curated_molecules.json"
+    },
+    "nh3": {
+      "record_id": "nh3",
+      "source": "curated_molecules.json"
+    },
+    "ch4": {
+      "record_id": "ch4",
+      "source": "curated_molecules.json"
+    },
+    "nh4-plus": {
+      "record_id": "nh4-plus",
+      "source": "curated_molecules.json"
+    },
+    "pcl5": {
+      "record_id": "pcl5",
+      "source": "curated_molecules.json"
+    },
+    "sf4": {
+      "record_id": "sf4",
+      "source": "curated_molecules.json"
+    },
+    "clf3": {
+      "record_id": "clf3",
+      "source": "curated_molecules.json"
+    },
+    "xef2": {
+      "record_id": "xef2",
+      "source": "curated_molecules.json"
+    },
+    "sf6": {
+      "record_id": "sf6",
+      "source": "curated_molecules.json"
+    },
+    "brf5": {
+      "record_id": "brf5",
+      "source": "curated_molecules.json"
+    },
+    "xef4": {
+      "record_id": "xef4",
+      "source": "curated_molecules.json"
+    },
+    "no3-minus": {
+      "record_id": "no3-minus",
+      "source": "curated_molecules.json"
+    },
+    "co3-2minus": {
+      "record_id": "co3-2minus",
+      "source": "curated_molecules.json"
+    }
+  }
 }

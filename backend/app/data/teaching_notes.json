@@ -1,4 +1,22 @@
 {
-  "_description": "Short teaching notes keyed by molecule/geometry, surfaced alongside AI explanations.",
-  "notes": {}
+  "_description": "Short Vietnamese teaching prompts keyed by curated molecule ID.",
+  "schema_version": "1.0",
+  "notes": {
+    "co2": "Ví dụ CO2: hình học phân tử thẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "bf3": "Ví dụ BF3: hình học phân tử tam giác phẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "so2": "Ví dụ SO2: hình học phân tử gấp khúc. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "h2o": "Ví dụ H2O: hình học phân tử gấp khúc. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "nh3": "Ví dụ NH3: hình học phân tử chóp tam giác. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "ch4": "Ví dụ CH4: hình học phân tử tứ diện. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "nh4-plus": "Ví dụ NH4+: hình học phân tử tứ diện. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "pcl5": "Ví dụ PCl5: hình học phân tử lưỡng tháp tam giác. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "sf4": "Ví dụ SF4: hình học phân tử bập bênh. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "clf3": "Ví dụ ClF3: hình học phân tử chữ T. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "xef2": "Ví dụ XeF2: hình học phân tử thẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "sf6": "Ví dụ SF6: hình học phân tử bát diện. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "brf5": "Ví dụ BrF5: hình học phân tử chóp vuông. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "xef4": "Ví dụ XeF4: hình học phân tử vuông phẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "no3-minus": "Ví dụ NO3-: hình học phân tử tam giác phẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
+    "co3-2minus": "Ví dụ CO3^2-: hình học phân tử tam giác phẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng."
+  }
 }

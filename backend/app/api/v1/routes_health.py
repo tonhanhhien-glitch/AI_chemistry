@@ -6,5 +6,4 @@ router = APIRouter()
 
 @router.get("/health")
 def get_health() -> dict:
-    # TODO: read version from package metadata
     return {"status": "ok", "version": "0.1.0"}

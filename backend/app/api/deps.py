@@ -1,1 +1,7 @@
-"""Shared FastAPI dependencies, e.g. constructing/caching service singletons for route handlers."""
+"""Dependency helpers kept side-effect free for tests and OpenAPI routes."""
+
+from app.core.config import Settings, settings
+
+
+def get_settings() -> Settings:
+    return settings

@@ -1,0 +1,4 @@
+# Optional external integrations; curated analysis does not require these.
+anthropic>=0.40,<1
+pubchempy>=1.0.4,<2
+rdkit>=2024.3,<2026

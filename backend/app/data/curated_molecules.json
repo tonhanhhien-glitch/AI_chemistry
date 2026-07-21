@@ -1,4 +1,1149 @@
 {
-  "_description": "Hand-verified molecules/ions with known-correct Lewis and VSEPR results, checked before PubChem/RDKit fallback.",
-  "molecules": []
+  "_description": "Golden Lewis/VSEPR records used offline. Rule conclusions are deterministic; external expert sign-off is tracked separately.",
+  "schema_version": "1.0",
+  "expert_review_queue": [
+    "All 15 internal golden records require documented external chemistry-expert sign-off before being labelled externally verified.",
+    "PubChem identifiers and measured reference properties are intentionally omitted until source verification."
+  ],
+  "molecules": [
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "co2",
+      "name_vi": "Cacbon đioxit",
+      "name_en": "Carbon dioxide",
+      "aliases": [
+        "carbon dioxide"
+      ],
+      "formula": "CO2",
+      "charge": 0,
+      "atom_inventory": {
+        "C": 1,
+        "O": 2
+      },
+      "atom_symbols": [
+        "C",
+        "O",
+        "O"
+      ],
+      "central_atom": "C",
+      "total_valence_electrons": 16,
+      "bond_orders": [
+        2,
+        2
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        2
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 0,
+      "steric_number": 2,
+      "ax_en": "AX2",
+      "electron_geometry": "linear",
+      "molecular_geometry": "linear",
+      "electron_geometry_vi": "thẳng",
+      "molecular_geometry_vi": "thẳng",
+      "ideal_angle": "180°",
+      "distortion_note_vi": null,
+      "hybridization": "sp",
+      "polarity_note_vi": "Phân tử không phân cực do hai moment liên kết triệt tiêu trong cấu trúc thẳng đối xứng.",
+      "smiles": "O=C=O",
+      "teaching_note_vi": "Liên kết đôi vẫn được tính là một miền electron trong VSEPR."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "bf3",
+      "name_vi": "Bo triflorua",
+      "name_en": "Boron trifluoride",
+      "aliases": [
+        "boron trifluoride"
+      ],
+      "formula": "BF3",
+      "charge": 0,
+      "atom_inventory": {
+        "B": 1,
+        "F": 3
+      },
+      "atom_symbols": [
+        "B",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "B",
+      "total_valence_electrons": 24,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": true,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 0,
+      "steric_number": 3,
+      "ax_en": "AX3",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "trigonal planar",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "tam giác phẳng",
+      "ideal_angle": "120°",
+      "distortion_note_vi": null,
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử không phân cực về tổng thể nhờ hình học đối xứng.",
+      "smiles": "B(F)(F)F",
+      "teaching_note_vi": "B chỉ có sáu electron quanh nguyên tử trung tâm; đây là ngoại lệ thiếu electron."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "so2",
+      "name_vi": "Lưu huỳnh đioxit",
+      "name_en": "Sulfur dioxide",
+      "aliases": [
+        "sulfur dioxide",
+        "sulphur dioxide"
+      ],
+      "formula": "SO2",
+      "charge": 0,
+      "atom_inventory": {
+        "S": 1,
+        "O": 2
+      },
+      "atom_symbols": [
+        "S",
+        "O",
+        "O"
+      ],
+      "central_atom": "S",
+      "total_valence_electrons": 18,
+      "bond_orders": [
+        2,
+        2
+      ],
+      "lone_pairs": [
+        1,
+        2,
+        2
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 2,
+      "resonance_note_vi": "Các cách biểu diễn cộng hưởng cho thấy mật độ liên kết S–O được delocal hoá; một công thức Lewis đơn lẻ không mô tả đầy đủ.",
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 1,
+      "steric_number": 3,
+      "ax_en": "AX2E",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "<120°",
+      "distortion_note_vi": "Cặp electron tự do trên S nén góc O–S–O.",
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử phân cực vì hình gấp khúc làm các moment liên kết không triệt tiêu.",
+      "smiles": "O=S=O",
+      "teaching_note_vi": "Hình học miền electron và hình học phân tử khác nhau vì cặp electron tự do không được vẽ như một nguyên tử."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "h2o",
+      "name_vi": "Nước",
+      "name_en": "Water",
+      "aliases": [
+        "water",
+        "nước"
+      ],
+      "formula": "H2O",
+      "charge": 0,
+      "atom_inventory": {
+        "H": 2,
+        "O": 1
+      },
+      "atom_symbols": [
+        "O",
+        "H",
+        "H"
+      ],
+      "central_atom": "O",
+      "total_valence_electrons": 8,
+      "bond_orders": [
+        1,
+        1
+      ],
+      "lone_pairs": [
+        2,
+        0,
+        0
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 2,
+      "steric_number": 4,
+      "ax_en": "AX2E2",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~104.5°",
+      "distortion_note_vi": "Hai cặp electron tự do nén góc H–O–H từ góc tứ diện lý tưởng.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực do hình gấp khúc.",
+      "smiles": "O",
+      "teaching_note_vi": "Cặp electron tự do đẩy mạnh hơn cặp electron liên kết."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "nh3",
+      "name_vi": "Amoniac",
+      "name_en": "Ammonia",
+      "aliases": [
+        "ammonia",
+        "amoniac"
+      ],
+      "formula": "NH3",
+      "charge": 0,
+      "atom_inventory": {
+        "N": 1,
+        "H": 3
+      },
+      "atom_symbols": [
+        "N",
+        "H",
+        "H",
+        "H"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 8,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "steric_number": 4,
+      "ax_en": "AX3E",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "chóp tam giác",
+      "ideal_angle": "~107°",
+      "distortion_note_vi": "Cặp electron tự do nén góc H–N–H.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực do hình chóp tam giác.",
+      "smiles": "N",
+      "teaching_note_vi": "Bốn miền electron cho hình học miền tứ diện nhưng chỉ ba nguyên tử tạo hình chóp tam giác."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "ch4",
+      "name_vi": "Metan",
+      "name_en": "Methane",
+      "aliases": [
+        "methane",
+        "metan"
+      ],
+      "formula": "CH4",
+      "charge": 0,
+      "atom_inventory": {
+        "C": 1,
+        "H": 4
+      },
+      "atom_symbols": [
+        "C",
+        "H",
+        "H",
+        "H",
+        "H"
+      ],
+      "central_atom": "C",
+      "total_valence_electrons": 8,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 4,
+      "lone_pair_domains": 0,
+      "steric_number": 4,
+      "ax_en": "AX4",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "tetrahedral",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "tứ diện",
+      "ideal_angle": "109.5°",
+      "distortion_note_vi": null,
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử không phân cực nhờ tứ diện đối xứng.",
+      "smiles": "C",
+      "teaching_note_vi": "Bốn liên kết tương đương hướng đến bốn đỉnh của tứ diện."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "nh4-plus",
+      "name_vi": "Ion amoni",
+      "name_en": "Ammonium ion",
+      "aliases": [
+        "ammonium",
+        "ion amoni"
+      ],
+      "formula": "NH4+",
+      "charge": 1,
+      "atom_inventory": {
+        "N": 1,
+        "H": 4
+      },
+      "atom_symbols": [
+        "N",
+        "H",
+        "H",
+        "H",
+        "H"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 8,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "formal_charges": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 4,
+      "lone_pair_domains": 0,
+      "steric_number": 4,
+      "ax_en": "AX4",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "tetrahedral",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "tứ diện",
+      "ideal_angle": "109.5°",
+      "distortion_note_vi": null,
+      "hybridization": "sp³",
+      "polarity_note_vi": "Đây là ion đa nguyên tử mang điện tích +1; tính phân cực phân tử trung hoà không áp dụng trực tiếp.",
+      "smiles": "[NH4+]",
+      "teaching_note_vi": "Điện tích dương làm giảm tổng electron hoá trị đi một electron."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "pcl5",
+      "name_vi": "Photpho pentaclorua",
+      "name_en": "Phosphorus pentachloride",
+      "aliases": [
+        "phosphorus pentachloride"
+      ],
+      "formula": "PCl5",
+      "charge": 0,
+      "atom_inventory": {
+        "P": 1,
+        "Cl": 5
+      },
+      "atom_symbols": [
+        "P",
+        "Cl",
+        "Cl",
+        "Cl",
+        "Cl",
+        "Cl"
+      ],
+      "central_atom": "P",
+      "total_valence_electrons": 40,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 5,
+      "lone_pair_domains": 0,
+      "steric_number": 5,
+      "ax_en": "AX5",
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "trigonal bipyramidal",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "lưỡng tháp tam giác",
+      "ideal_angle": "90°, 120°, 180°",
+      "distortion_note_vi": null,
+      "hybridization": "sp³d",
+      "polarity_note_vi": "Mô hình pha khí lý tưởng đối xứng và không phân cực; trạng thái rắn có cấu trúc ion khác.",
+      "smiles": "P(Cl)(Cl)(Cl)(Cl)Cl",
+      "teaching_note_vi": "Ba vị trí xích đạo và hai vị trí trục không hoàn toàn tương đương."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "sf4",
+      "name_vi": "Lưu huỳnh tetraflorua",
+      "name_en": "Sulfur tetrafluoride",
+      "aliases": [
+        "sulfur tetrafluoride"
+      ],
+      "formula": "SF4",
+      "charge": 0,
+      "atom_inventory": {
+        "S": 1,
+        "F": 4
+      },
+      "atom_symbols": [
+        "S",
+        "F",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "S",
+      "total_valence_electrons": 34,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        3,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 4,
+      "lone_pair_domains": 1,
+      "steric_number": 5,
+      "ax_en": "AX4E",
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "seesaw",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "bập bênh",
+      "ideal_angle": "<90°, <120°, 180°",
+      "distortion_note_vi": "Cặp electron tự do ở vị trí xích đạo làm biến dạng các góc.",
+      "hybridization": "sp³d",
+      "polarity_note_vi": "Phân tử phân cực vì hình bập bênh không đối xứng.",
+      "smiles": "S(F)(F)(F)F",
+      "teaching_note_vi": "Cặp tự do chọn vị trí xích đạo để giảm tương tác 90°."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "clf3",
+      "name_vi": "Clo triflorua",
+      "name_en": "Chlorine trifluoride",
+      "aliases": [
+        "chlorine trifluoride"
+      ],
+      "formula": "ClF3",
+      "charge": 0,
+      "atom_inventory": {
+        "Cl": 1,
+        "F": 3
+      },
+      "atom_symbols": [
+        "Cl",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "Cl",
+      "total_valence_electrons": 28,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        2,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 2,
+      "steric_number": 5,
+      "ax_en": "AX3E2",
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "T-shaped",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "chữ T",
+      "ideal_angle": "~90°, 180°",
+      "distortion_note_vi": "Hai cặp tự do xích đạo nén nhẹ góc liên kết.",
+      "hybridization": "sp³d",
+      "polarity_note_vi": "Phân tử phân cực do hình chữ T.",
+      "smiles": "Cl(F)(F)F",
+      "teaching_note_vi": "Cl có thể là nguyên tử trung tâm trong hợp chất liên halogen; không được loại bằng quy tắc cứng."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "xef2",
+      "name_vi": "Xenon điflorua",
+      "name_en": "Xenon difluoride",
+      "aliases": [
+        "xenon difluoride"
+      ],
+      "formula": "XeF2",
+      "charge": 0,
+      "atom_inventory": {
+        "Xe": 1,
+        "F": 2
+      },
+      "atom_symbols": [
+        "Xe",
+        "F",
+        "F"
+      ],
+      "central_atom": "Xe",
+      "total_valence_electrons": 22,
+      "bond_orders": [
+        1,
+        1
+      ],
+      "lone_pairs": [
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 3,
+      "steric_number": 5,
+      "ax_en": "AX2E3",
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "linear",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "thẳng",
+      "ideal_angle": "180°",
+      "distortion_note_vi": null,
+      "hybridization": "sp³d",
+      "polarity_note_vi": "Phân tử không phân cực nhờ hai liên kết đối nhau.",
+      "smiles": "F[Xe]F",
+      "teaching_note_vi": "Ba cặp tự do chiếm toàn bộ vị trí xích đạo, để hai F ở trục."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "sf6",
+      "name_vi": "Lưu huỳnh hexaflorua",
+      "name_en": "Sulfur hexafluoride",
+      "aliases": [
+        "sulfur hexafluoride"
+      ],
+      "formula": "SF6",
+      "charge": 0,
+      "atom_inventory": {
+        "S": 1,
+        "F": 6
+      },
+      "atom_symbols": [
+        "S",
+        "F",
+        "F",
+        "F",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "S",
+      "total_valence_electrons": 48,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 6,
+      "lone_pair_domains": 0,
+      "steric_number": 6,
+      "ax_en": "AX6",
+      "electron_geometry": "octahedral",
+      "molecular_geometry": "octahedral",
+      "electron_geometry_vi": "bát diện",
+      "molecular_geometry_vi": "bát diện",
+      "ideal_angle": "90°, 180°",
+      "distortion_note_vi": null,
+      "hybridization": "sp³d²",
+      "polarity_note_vi": "Phân tử không phân cực nhờ cấu trúc bát diện đối xứng.",
+      "smiles": "S(F)(F)(F)(F)(F)F",
+      "teaching_note_vi": "Sáu miền liên kết phân bố theo các trục ±x, ±y, ±z."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "brf5",
+      "name_vi": "Brom pentaflorua",
+      "name_en": "Bromine pentafluoride",
+      "aliases": [
+        "bromine pentafluoride"
+      ],
+      "formula": "BrF5",
+      "charge": 0,
+      "atom_inventory": {
+        "Br": 1,
+        "F": 5
+      },
+      "atom_symbols": [
+        "Br",
+        "F",
+        "F",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "Br",
+      "total_valence_electrons": 42,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 5,
+      "lone_pair_domains": 1,
+      "steric_number": 6,
+      "ax_en": "AX5E",
+      "electron_geometry": "octahedral",
+      "molecular_geometry": "square pyramidal",
+      "electron_geometry_vi": "bát diện",
+      "molecular_geometry_vi": "chóp vuông",
+      "ideal_angle": "~90°, 180°",
+      "distortion_note_vi": "Cặp electron tự do đối diện đỉnh chóp gây biến dạng nhẹ.",
+      "hybridization": "sp³d²",
+      "polarity_note_vi": "Phân tử phân cực do hình chóp vuông.",
+      "smiles": "Br(F)(F)(F)(F)F",
+      "teaching_note_vi": "Br là nguyên tử trung tâm hợp lệ trong hợp chất liên halogen."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "xef4",
+      "name_vi": "Xenon tetraflorua",
+      "name_en": "Xenon tetrafluoride",
+      "aliases": [
+        "xenon tetrafluoride"
+      ],
+      "formula": "XeF4",
+      "charge": 0,
+      "atom_inventory": {
+        "Xe": 1,
+        "F": 4
+      },
+      "atom_symbols": [
+        "Xe",
+        "F",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "Xe",
+      "total_valence_electrons": 36,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        2,
+        3,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 4,
+      "lone_pair_domains": 2,
+      "steric_number": 6,
+      "ax_en": "AX4E2",
+      "electron_geometry": "octahedral",
+      "molecular_geometry": "square planar",
+      "electron_geometry_vi": "bát diện",
+      "molecular_geometry_vi": "vuông phẳng",
+      "ideal_angle": "90°, 180°",
+      "distortion_note_vi": null,
+      "hybridization": "sp³d²",
+      "polarity_note_vi": "Phân tử không phân cực nhờ cấu trúc vuông phẳng đối xứng.",
+      "smiles": "[Xe](F)(F)(F)F",
+      "teaching_note_vi": "Hai cặp electron tự do nằm đối diện nhau trên trục vuông góc mặt phẳng XeF4."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "no3-minus",
+      "name_vi": "Ion nitrat",
+      "name_en": "Nitrate ion",
+      "aliases": [
+        "nitrate",
+        "ion nitrat"
+      ],
+      "formula": "NO3-",
+      "charge": -1,
+      "atom_inventory": {
+        "N": 1,
+        "O": 3
+      },
+      "atom_symbols": [
+        "N",
+        "O",
+        "O",
+        "O"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 24,
+      "bond_orders": [
+        2,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        3,
+        3
+      ],
+      "formal_charges": [
+        1,
+        0,
+        -1,
+        -1
+      ],
+      "resonance_forms": 3,
+      "resonance_note_vi": "Có ba công thức cộng hưởng tương đương; liên kết đôi có thể ở bất kỳ O nào.",
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 0,
+      "steric_number": 3,
+      "ax_en": "AX3",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "trigonal planar",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "tam giác phẳng",
+      "ideal_angle": "120°",
+      "distortion_note_vi": null,
+      "hybridization": "sp²",
+      "polarity_note_vi": "Đây là ion đa nguyên tử; ba liên kết N–O tương đương trong cấu trúc cộng hưởng thực.",
+      "smiles": "[O-][N+](=O)[O-]",
+      "teaching_note_vi": "Không chọn một liên kết đôi cố định làm cấu trúc thật; cộng hưởng mô tả sự delocal hoá."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "co3-2minus",
+      "name_vi": "Ion cacbonat",
+      "name_en": "Carbonate ion",
+      "aliases": [
+        "carbonate",
+        "ion cacbonat"
+      ],
+      "formula": "CO3^2-",
+      "charge": -2,
+      "atom_inventory": {
+        "C": 1,
+        "O": 3
+      },
+      "atom_symbols": [
+        "C",
+        "O",
+        "O",
+        "O"
+      ],
+      "central_atom": "C",
+      "total_valence_electrons": 24,
+      "bond_orders": [
+        2,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        -1,
+        -1
+      ],
+      "resonance_forms": 3,
+      "resonance_note_vi": "Có ba công thức cộng hưởng tương đương; điện tích và liên kết π được delocal hoá trên ba O.",
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 0,
+      "steric_number": 3,
+      "ax_en": "AX3",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "trigonal planar",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "tam giác phẳng",
+      "ideal_angle": "120°",
+      "distortion_note_vi": null,
+      "hybridization": "sp²",
+      "polarity_note_vi": "Đây là ion đa nguyên tử có ba liên kết C–O tương đương trong lai cộng hưởng.",
+      "smiles": "[O-]C(=O)[O-]",
+      "teaching_note_vi": "Tổng điện tích hình thức của biểu diễn Lewis phải bằng −2."
+    }
+  ]
 }

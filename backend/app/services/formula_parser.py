@@ -3,18 +3,11 @@
 from dataclasses import dataclass
 import re
 
+from app.chemistry.periodic_table import SUPPORTED_ELEMENTS
 from app.core.exceptions import (
     FormulaParseError,
     UnsupportedElementError,
     UnsupportedFormulaSyntaxError,
-)
-
-SUPPORTED_ELEMENTS = frozenset(
-    {
-        "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne",
-        "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca",
-        "Br", "I", "Xe",
-    }
 )
 
 _TOKEN_PATTERN = re.compile(r"([A-Z][a-z]?)([1-9]\d*)?")

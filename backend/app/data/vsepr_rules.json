@@ -1,4 +1,149 @@
 {
-  "_description": "AXnEm rule table: domain counts, electron/molecular geometry, bond angle, example molecules.",
-  "rules": []
+  "_description": "Reviewable mirror of deterministic AXnEm rules implemented in app.chemistry.vsepr_rules.",
+  "schema_version": "1.0",
+  "rules": [
+    {
+      "ax_en": "AX2",
+      "bonding_domains": 2,
+      "lone_pair_domains": 0,
+      "steric_number": 2,
+      "electron_geometry": "linear",
+      "molecular_geometry": "linear",
+      "electron_geometry_vi": "thẳng",
+      "molecular_geometry_vi": "thẳng",
+      "ideal_angle": "180°"
+    },
+    {
+      "ax_en": "AX3",
+      "bonding_domains": 3,
+      "lone_pair_domains": 0,
+      "steric_number": 3,
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "trigonal planar",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "tam giác phẳng",
+      "ideal_angle": "120°"
+    },
+    {
+      "ax_en": "AX2E",
+      "bonding_domains": 2,
+      "lone_pair_domains": 1,
+      "steric_number": 3,
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "<120°"
+    },
+    {
+      "ax_en": "AX4",
+      "bonding_domains": 4,
+      "lone_pair_domains": 0,
+      "steric_number": 4,
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "tetrahedral",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "tứ diện",
+      "ideal_angle": "109.5°"
+    },
+    {
+      "ax_en": "AX3E",
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "steric_number": 4,
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "chóp tam giác",
+      "ideal_angle": "~107°"
+    },
+    {
+      "ax_en": "AX2E2",
+      "bonding_domains": 2,
+      "lone_pair_domains": 2,
+      "steric_number": 4,
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~104.5°"
+    },
+    {
+      "ax_en": "AX5",
+      "bonding_domains": 5,
+      "lone_pair_domains": 0,
+      "steric_number": 5,
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "trigonal bipyramidal",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "lưỡng tháp tam giác",
+      "ideal_angle": "90°, 120°, 180°"
+    },
+    {
+      "ax_en": "AX4E",
+      "bonding_domains": 4,
+      "lone_pair_domains": 1,
+      "steric_number": 5,
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "seesaw",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "bập bênh",
+      "ideal_angle": "<90°, <120°, 180°"
+    },
+    {
+      "ax_en": "AX3E2",
+      "bonding_domains": 3,
+      "lone_pair_domains": 2,
+      "steric_number": 5,
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "T-shaped",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "chữ T",
+      "ideal_angle": "~90°, 180°"
+    },
+    {
+      "ax_en": "AX2E3",
+      "bonding_domains": 2,
+      "lone_pair_domains": 3,
+      "steric_number": 5,
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "linear",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "thẳng",
+      "ideal_angle": "180°"
+    },
+    {
+      "ax_en": "AX6",
+      "bonding_domains": 6,
+      "lone_pair_domains": 0,
+      "steric_number": 6,
+      "electron_geometry": "octahedral",
+      "molecular_geometry": "octahedral",
+      "electron_geometry_vi": "bát diện",
+      "molecular_geometry_vi": "bát diện",
+      "ideal_angle": "90°, 180°"
+    },
+    {
+      "ax_en": "AX5E",
+      "bonding_domains": 5,
+      "lone_pair_domains": 1,
+      "steric_number": 6,
+      "electron_geometry": "octahedral",
+      "molecular_geometry": "square pyramidal",
+      "electron_geometry_vi": "bát diện",
+      "molecular_geometry_vi": "chóp vuông",
+      "ideal_angle": "~90°, 180°"
+    },
+    {
+      "ax_en": "AX4E2",
+      "bonding_domains": 4,
+      "lone_pair_domains": 2,
+      "steric_number": 6,
+      "electron_geometry": "octahedral",
+      "molecular_geometry": "square planar",
+      "electron_geometry_vi": "bát diện",
+      "molecular_geometry_vi": "vuông phẳng",
+      "ideal_angle": "90°, 180°"
+    }
+  ]
 }
