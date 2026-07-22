@@ -14,7 +14,7 @@ class SurveyRequest(BaseModel):
     @model_validator(mode="after")
     def require_consent(self) -> "SurveyRequest":
         if not self.consent:
-            raise ValueError("Cần đồng ý tham gia trước khi gửi khảo sát.")
+            raise ValueError("Consent to participate is required before submitting the survey.")
         if len(self.answers) > 30:
-            raise ValueError("Quá nhiều câu trả lời.")
+            raise ValueError("Too many answers.")
         return self

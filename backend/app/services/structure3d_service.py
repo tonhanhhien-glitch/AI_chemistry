@@ -23,5 +23,5 @@ def get_structure3d(record: dict[str, Any]) -> Structure3D:
     bonds = [Structure3DBond(atom1_id="a0", atom2_id=f"a{i + 1}", order=order) for i, order in enumerate(record["bond_orders"])]
     return Structure3D(
         atoms=atoms, bonds=bonds, source="curated_vsepr_template", is_illustrative=True,
-        warning_vi="Mô hình 3D này là hình học VSEPR lý tưởng hoá để minh hoạ, không phải cấu trúc tối ưu hoá lượng tử hay số liệu thực nghiệm.",
+        warning_vi="This 3D model is an idealized VSEPR geometry for illustration, not a quantum-optimized structure or experimental data.",
     )

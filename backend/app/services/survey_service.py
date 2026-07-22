@@ -11,7 +11,7 @@ def save_survey(request: SurveyRequest) -> PersistenceResponse:
         "session_id": session_id, "submitted_at": timestamp_utc(),
         "phase": request.phase, "answers": request.answers,
     })
-    return PersistenceResponse(session_id=session_id, message_vi="Câu trả lời ẩn danh đã được lưu.")
+    return PersistenceResponse(session_id=session_id, message_vi="Your anonymous answers have been saved.")
 
 
 def export_study_csv(kind: str) -> str:

@@ -1,5 +1,7 @@
 import axios, { AxiosError } from "axios";
 
+import { t } from "../i18n";
+
 export interface ApiErrorDetail {
   code: string;
   message: string;
@@ -24,9 +26,9 @@ export function getApiErrorDetail(error: unknown): ApiErrorDetail {
       code: body.detail.code || "API_ERROR", message: body.detail.message,
       candidates: body.detail.candidates,
     };
-    if (error.code === "ECONNABORTED") return { code: "TIMEOUT", message: "Yêu cầu đã hết thời gian chờ. Vui lòng thử lại." };
+    if (error.code === "ECONNABORTED") return { code: "TIMEOUT", message: t("api.error.timeout") };
   }
-  return { code: "NETWORK_ERROR", message: "Không thể kết nối tới máy chủ. Các ví dụ cần backend chạy cục bộ." };
+  return { code: "NETWORK_ERROR", message: t("api.error.network") };
 }
 
 export function getApiErrorMessage(error: unknown): string {

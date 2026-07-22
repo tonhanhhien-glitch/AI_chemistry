@@ -21,6 +21,8 @@ small, .muted { color: var(--muted); }
 .site-header nav { display: flex; flex-wrap: wrap; gap: .25rem; }
 .site-header nav a { padding: .55rem .7rem; text-decoration: none; color: #47645c; border-bottom: 2px solid transparent; }
 .site-header nav a.active { color: var(--green); border-color: var(--coral); }
+.lang-toggle { flex: none; padding: .45rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: #47645c; font-weight: 600; font-size: .85rem; cursor: pointer; }
+.lang-toggle:hover { color: var(--green); border-color: var(--coral); }
 .page-shell { width: min(1180px, calc(100% - 2rem)); min-height: calc(100vh - 180px); margin: 0 auto; padding: clamp(2.5rem, 6vw, 5rem) 0; }
 .site-footer { display: flex; justify-content: space-between; gap: 2rem; padding: 2rem clamp(1rem, 5vw, 5rem); color: var(--muted); border-top: 1px solid var(--line); font-size: .85rem; }
 .site-footer p { margin: 0; }

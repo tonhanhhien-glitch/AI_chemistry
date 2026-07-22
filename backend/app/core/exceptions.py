@@ -27,8 +27,8 @@ class UnsupportedFormulaSyntaxError(FormulaParseError):
 
     def __init__(self) -> None:
         super().__init__(
-            "Cú pháp công thức chưa được hỗ trợ. Chỉ dùng công thức phẳng và "
-            "điện tích dạng NH4+, NO3- hoặc SO4^2-."
+            "Formula syntax not supported. Use only flat formulas and charges "
+            "in the form NH4+, NO3- or SO4^2-."
         )
 
 
@@ -53,7 +53,7 @@ class UnknownElementError(ChemistryDomainError):
     code = "UNSUPPORTED_ELEMENT"
 
     def __init__(self, symbol: str) -> None:
-        super().__init__(f"Nguyên tố '{symbol}' chưa nằm trong phạm vi hỗ trợ.")
+        super().__init__(f"Element '{symbol}' is not within the supported scope.")
 
 
 class InvalidAtomCountError(ChemistryDomainError):
@@ -61,7 +61,7 @@ class InvalidAtomCountError(ChemistryDomainError):
 
     def __init__(self, symbol: str, count: object) -> None:
         super().__init__(
-            f"Số nguyên tử của {symbol} phải là số nguyên dương; nhận {count!r}."
+            f"The atom count of {symbol} must be a positive integer; got {count!r}."
         )
 
 
@@ -70,8 +70,8 @@ class UnsupportedMoleculeError(ChemistryDomainError):
 
     def __init__(self, query: str) -> None:
         super().__init__(
-            f"Chưa có cấu trúc đã kiểm chứng cho '{query}'. "
-            "Ứng dụng không suy đoán liên kết chỉ từ thành phần nguyên tố."
+            f"There is no verified structure for '{query}'. "
+            "The app does not infer bonding from elemental composition alone."
         )
 
 
@@ -81,7 +81,7 @@ class AmbiguousMoleculeError(ChemistryDomainError):
 
     def __init__(self, candidates: list[dict[str, object]]) -> None:
         super().__init__(
-            "Công thức có thể biểu diễn nhiều cấu tạo. Hãy chọn một chất cụ thể.",
+            "The formula may represent several structures. Please pick a specific substance.",
             candidates=candidates,
         )
 

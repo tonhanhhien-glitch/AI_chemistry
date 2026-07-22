@@ -12,6 +12,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -68,8 +69,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp",
       "polarity_note_vi": "Phân tử không phân cực do hai moment liên kết triệt tiêu trong cấu trúc thẳng đối xứng.",
+      "polarity_note_en": "The molecule is nonpolar because the two bond moments cancel in the symmetric linear structure.",
       "smiles": "O=C=O",
-      "teaching_note_vi": "Liên kết đôi vẫn được tính là một miền electron trong VSEPR."
+      "teaching_note_vi": "Liên kết đôi vẫn được tính là một miền electron trong VSEPR.",
+      "teaching_note_en": "A double bond still counts as a single electron domain in VSEPR."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -77,6 +80,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -137,8 +141,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp²",
       "polarity_note_vi": "Phân tử không phân cực về tổng thể nhờ hình học đối xứng.",
+      "polarity_note_en": "The molecule is nonpolar overall thanks to its symmetric geometry.",
       "smiles": "B(F)(F)F",
-      "teaching_note_vi": "B chỉ có sáu electron quanh nguyên tử trung tâm; đây là ngoại lệ thiếu electron."
+      "teaching_note_vi": "B chỉ có sáu electron quanh nguyên tử trung tâm; đây là ngoại lệ thiếu electron.",
+      "teaching_note_en": "B has only six electrons around the central atom; this is an electron-deficient exception."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -146,6 +152,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -186,6 +193,7 @@
       ],
       "resonance_forms": 2,
       "resonance_note_vi": "Các cách biểu diễn cộng hưởng cho thấy mật độ liên kết S–O được delocal hoá; một công thức Lewis đơn lẻ không mô tả đầy đủ.",
+      "resonance_note_en": "The resonance representations show that the S-O bond density is delocalized; a single Lewis structure does not describe it fully.",
       "exception_flags": {
         "electron_deficient": false,
         "expanded_octet": true,
@@ -201,10 +209,13 @@
       "molecular_geometry_vi": "gấp khúc",
       "ideal_angle": "<120°",
       "distortion_note_vi": "Cặp electron tự do trên S nén góc O–S–O.",
+      "distortion_note_en": "The lone pair on S compresses the O-S-O angle.",
       "hybridization": "sp²",
       "polarity_note_vi": "Phân tử phân cực vì hình gấp khúc làm các moment liên kết không triệt tiêu.",
+      "polarity_note_en": "The molecule is polar because the bent shape leaves the bond moments uncancelled.",
       "smiles": "O=S=O",
-      "teaching_note_vi": "Hình học miền electron và hình học phân tử khác nhau vì cặp electron tự do không được vẽ như một nguyên tử."
+      "teaching_note_vi": "Hình học miền electron và hình học phân tử khác nhau vì cặp electron tự do không được vẽ như một nguyên tử.",
+      "teaching_note_en": "The electron-domain geometry and the molecular geometry differ because the lone pair is not drawn as an atom."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -212,6 +223,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -267,10 +279,13 @@
       "molecular_geometry_vi": "gấp khúc",
       "ideal_angle": "~104.5°",
       "distortion_note_vi": "Hai cặp electron tự do nén góc H–O–H từ góc tứ diện lý tưởng.",
+      "distortion_note_en": "Two lone pairs compress the H-O-H angle from the ideal tetrahedral angle.",
       "hybridization": "sp³",
       "polarity_note_vi": "Phân tử phân cực do hình gấp khúc.",
+      "polarity_note_en": "The molecule is polar because of its bent shape.",
       "smiles": "O",
-      "teaching_note_vi": "Cặp electron tự do đẩy mạnh hơn cặp electron liên kết."
+      "teaching_note_vi": "Cặp electron tự do đẩy mạnh hơn cặp electron liên kết.",
+      "teaching_note_en": "A lone pair repels more strongly than a bonding pair."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -278,6 +293,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -337,10 +353,13 @@
       "molecular_geometry_vi": "chóp tam giác",
       "ideal_angle": "~107°",
       "distortion_note_vi": "Cặp electron tự do nén góc H–N–H.",
+      "distortion_note_en": "The lone pair compresses the H-N-H angle.",
       "hybridization": "sp³",
       "polarity_note_vi": "Phân tử phân cực do hình chóp tam giác.",
+      "polarity_note_en": "The molecule is polar because of its trigonal pyramidal shape.",
       "smiles": "N",
-      "teaching_note_vi": "Bốn miền electron cho hình học miền tứ diện nhưng chỉ ba nguyên tử tạo hình chóp tam giác."
+      "teaching_note_vi": "Bốn miền electron cho hình học miền tứ diện nhưng chỉ ba nguyên tử tạo hình chóp tam giác.",
+      "teaching_note_en": "Four electron domains give a tetrahedral domain geometry, but only three atoms form a trigonal pyramid."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -348,6 +367,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -413,8 +433,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp³",
       "polarity_note_vi": "Phân tử không phân cực nhờ tứ diện đối xứng.",
+      "polarity_note_en": "The molecule is nonpolar thanks to its symmetric tetrahedron.",
       "smiles": "C",
-      "teaching_note_vi": "Bốn liên kết tương đương hướng đến bốn đỉnh của tứ diện."
+      "teaching_note_vi": "Bốn liên kết tương đương hướng đến bốn đỉnh của tứ diện.",
+      "teaching_note_en": "Four equivalent bonds point to the four vertices of a tetrahedron."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -422,6 +444,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -487,8 +510,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp³",
       "polarity_note_vi": "Đây là ion đa nguyên tử mang điện tích +1; tính phân cực phân tử trung hoà không áp dụng trực tiếp.",
+      "polarity_note_en": "This is a polyatomic ion with a +1 charge; the polarity of a neutral molecule does not apply directly.",
       "smiles": "[NH4+]",
-      "teaching_note_vi": "Điện tích dương làm giảm tổng electron hoá trị đi một electron."
+      "teaching_note_vi": "Điện tích dương làm giảm tổng electron hoá trị đi một electron.",
+      "teaching_note_en": "The positive charge reduces the total valence electron count by one electron."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -496,6 +521,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -564,8 +590,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp³d",
       "polarity_note_vi": "Mô hình pha khí lý tưởng đối xứng và không phân cực; trạng thái rắn có cấu trúc ion khác.",
+      "polarity_note_en": "The idealized gas-phase model is symmetric and nonpolar; the solid state has a different ionic structure.",
       "smiles": "P(Cl)(Cl)(Cl)(Cl)Cl",
-      "teaching_note_vi": "Ba vị trí xích đạo và hai vị trí trục không hoàn toàn tương đương."
+      "teaching_note_vi": "Ba vị trí xích đạo và hai vị trí trục không hoàn toàn tương đương.",
+      "teaching_note_en": "The three equatorial and two axial positions are not fully equivalent."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -573,6 +601,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -635,10 +664,13 @@
       "molecular_geometry_vi": "bập bênh",
       "ideal_angle": "<90°, <120°, 180°",
       "distortion_note_vi": "Cặp electron tự do ở vị trí xích đạo làm biến dạng các góc.",
+      "distortion_note_en": "The equatorial lone pair distorts the angles.",
       "hybridization": "sp³d",
       "polarity_note_vi": "Phân tử phân cực vì hình bập bênh không đối xứng.",
+      "polarity_note_en": "The molecule is polar because the seesaw shape is not symmetric.",
       "smiles": "S(F)(F)(F)F",
-      "teaching_note_vi": "Cặp tự do chọn vị trí xích đạo để giảm tương tác 90°."
+      "teaching_note_vi": "Cặp tự do chọn vị trí xích đạo để giảm tương tác 90°.",
+      "teaching_note_en": "The lone pair takes an equatorial position to reduce 90-degree interactions."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -646,6 +678,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -704,10 +737,13 @@
       "molecular_geometry_vi": "chữ T",
       "ideal_angle": "~90°, 180°",
       "distortion_note_vi": "Hai cặp tự do xích đạo nén nhẹ góc liên kết.",
+      "distortion_note_en": "Two equatorial lone pairs slightly compress the bond angles.",
       "hybridization": "sp³d",
       "polarity_note_vi": "Phân tử phân cực do hình chữ T.",
+      "polarity_note_en": "The molecule is polar because of its T-shape.",
       "smiles": "Cl(F)(F)F",
-      "teaching_note_vi": "Cl có thể là nguyên tử trung tâm trong hợp chất liên halogen; không được loại bằng quy tắc cứng."
+      "teaching_note_vi": "Cl có thể là nguyên tử trung tâm trong hợp chất liên halogen; không được loại bằng quy tắc cứng.",
+      "teaching_note_en": "Cl can be the central atom in an interhalogen compound; do not rule it out with a rigid rule."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -715,6 +751,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -771,8 +808,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp³d",
       "polarity_note_vi": "Phân tử không phân cực nhờ hai liên kết đối nhau.",
+      "polarity_note_en": "The molecule is nonpolar thanks to its two opposing bonds.",
       "smiles": "F[Xe]F",
-      "teaching_note_vi": "Ba cặp tự do chiếm toàn bộ vị trí xích đạo, để hai F ở trục."
+      "teaching_note_vi": "Ba cặp tự do chiếm toàn bộ vị trí xích đạo, để hai F ở trục.",
+      "teaching_note_en": "Three lone pairs occupy all equatorial positions, leaving the two F atoms axial."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -780,6 +819,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -852,8 +892,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp³d²",
       "polarity_note_vi": "Phân tử không phân cực nhờ cấu trúc bát diện đối xứng.",
+      "polarity_note_en": "The molecule is nonpolar thanks to its symmetric octahedral structure.",
       "smiles": "S(F)(F)(F)(F)(F)F",
-      "teaching_note_vi": "Sáu miền liên kết phân bố theo các trục ±x, ±y, ±z."
+      "teaching_note_vi": "Sáu miền liên kết phân bố theo các trục ±x, ±y, ±z.",
+      "teaching_note_en": "Six bonding domains are distributed along the +/-x, +/-y, +/-z axes."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -861,6 +903,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -927,10 +970,13 @@
       "molecular_geometry_vi": "chóp vuông",
       "ideal_angle": "~90°, 180°",
       "distortion_note_vi": "Cặp electron tự do đối diện đỉnh chóp gây biến dạng nhẹ.",
+      "distortion_note_en": "The lone pair opposite the pyramid apex causes slight distortion.",
       "hybridization": "sp³d²",
       "polarity_note_vi": "Phân tử phân cực do hình chóp vuông.",
+      "polarity_note_en": "The molecule is polar because of its square pyramidal shape.",
       "smiles": "Br(F)(F)(F)(F)F",
-      "teaching_note_vi": "Br là nguyên tử trung tâm hợp lệ trong hợp chất liên halogen."
+      "teaching_note_vi": "Br là nguyên tử trung tâm hợp lệ trong hợp chất liên halogen.",
+      "teaching_note_en": "Br is a valid central atom in an interhalogen compound."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -938,6 +984,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -1002,8 +1049,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp³d²",
       "polarity_note_vi": "Phân tử không phân cực nhờ cấu trúc vuông phẳng đối xứng.",
+      "polarity_note_en": "The molecule is nonpolar thanks to its symmetric square planar structure.",
       "smiles": "[Xe](F)(F)(F)F",
-      "teaching_note_vi": "Hai cặp electron tự do nằm đối diện nhau trên trục vuông góc mặt phẳng XeF4."
+      "teaching_note_vi": "Hai cặp electron tự do nằm đối diện nhau trên trục vuông góc mặt phẳng XeF4.",
+      "teaching_note_en": "The two lone pairs sit opposite each other on the axis perpendicular to the XeF4 plane."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -1011,6 +1060,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -1055,6 +1105,7 @@
       ],
       "resonance_forms": 3,
       "resonance_note_vi": "Có ba công thức cộng hưởng tương đương; liên kết đôi có thể ở bất kỳ O nào.",
+      "resonance_note_en": "There are three equivalent resonance structures; the double bond can be on any O.",
       "exception_flags": {
         "electron_deficient": false,
         "expanded_octet": false,
@@ -1072,8 +1123,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp²",
       "polarity_note_vi": "Đây là ion đa nguyên tử; ba liên kết N–O tương đương trong cấu trúc cộng hưởng thực.",
+      "polarity_note_en": "This is a polyatomic ion; the three N-O bonds are equivalent in the true resonance structure.",
       "smiles": "[O-][N+](=O)[O-]",
-      "teaching_note_vi": "Không chọn một liên kết đôi cố định làm cấu trúc thật; cộng hưởng mô tả sự delocal hoá."
+      "teaching_note_vi": "Không chọn một liên kết đôi cố định làm cấu trúc thật; cộng hưởng mô tả sự delocal hoá.",
+      "teaching_note_en": "Do not pick one fixed double bond as the real structure; resonance describes the delocalization."
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
@@ -1081,6 +1134,7 @@
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
       "three_d_source": {
         "kind": "idealized_vsepr_template",
         "verified_reference": false
@@ -1125,6 +1179,7 @@
       ],
       "resonance_forms": 3,
       "resonance_note_vi": "Có ba công thức cộng hưởng tương đương; điện tích và liên kết π được delocal hoá trên ba O.",
+      "resonance_note_en": "There are three equivalent resonance structures; the charge and the pi bond are delocalized over the three O atoms.",
       "exception_flags": {
         "electron_deficient": false,
         "expanded_octet": false,
@@ -1142,8 +1197,10 @@
       "distortion_note_vi": null,
       "hybridization": "sp²",
       "polarity_note_vi": "Đây là ion đa nguyên tử có ba liên kết C–O tương đương trong lai cộng hưởng.",
+      "polarity_note_en": "This is a polyatomic ion with three equivalent C-O bonds in the resonance hybrid.",
       "smiles": "[O-]C(=O)[O-]",
-      "teaching_note_vi": "Tổng điện tích hình thức của biểu diễn Lewis phải bằng −2."
+      "teaching_note_vi": "Tổng điện tích hình thức của biểu diễn Lewis phải bằng −2.",
+      "teaching_note_en": "The total formal charge of the Lewis representation must equal -2."
     }
   ]
 }

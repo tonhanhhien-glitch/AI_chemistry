@@ -21,7 +21,7 @@ class AnalysisRequest(BaseModel):
     @model_validator(mode="after")
     def require_query(self) -> "AnalysisRequest":
         if not self.formula and not self.molecule_id:
-            raise ValueError("Cần cung cấp formula hoặc molecule_id.")
+            raise ValueError("Either formula or molecule_id must be provided.")
         return self
 
 

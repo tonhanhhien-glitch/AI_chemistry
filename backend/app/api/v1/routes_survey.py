@@ -25,7 +25,7 @@ def get_teacher_export(
 ) -> Response:
     configured = settings.TEACHER_EXPORT_TOKEN
     if not configured or not secrets.compare_digest(x_teacher_token, configured):
-        raise HTTPException(status_code=403, detail={"code": "EXPORT_FORBIDDEN", "message": "Token xuất dữ liệu không hợp lệ."})
+        raise HTTPException(status_code=403, detail={"code": "EXPORT_FORBIDDEN", "message": "The data-export token is invalid."})
     return Response(
         content=export_study_csv(kind), media_type="text/csv; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{kind}.csv"'},

@@ -11,4 +11,4 @@ def save_feedback(request: FeedbackRequest) -> PersistenceResponse:
         "molecule_id": request.molecule_id, "rating": request.rating,
         "category": request.category, "comment": request.comment,
     })
-    return PersistenceResponse(session_id=session_id, message_vi="Cảm ơn bạn. Phản hồi ẩn danh đã được lưu.")
+    return PersistenceResponse(session_id=session_id, message_vi="Thank you. Your anonymous feedback has been saved.")

@@ -27,7 +27,7 @@ def analyze(request: AnalysisRequest) -> AnalysisResponse:
     if structure3d.warning_vi:
         warnings.append(structure3d.warning_vi)
     if "pending_expert" in record["review_status"]:
-        warnings.append("Bản ghi thuộc bộ golden nội bộ và đang chờ biên bản ký duyệt của chuyên gia hoá học bên ngoài.")
+        warnings.append("This record belongs to the internal golden set and is awaiting external chemistry-expert sign-off.")
     return AnalysisResponse(
         molecule=molecule, lewis=lewis, vsepr=vsepr,
         properties=get_properties(record), structure3d=structure3d,

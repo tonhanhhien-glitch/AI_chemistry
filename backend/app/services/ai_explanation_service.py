@@ -63,7 +63,7 @@ def generate_explanation(record: dict[str, Any], level: Literal["basic", "interm
     if key in _CACHE:
         return _CACHE[key]
     if not (settings.ENABLE_CLAUDE and settings.ANTHROPIC_API_KEY):
-        result = deterministic_explanation(record, level, language, "Claude chưa được cấu hình; dùng bản giải thích xác định.")
+        result = deterministic_explanation(record, level, language, "Claude is not configured; using the deterministic explanation.")
         _CACHE[key] = result
         return result
     problems: list[str] = []
@@ -79,6 +79,6 @@ def generate_explanation(record: dict[str, Any], level: Literal["basic", "interm
         except Exception as exc:
             problems = [type(exc).__name__]
             break
-    result = deterministic_explanation(record, level, language, "Phản hồi AI không khả dụng hoặc mâu thuẫn; đã thay bằng mẫu xác định.")
+    result = deterministic_explanation(record, level, language, "The AI response was unavailable or contradictory; replaced with the deterministic template.")
     _CACHE[key] = result
     return result

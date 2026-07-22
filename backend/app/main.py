@@ -10,7 +10,7 @@ from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.exceptions import ChemistryDomainError, FormulaParseError
 
-app = FastAPI(title="VSEPR-AI", version="1.0.0", description="API giáo dục Lewis/VSEPR với bộ quy tắc xác định.")
+app = FastAPI(title="VSEPR-AI", version="1.0.0", description="Educational Lewis/VSEPR API with a deterministic rule set..")
 
 app.add_middleware(
     CORSMiddleware,

@@ -10,7 +10,7 @@ _ATOMIC_WEIGHTS = {"H": 1.008, "B": 10.81, "C": 12.011, "N": 14.007, "O": 15.999
 def get_properties(record: dict[str, Any]) -> list[PropertyItem]:
     mass = sum(_ATOMIC_WEIGHTS[symbol] * count for symbol, count in record["atom_inventory"].items())
     return [
-        PropertyItem(key="molar_mass", label_vi="Khối lượng mol tính từ nguyên tử khối chuẩn", value=round(mass, 3), unit="g/mol", provenance="computed", note_vi="Giá trị tính theo thành phần nguyên tố, không lấy từ LLM."),
-        PropertyItem(key="polarity", label_vi="Nhận xét phân cực", value=record["polarity_note_vi"], provenance="curated", verified_teaching_fact=True),
-        PropertyItem(key="review_status", label_vi="Trạng thái duyệt dữ liệu", value=record["review_status"], provenance="curated", note_vi="Chưa gắn nhãn kiểm chứng bên ngoài cho đến khi có biên bản chuyên gia."),
+        PropertyItem(key="molar_mass", label_vi="Molar mass computed from standard atomic weights", value=round(mass, 3), unit="g/mol", provenance="computed", note_vi="Value computed from elemental composition, not taken from an LLM."),
+        PropertyItem(key="polarity", label_vi="Polarity note", value=record.get("polarity_note_en") or record["polarity_note_vi"], provenance="curated", verified_teaching_fact=True),
+        PropertyItem(key="review_status", label_vi="Data review status", value=record["review_status"], provenance="curated", note_vi="Not labelled externally verified until an expert sign-off exists."),
     ]

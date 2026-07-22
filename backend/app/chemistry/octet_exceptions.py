@@ -19,13 +19,13 @@ def classify_octet_exception(
     odd = total_valence % 2 == 1
     notes: list[str] = []
     if electron_deficient:
-        notes.append("Nguyên tử trung tâm chưa đủ bát tử.")
+        notes.append("The central atom does not have a complete octet.")
     if expanded:
         notes.append(
-            "Biểu diễn Lewis dùng bát tử mở rộng cho nguyên tử chu kỳ 3 trở lên."
+            "The Lewis representation uses an expanded octet for period-3+ atoms."
         )
     if odd:
-        notes.append("Tổng electron hoá trị là số lẻ.")
+        notes.append("The total number of valence electrons is odd.")
     return OctetException(
         electron_deficient, expanded, odd, " ".join(notes) or None
     )

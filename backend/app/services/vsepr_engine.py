@@ -13,9 +13,9 @@ def analyze_vsepr(record: dict[str, Any]) -> VSEPRResult:
     lone_pairs = int(record["lone_pair_domains"])
     rule = get_vsepr_rule(bonding, lone_pairs)
     if record["ax_en"] != rule.ax_en:
-        raise ChemistryValidationError("AXnEm trong dữ liệu không khớp số miền electron.")
+        raise ChemistryValidationError("The AXnEm in the data does not match the electron-domain count.")
     if record["electron_geometry"] != rule.electron_geometry or record["molecular_geometry"] != rule.molecular_geometry:
-        raise ChemistryValidationError("Hình học trong dữ liệu không khớp bảng VSEPR.")
+        raise ChemistryValidationError("The geometry in the data does not match the VSEPR table.")
     hybridization, warning = pedagogical_hybridization(bonding + lone_pairs)
     return VSEPRResult(
         bonding_domains=bonding, lone_pair_domains=lone_pairs, steric_number=bonding + lone_pairs,

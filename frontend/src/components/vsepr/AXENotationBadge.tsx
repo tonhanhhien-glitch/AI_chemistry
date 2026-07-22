@@ -1,3 +1,6 @@
+import { useI18n } from "../../i18n";
+
 export default function AXENotationBadge({ notation }: { notation: string }) {
-  return <span className="ax-badge" aria-label={`Ký hiệu VSEPR ${notation}`}>{notation}</span>;
+  const { t } = useI18n();
+  return <span className="ax-badge" aria-label={t("vsepr.badgeAria", { notation })}>{notation}</span>;
 }

@@ -11,13 +11,13 @@ def choose_central_atom(atoms: Mapping[str, int], curated_override: str | None =
 
     if curated_override:
         if curated_override not in atoms:
-            raise ChemistryValidationError("Nguyên tử trung tâm không có trong công thức.")
+            raise ChemistryValidationError("The central atom is not present in the formula.")
         if curated_override in {"H", "F"}:
-            raise ChemistryValidationError("H và F không thể là nguyên tử trung tâm trong phạm vi này.")
+            raise ChemistryValidationError("H and F cannot be the central atom within this scope.")
         return curated_override
     candidates = [symbol for symbol in atoms if symbol not in {"H", "F"}]
     if not candidates:
-        raise ChemistryValidationError("Không xác định được nguyên tử trung tâm.")
+        raise ChemistryValidationError("Could not determine the central atom.")
     unique = [symbol for symbol in candidates if atoms[symbol] == 1]
     pool = unique or candidates
     return min(

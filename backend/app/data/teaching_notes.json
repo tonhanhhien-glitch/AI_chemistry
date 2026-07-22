@@ -1,5 +1,5 @@
 {
-  "_description": "Short Vietnamese teaching prompts keyed by curated molecule ID.",
+  "_description": "Short Vietnamese (notes) and English (notes_en) teaching prompts keyed by curated molecule ID.",
   "schema_version": "1.0",
   "notes": {
     "co2": "Ví dụ CO2: hình học phân tử thẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
@@ -18,5 +18,23 @@
     "xef4": "Ví dụ XeF4: hình học phân tử vuông phẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
     "no3-minus": "Ví dụ NO3-: hình học phân tử tam giác phẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng.",
     "co3-2minus": "Ví dụ CO3^2-: hình học phân tử tam giác phẳng. Hãy đếm miền liên kết và cặp electron tự do trước khi tra bảng."
+  },
+  "notes_en": {
+    "co2": "Example CO2: linear molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "bf3": "Example BF3: trigonal planar molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "so2": "Example SO2: bent molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "h2o": "Example H2O: bent molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "nh3": "Example NH3: trigonal pyramidal molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "ch4": "Example CH4: tetrahedral molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "nh4-plus": "Example NH4+: tetrahedral molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "pcl5": "Example PCl5: trigonal bipyramidal molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "sf4": "Example SF4: seesaw molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "clf3": "Example ClF3: T-shaped molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "xef2": "Example XeF2: linear molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "sf6": "Example SF6: octahedral molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "brf5": "Example BrF5: square pyramidal molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "xef4": "Example XeF4: square planar molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "no3-minus": "Example NO3-: trigonal planar molecular geometry. Count the bonding domains and lone pairs before consulting the table.",
+    "co3-2minus": "Example CO3^2-: trigonal planar molecular geometry. Count the bonding domains and lone pairs before consulting the table."
   }
 }

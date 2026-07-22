@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
+import { useI18n } from "../i18n";
 
 export default function NotFoundPage() {
-  return <PageContainer><section className="not-found"><p className="eyebrow">Lỗi 404</p><h1>Không tìm thấy trang</h1><p>Đường dẫn này không tồn tại hoặc đã thay đổi.</p><Link className="button button--link" to="/">Về trang chủ</Link></section></PageContainer>;
+  const { t } = useI18n();
+  return <PageContainer><section className="not-found"><p className="eyebrow">{t("notFound.eyebrow")}</p><h1>{t("notFound.title")}</h1><p>{t("notFound.body")}</p><Link className="button button--link" to="/">{t("notFound.home")}</Link></section></PageContainer>;
 }

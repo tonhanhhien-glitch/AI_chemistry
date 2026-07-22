@@ -15,10 +15,10 @@ def calculate_formal_charge(symbol: str, nonbonding_electrons: int, bonding_elec
         for value in values
     ):
         raise ChemistryValidationError(
-            "Số electron liên kết và không liên kết phải là số nguyên không âm."
+            "Bonding and nonbonding electron counts must be non-negative integers."
         )
     if bonding_electrons % 2:
-        raise ChemistryValidationError("Số electron liên kết phải là số chẵn.")
+        raise ChemistryValidationError("The number of bonding electrons must be even.")
     return (
         get_valence_electrons(symbol)
         - nonbonding_electrons
@@ -32,5 +32,5 @@ def validate_formal_charge_sum(
     values = charges.values() if isinstance(charges, Mapping) else charges
     if sum(values) != molecular_charge:
         raise ChemistryValidationError(
-            "Tổng điện tích hình thức không bằng điện tích toàn phần."
+            "The sum of formal charges does not equal the overall charge."
         )

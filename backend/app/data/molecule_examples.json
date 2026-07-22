@@ -5,82 +5,98 @@
     {
       "molecule_id": "co2",
       "formula": "CO2",
-      "geometry_vi": "thẳng"
+      "geometry_vi": "thẳng",
+      "geometry_en": "linear"
     },
     {
       "molecule_id": "bf3",
       "formula": "BF3",
-      "geometry_vi": "tam giác phẳng"
+      "geometry_vi": "tam giác phẳng",
+      "geometry_en": "trigonal planar"
     },
     {
       "molecule_id": "so2",
       "formula": "SO2",
-      "geometry_vi": "gấp khúc"
+      "geometry_vi": "gấp khúc",
+      "geometry_en": "bent"
     },
     {
       "molecule_id": "h2o",
       "formula": "H2O",
-      "geometry_vi": "gấp khúc"
+      "geometry_vi": "gấp khúc",
+      "geometry_en": "bent"
     },
     {
       "molecule_id": "nh3",
       "formula": "NH3",
-      "geometry_vi": "chóp tam giác"
+      "geometry_vi": "chóp tam giác",
+      "geometry_en": "trigonal pyramidal"
     },
     {
       "molecule_id": "ch4",
       "formula": "CH4",
-      "geometry_vi": "tứ diện"
+      "geometry_vi": "tứ diện",
+      "geometry_en": "tetrahedral"
     },
     {
       "molecule_id": "nh4-plus",
       "formula": "NH4+",
-      "geometry_vi": "tứ diện"
+      "geometry_vi": "tứ diện",
+      "geometry_en": "tetrahedral"
     },
     {
       "molecule_id": "pcl5",
       "formula": "PCl5",
-      "geometry_vi": "lưỡng tháp tam giác"
+      "geometry_vi": "lưỡng tháp tam giác",
+      "geometry_en": "trigonal bipyramidal"
     },
     {
       "molecule_id": "sf4",
       "formula": "SF4",
-      "geometry_vi": "bập bênh"
+      "geometry_vi": "bập bênh",
+      "geometry_en": "seesaw"
     },
     {
       "molecule_id": "clf3",
       "formula": "ClF3",
-      "geometry_vi": "chữ T"
+      "geometry_vi": "chữ T",
+      "geometry_en": "T-shaped"
     },
     {
       "molecule_id": "xef2",
       "formula": "XeF2",
-      "geometry_vi": "thẳng"
+      "geometry_vi": "thẳng",
+      "geometry_en": "linear"
     },
     {
       "molecule_id": "sf6",
       "formula": "SF6",
-      "geometry_vi": "bát diện"
+      "geometry_vi": "bát diện",
+      "geometry_en": "octahedral"
     },
     {
       "molecule_id": "brf5",
       "formula": "BrF5",
-      "geometry_vi": "chóp vuông"
+      "geometry_vi": "chóp vuông",
+      "geometry_en": "square pyramidal"
     },
     {
       "molecule_id": "xef4",
       "formula": "XeF4",
-      "geometry_vi": "vuông phẳng"
+      "geometry_vi": "vuông phẳng",
+      "geometry_en": "square planar"
     },
     {
       "molecule_id": "no3-minus",
       "formula": "NO3-",
-      "geometry_vi": "tam giác phẳng"
+      "geometry_vi": "tam giác phẳng",
+      "geometry_en": "trigonal planar"
     },
     {
       "molecule_id": "co3-2minus",
       "formula": "CO3^2-",
-      "geometry_vi": "tam giác phẳng"
+      "geometry_vi": "tam giác phẳng",
+      "geometry_en": "trigonal planar"
     }
   ]
 }

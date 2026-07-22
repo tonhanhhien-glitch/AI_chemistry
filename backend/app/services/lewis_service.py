@@ -22,13 +22,13 @@ def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
     lone_pairs = record["lone_pairs"]
     charges = record["formal_charges"]
     if not (len(symbols) == len(lone_pairs) == len(charges)):
-        raise ChemistryValidationError("Dữ liệu nguyên tử Lewis không đồng nhất.")
+        raise ChemistryValidationError("Lewis atom data is inconsistent.")
     if len(orders) != len(symbols) - 1:
-        raise ChemistryValidationError("Khung liên kết Lewis không đồng nhất.")
+        raise ChemistryValidationError("The Lewis bond framework is inconsistent.")
     computed_total = total_valence_electrons(record["atom_inventory"], record["charge"])
     represented_total = 2 * sum(orders) + 2 * sum(lone_pairs)
     if computed_total != record["total_valence_electrons"] or represented_total != computed_total:
-        raise ChemistryValidationError("Biểu diễn Lewis không bảo toàn electron hoá trị.")
+        raise ChemistryValidationError("The Lewis representation does not conserve valence electrons.")
     validate_formal_charge_sum(charges, record["charge"])
     positions = [(160.0, 140.0), *_positions(len(symbols) - 1)]
     atoms = [LewisAtom(id=f"a{i}", element=symbol, x=positions[i][0], y=positions[i][1], lone_pairs=lone_pairs[i], formal_charge=charges[i]) for i, symbol in enumerate(symbols)]
@@ -36,11 +36,11 @@ def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
     flags = dict(record["exception_flags"])
     notes = []
     if flags["electron_deficient"]:
-        notes.append("Nguyên tử trung tâm thiếu electron so với quy tắc bát tử.")
+        notes.append("The central atom is electron-deficient relative to the octet rule.")
     if flags["expanded_octet"]:
-        notes.append("Biểu diễn Lewis dùng bát tử mở rộng.")
+        notes.append("The Lewis representation uses an expanded octet.")
     if flags["odd_electron"]:
-        notes.append("Loài có số electron hoá trị lẻ.")
+        notes.append("The species has an odd number of valence electrons.")
     return LewisStructure(
         atoms=atoms, bonds=bonds, central_atom_id="a0", total_valence_electrons=computed_total,
         resonance_forms=record.get("resonance_forms", 1), resonance_note_vi=record.get("resonance_note_vi"),
