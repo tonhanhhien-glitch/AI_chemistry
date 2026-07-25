@@ -27,5 +27,5 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
     viewer.render();
   }, [labels, structure, style]);
   if (failed) return <ViewerFallback />;
-  return <div className="viewer-wrap"><ViewerToolbar style={style} labels={labels} onStyle={setStyle} onLabels={setLabels} onReset={() => { viewerRef.current?.zoomTo(); viewerRef.current?.render(); }} onFullscreen={() => { void containerRef.current?.parentElement?.requestFullscreen?.(); }} /><div className="mol-viewer" ref={containerRef} aria-label={t("viewer3d.viewerAria")} /><p className="viewer-help">{t("viewer3d.help")}</p>{structure.warning_vi && <p className="warning-note">{structure.warning_vi}</p>}</div>;
+  return <div className="viewer-wrap"><ViewerToolbar style={style} labels={labels} onStyle={setStyle} onLabels={setLabels} onReset={() => { viewerRef.current?.zoomTo(); viewerRef.current?.render(); }} onFullscreen={() => { void containerRef.current?.parentElement?.requestFullscreen?.(); }} /><div className="mol-viewer" ref={containerRef} aria-label={t("viewer3d.viewerAria")} /><p className="viewer-help">{t("viewer3d.help")}</p></div>;
 }

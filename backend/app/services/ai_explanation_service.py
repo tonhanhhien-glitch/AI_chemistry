@@ -25,7 +25,7 @@ def deterministic_explanation(record: dict[str, Any], level: str = "intermediate
             ax_en=f"The central atom has {record['bonding_domains']} bonding domains and {record['lone_pair_domains']} lone-pair domains, giving {record['ax_en']}.",
             electron_geometry=f"Its electron-domain geometry is {record['electron_geometry']}.",
             molecular_geometry=f"Its molecular geometry is {record['molecular_geometry']}, with ideal angle(s) {record['ideal_angle']}.",
-            structure_property=record["polarity_note_vi"], learning_tip="Count electron domains around the central atom; a multiple bond counts as one domain.",
+            structure_property=record["polarity_note_en"], learning_tip="Count electron domains around the central atom; a multiple bond counts as one domain.",
             disclaimer="This explanation restates deterministic rule-engine facts. The 3D fallback is illustrative.",
         )
     else:
@@ -43,7 +43,10 @@ def deterministic_explanation(record: dict[str, Any], level: str = "intermediate
 def _call_claude(record: dict[str, Any], level: str, language: str, correction: str | None = None) -> ExplanationSections:
     from anthropic import Anthropic  # optional dependency, imported only when used
 
-    facts = {key: record[key] for key in ("formula", "charge", "total_valence_electrons", "bonding_domains", "lone_pair_domains", "ax_en", "electron_geometry", "molecular_geometry", "ideal_angle", "polarity_note_vi", "teaching_note_vi")}
+    note_suffix = "en" if language == "en" else "vi"
+    facts = {key: record[key] for key in ("formula", "charge", "total_valence_electrons", "bonding_domains", "lone_pair_domains", "ax_en", "electron_geometry", "molecular_geometry", "ideal_angle")}
+    facts["polarity_note"] = record[f"polarity_note_{note_suffix}"]
+    facts["teaching_note"] = record[f"teaching_note_{note_suffix}"]
     system = (
         "You are a chemistry teaching assistant. The supplied JSON facts are immutable. "
         "Never change Lewis structure, formal charge, domain counts, AXnEm, geometry, or angles. "

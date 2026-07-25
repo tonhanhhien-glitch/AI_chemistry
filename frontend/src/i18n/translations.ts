@@ -64,6 +64,20 @@ const vi: Catalogue = {
   "analysis.step.properties": "Tính chất & nguồn",
   "analysis.step.explanation": "Giải thích sư phạm",
   "analysis.step.feedback": "Phản hồi ẩn danh",
+  "analysis.pane.info": "Chi tiết phân tích",
+  "analysis.pane.collapse": "Thu gọn bảng {title}",
+  "analysis.pane.expand": "Mở bảng {title}",
+
+  // Chatbot
+  "chat.title": "Trợ lý hỏi đáp AI",
+  "chat.empty": "Hỏi bất kỳ điều gì về {formula}. Ví dụ:",
+  "chat.placeholder": "Nhập câu hỏi…",
+  "chat.send": "Gửi",
+  "chat.sending": "Đang trả lời…",
+  "chat.disclaimer": "AI có thể sai sót. Mọi kết luận Lewis, AXnEm, hình học và góc đều đến từ bộ quy tắc xác định và không thể bị thay đổi.",
+  "chat.suggest.1": "Vì sao phân tử này có hình dạng như vậy?",
+  "chat.suggest.2": "Phân tử này có phân cực không?",
+  "chat.suggest.3": "Giải thích ký hiệu AXnEm giúp mình.",
 
   // Examples page
   "examples.loadError": "Không tải được ví dụ. Hãy kiểm tra backend.",
@@ -287,6 +301,20 @@ const en: Catalogue = {
   "analysis.step.properties": "Properties & sources",
   "analysis.step.explanation": "Pedagogical explanation",
   "analysis.step.feedback": "Anonymous feedback",
+  "analysis.pane.info": "Analysis details",
+  "analysis.pane.collapse": "Collapse the {title} panel",
+  "analysis.pane.expand": "Open the {title} panel",
+
+  // Chatbot
+  "chat.title": "AI chat assistant",
+  "chat.empty": "Ask anything about {formula}. For example:",
+  "chat.placeholder": "Type a question...",
+  "chat.send": "Send",
+  "chat.sending": "Thinking…",
+  "chat.disclaimer": "The AI may make mistakes. Every Lewis, AXnEm, geometry and angle conclusion comes from the deterministic rule set and cannot be changed.",
+  "chat.suggest.1": "Why does this molecule have this shape?",
+  "chat.suggest.2": "Is this molecule polar?",
+  "chat.suggest.3": "Explain the AXnEm notation for me.",
 
   // Examples page
   "examples.loadError": "Could not load examples. Please check the backend.",

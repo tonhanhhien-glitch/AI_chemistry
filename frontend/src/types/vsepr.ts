@@ -9,7 +9,10 @@ export interface VseprResult {
   molecular_geometry_vi: string;
   ideal_angle: string;
   distortion_note_vi: string | null;
+  distortion_note_en: string | null;
   teaching_note_vi: string;
+  teaching_note_en: string;
   pedagogical_hybridization: string | null;
   hybridization_warning_vi: string | null;
+  hybridization_warning_en: string | null;
 }

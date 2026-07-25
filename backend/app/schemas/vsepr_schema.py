@@ -14,6 +14,9 @@ class VSEPRResult(BaseModel):
     molecular_geometry_vi: str
     ideal_angle: str
     distortion_note_vi: str | None = None
+    distortion_note_en: str | None = None
     teaching_note_vi: str
+    teaching_note_en: str
     pedagogical_hybridization: str | None = None
     hybridization_warning_vi: str | None = None
+    hybridization_warning_en: str | None = None

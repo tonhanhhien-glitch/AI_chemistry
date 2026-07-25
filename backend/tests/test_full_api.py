@@ -38,6 +38,31 @@ def test_examples_search_rules_and_explain() -> None:
     assert explanation.json()["formula"] == "CO2"
 
 
+def test_chat_falls_back_offline() -> None:
+    response = client.post(
+        "/api/v1/chat",
+        json={"molecule_id": "co2", "messages": [{"role": "user", "content": "Vì sao thẳng?"}]},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["source"] == "deterministic_fallback"
+    assert "CO2" in body["reply"]
+
+
+def test_chat_unknown_molecule_is_structured() -> None:
+    response = client.post(
+        "/api/v1/chat",
+        json={"molecule_id": "not-a-molecule", "messages": [{"role": "user", "content": "hi"}]},
+    )
+    assert response.status_code == 422
+    assert response.json()["detail"]["code"] == "UNSUPPORTED_MOLECULE"
+
+
+def test_chat_rejects_empty_message_list() -> None:
+    response = client.post("/api/v1/chat", json={"molecule_id": "co2", "messages": []})
+    assert response.status_code == 422
+
+
 def test_formula_input_length_limit() -> None:
     response = client.get("/api/v1/formula", params={"formula": "H" * 81})
     assert response.status_code == 422

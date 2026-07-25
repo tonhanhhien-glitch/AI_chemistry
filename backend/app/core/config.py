@@ -22,12 +22,16 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins_list(self) -> list[str]:
-        """Accept comma-separated origins and strip accidental whitespace."""
+        """Accept comma-separated origins, tolerating an accidental JSON-array value.
+
+        Strips surrounding brackets/quotes so ``["http://localhost:5173"]`` still
+        parses to a real origin instead of one malformed entry.
+        """
 
         return [
-            origin.strip()
+            origin.strip().strip("[]\"'")
             for origin in self.CORS_ORIGINS.split(",")
-            if origin.strip()
+            if origin.strip().strip("[]\"'")
         ]
 
 

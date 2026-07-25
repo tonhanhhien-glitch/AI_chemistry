@@ -5,7 +5,7 @@ import { t } from "../i18n";
 export interface ApiErrorDetail {
   code: string;
   message: string;
-  candidates?: Array<{ id: string; formula: string; name_vi: string }>;
+  candidates?: Array<{ id: string; formula: string; name_vi: string; name_en: string }>;
 }
 
 interface ApiErrorBody {

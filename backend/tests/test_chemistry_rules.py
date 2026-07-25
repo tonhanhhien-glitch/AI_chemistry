@@ -54,6 +54,7 @@ def test_complete_vsepr_contract() -> None:
     expected = {"AX2", "AX3", "AX2E", "AX4", "AX3E", "AX2E2", "AX5", "AX4E", "AX3E2", "AX2E3", "AX6", "AX5E", "AX4E2"}
     assert set(VSEPR_RULES) == expected
     assert get_vsepr_rule(3, 2).molecular_geometry == "T-shaped"
-    label, warning = pedagogical_hybridization(6)
+    label, warning_vi, warning_en = pedagogical_hybridization(6)
     assert label == "sp³d²"
-    assert "gần đúng" in warning
+    assert "gần đúng" in warning_vi
+    assert "pedagogical model" in warning_en

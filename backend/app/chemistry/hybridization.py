@@ -14,8 +14,8 @@ APPROXIMATION_WARNING_EN = (
 _LABELS = {2: "sp", 3: "sp²", 4: "sp³", 5: "sp³d", 6: "sp³d²"}
 
 
-def pedagogical_hybridization(steric_number: int) -> tuple[str, str]:
+def pedagogical_hybridization(steric_number: int) -> tuple[str, str, str]:
     try:
-        return _LABELS[steric_number], APPROXIMATION_WARNING_VI
+        return _LABELS[steric_number], APPROXIMATION_WARNING_VI, APPROXIMATION_WARNING_EN
     except KeyError as exc:
         raise ChemistryValidationError("The number of electron domains is outside the 2-6 range.") from exc
