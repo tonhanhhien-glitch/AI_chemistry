@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.schemas.explanation_schema import ExplanationLevel, ExplanationResponse
 from app.schemas.lewis_schema import LewisStructure
-from app.schemas.molecule_schema import PropertyItem, ResolvedMolecule
+from app.schemas.molecule_schema import ExternalServiceStatus, PropertyItem, ResolvedMolecule
 from app.schemas.structure3d_schema import Structure3D
 from app.schemas.vsepr_schema import VSEPRResult
 
@@ -14,6 +14,7 @@ from app.schemas.vsepr_schema import VSEPRResult
 class AnalysisRequest(BaseModel):
     formula: str | None = Field(default=None, min_length=1, max_length=80)
     molecule_id: str | None = Field(default=None, min_length=1, max_length=80)
+    pubchem_cid: int | None = Field(default=None, gt=0)
     include_explanation: bool = False
     explanation_level: ExplanationLevel = "intermediate"
     language: Literal["vi", "en"] = "vi"
@@ -29,6 +30,8 @@ class AnalysisNotices(BaseModel):
     offline_capable: bool = True
     external_services_used: list[str] = Field(default_factory=list)
     warnings_vi: list[str] = Field(default_factory=list)
+    warnings_en: list[str] = Field(default_factory=list)
+    external_service_statuses: list[ExternalServiceStatus] = Field(default_factory=list)
 
 
 class AnalysisResponse(BaseModel):

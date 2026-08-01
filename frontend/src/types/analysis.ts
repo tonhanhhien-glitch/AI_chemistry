@@ -7,6 +7,7 @@ import type { VseprResult } from "./vsepr";
 export interface AnalysisRequest {
   formula?: string;
   molecule_id?: string;
+  pubchem_cid?: number;
   include_explanation?: boolean;
   explanation_level?: ExplanationLevel;
   language?: "vi" | "en";
@@ -24,5 +25,7 @@ export interface AnalysisResult {
     offline_capable: boolean;
     external_services_used: string[];
     warnings_vi: string[];
+    warnings_en: string[];
+    external_service_statuses: Array<{ service: "PubChem" | "RDKit"; state: string; cache_hit: boolean; message: string | null }>;
   };
 }

@@ -21,19 +21,19 @@ def _cache_key(record: dict[str, Any], language: str, level: str) -> str:
 def deterministic_explanation(record: dict[str, Any], level: str = "intermediate", language: str = "vi", reason: str | None = None) -> ExplanationResponse:
     if language == "en":
         sections = ExplanationSections(
-            lewis=f"{record['formula']} has {record['total_valence_electrons']} valence electrons. The curated Lewis template conserves every electron and has formal charges summing to {record['charge']}.",
+            lewis=f"{record['formula']} has {record['total_valence_electrons']} valence electrons. The deterministic Lewis representation conserves every electron and has formal charges summing to {record['charge']}.",
             ax_en=f"The central atom has {record['bonding_domains']} bonding domains and {record['lone_pair_domains']} lone-pair domains, giving {record['ax_en']}.",
             electron_geometry=f"Its electron-domain geometry is {record['electron_geometry']}.",
-            molecular_geometry=f"Its molecular geometry is {record['molecular_geometry']}, with ideal angle(s) {record['ideal_angle']}.",
+            molecular_geometry=f"Its molecular geometry is {record['molecular_geometry']}, with VSEPR teaching/reference angle(s) {record['ideal_angle']}.",
             structure_property=record["polarity_note_en"], learning_tip="Count electron domains around the central atom; a multiple bond counts as one domain.",
             disclaimer="This explanation restates deterministic rule-engine facts. The 3D fallback is illustrative.",
         )
     else:
         sections = ExplanationSections(
-            lewis=f"{record['formula']} có tổng {record['total_valence_electrons']} electron hoá trị. Mẫu Lewis đã tuyển chọn bảo toàn electron và tổng điện tích hình thức bằng {record['charge']}.",
+            lewis=f"{record['formula']} có tổng {record['total_valence_electrons']} electron hoá trị. Biểu diễn Lewis tất định bảo toàn electron và tổng điện tích hình thức bằng {record['charge']}.",
             ax_en=f"Quanh nguyên tử trung tâm có {record['bonding_domains']} miền liên kết và {record['lone_pair_domains']} miền cặp electron tự do, nên ký hiệu là {record['ax_en']}.",
             electron_geometry=f"Hình học miền electron là {record['electron_geometry_vi']} ({record['electron_geometry']}).",
-            molecular_geometry=f"Hình học phân tử là {record['molecular_geometry_vi']} ({record['molecular_geometry']}), với góc lý tưởng {record['ideal_angle']}.",
+            molecular_geometry=f"Hình học phân tử là {record['molecular_geometry_vi']} ({record['molecular_geometry']}), với góc tham chiếu VSEPR {record['ideal_angle']}.",
             structure_property=record["polarity_note_vi"], learning_tip=record["teaching_note_vi"],
             disclaimer="Nội dung này chỉ diễn giải dữ kiện bất biến từ bộ quy tắc. Mô hình 3D dự phòng chỉ có tính minh hoạ.",
         )

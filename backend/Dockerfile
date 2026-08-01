@@ -3,8 +3,10 @@ FROM python:3.11-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 RUN addgroup --system app && adduser --system --ingroup app app
-COPY requirements.txt ./
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
+ARG INSTALL_RDKIT=false
+COPY requirements.txt requirements-optional.txt ./
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt \
+    && if [ "$INSTALL_RDKIT" = "true" ]; then pip install --no-cache-dir -r requirements-optional.txt; fi
 COPY --chown=app:app app ./app
 RUN mkdir -p /data /app/app/cache && chown -R app:app /data /app/app/cache
 USER app

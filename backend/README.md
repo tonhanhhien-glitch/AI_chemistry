@@ -1,3 +1,22 @@
+# Backend
+
+`app` is the only authoritative FastAPI application. The production analyzer is curated-first, then validates formula-aware PubChem candidates, then applies a deliberately conservative deterministic Lewis/VSEPR engine. 3D priority is PubChem 3D SDF, RDKit ETKDGv3 MolBlock, then an idealized VSEPR coordinate template. Automated tests never make live network calls.
+
+## Run and test
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pytest -q
+uvicorn app.main:app --reload
+```
+
+Install `requirements-optional.txt` and set `ENABLE_RDKIT=true` for RDKit conformers. For Docker, also set the build-time `INSTALL_RDKIT=true` so the optional wheel is installed. Set `ENABLE_PUBCHEM=true` for uncurated identity and PubChem 3D lookup; PubChem requires outbound HTTPS but no key. `PUBCHEM_TIMEOUT_SECONDS`, `PUBCHEM_CACHE_TTL_SECONDS`, `PUBCHEM_MAX_REQUESTS_PER_SECOND`, `PUBCHEM_MAX_CANDIDATES`, and `PUBCHEM_RETRY_COUNT` control safe network behavior. With both flags false, curated molecules remain functional and use idealized coordinates. Cache files under `CACHE_DIR` are keyed by formula identity or CID/record type and expire by TTL.
+
+A rendered-coordinate angle is computed from the actual returned coordinates. `ideal_angle`/`reference_angles` are separate VSEPR teaching references. Lone-pair 3D domains are illustrative annotations, not atoms or quantum density.
+
 # Backend Task Checklist
 
 ## Setup
@@ -55,11 +74,11 @@
 ## Molecule Resolver (`app/services/molecule_resolver.py`)
 
 - [x] Search molecule in curated database first.
-- [ ] Search molecule using PubChemPy second.
-- [ ] Use RDKit fallback if possible.
-- [ ] Use manual VSEPR template fallback if RDKit/PubChem fails.
+- [x] Search molecule using formula-aware PubChem PUG REST second.
+- [x] Use RDKit for 3D conformer fallback when validated SMILES is available.
+- [x] Use VSEPR template fallback if PubChem/RDKit 3D fails.
 - [x] Cache PubChem results.
-- [ ] Return molecule name, formula, SMILES, PubChem CID, and basic properties.
+- [x] Return molecule identity, formula, SMILES, CID, validation, and properties.
 - [x] Write resolver unit tests.
 
 ## Lewis Structure Module (`app/services/lewis_service.py`, `app/chemistry/`)
@@ -104,15 +123,15 @@
 
 ## 3D Structure Service (`app/services/structure3d_service.py`)
 
-- [ ] Generate 3D structure using RDKit when SMILES is available.
-- [ ] Retrieve PubChem 3D structure if available.
+- [x] Generate 3D structure using RDKit when validated SMILES is available.
+- [x] Retrieve and cache PubChem 3D SDF when available.
 - [x] Use VSEPR geometry template if automatic 3D generation fails.
-- [ ] Export MolBlock/SDF/PDB-compatible data.
+- [x] Return native MolBlock/SDF plus coordinate-compatible data.
 - [x] Return atom coordinates.
 - [x] Return bond data.
 - [x] Return rendering metadata for 3Dmol.js.
 - [x] Add warning for illustrative 3D models.
-- [ ] Cache generated 3D structures.
+- [x] Cache PubChem identity and CID/record-type structures.
 - [x] Write tests for 3D generation.
 
 ## AI Explanation Service (`app/services/ai_explanation_service.py`, `app/prompts/`)
@@ -150,8 +169,8 @@
 
 - [x] Test formula parser.
 - [x] Test molecule resolver.
-- [ ] Test PubChem connection.
-- [ ] Test RDKit generation.
+- [x] Test PubChem behavior with network-free mocks.
+- [x] Test RDKit priority and fallback with network-free mocks.
 - [x] Test Lewis output.
 - [x] Test VSEPR output.
 - [ ] Test AI prompt.

@@ -1,6 +1,9 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      args:
+        INSTALL_RDKIT: ${INSTALL_RDKIT:-false}
     restart: unless-stopped
     environment:
       CORS_ORIGINS: ${CORS_ORIGINS:-https://vsepr.hungntt.me,http://localhost:8080}
@@ -10,6 +13,11 @@ services:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       ENABLE_CLAUDE: ${ENABLE_CLAUDE:-false}
       ENABLE_PUBCHEM: ${ENABLE_PUBCHEM:-false}
+      PUBCHEM_TIMEOUT_SECONDS: ${PUBCHEM_TIMEOUT_SECONDS:-8}
+      PUBCHEM_CACHE_TTL_SECONDS: ${PUBCHEM_CACHE_TTL_SECONDS:-86400}
+      PUBCHEM_MAX_REQUESTS_PER_SECOND: ${PUBCHEM_MAX_REQUESTS_PER_SECOND:-4}
+      PUBCHEM_MAX_CANDIDATES: ${PUBCHEM_MAX_CANDIDATES:-20}
+      PUBCHEM_RETRY_COUNT: ${PUBCHEM_RETRY_COUNT:-2}
       ENABLE_RDKIT: ${ENABLE_RDKIT:-false}
     volumes:
       - study-data:/data

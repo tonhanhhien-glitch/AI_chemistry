@@ -75,6 +75,18 @@ class UnsupportedMoleculeError(ChemistryDomainError):
         )
 
 
+class ExternalResolutionError(ChemistryDomainError):
+    """A typed, user-safe degradation when external identity resolution fails."""
+
+    code = "EXTERNAL_RESOLUTION_FAILED"
+
+    def __init__(self, query: str, reason: str) -> None:
+        super().__init__(
+            f"No verified structure could be resolved for '{query}'. "
+            f"External lookup status: {reason}."
+        )
+
+
 class AmbiguousMoleculeError(ChemistryDomainError):
     code = "AMBIGUOUS_MOLECULE"
     status_code = 409

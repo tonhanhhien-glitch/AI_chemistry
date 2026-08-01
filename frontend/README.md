@@ -1,3 +1,25 @@
+# Frontend
+
+The authoritative UI is the React + TypeScript + Vite application in this directory. `Molecule3DViewer` loads native SDF as `sdf`, MolBlock as `mol`, PDB as `pdb`, and constructs XYZ only for coordinate responses. It provides stick, ball-and-stick, and space-filling representations; atom labels; coordinate-derived angle arcs; illustrative lone-pair domains; reset; fullscreen; provenance badges; warnings; and WebGL fallback. Ambiguous PubChem formulas show validated candidates and resubmit the unchanged formula with `pubchem_cid`.
+
+## Run and verify
+
+```bash
+npm ci
+npm test
+npm run lint
+npm run build
+npm run dev
+```
+
+Manual NF3 verification with a PubChem-enabled backend:
+
+1. Open `http://localhost:5173/analysis`, enter `NF3`, and confirm Lewis shows 26 electrons, AX3E, one central lone pair, and trigonal-pyramidal geometry.
+2. Confirm the source badge reports PubChem 3D, RDKit-generated conformer, or Idealized VSEPR model according to the configured fallback.
+3. Enable **Bond angle**. Confirm two rays, an arc, and a coordinate-derived label appear; compare it with the separately labeled VSEPR reference angle.
+4. Enable **Lone-pair domains**. Confirm a translucent two-sphere domain appears outside N and the explanatory text says it is illustrative.
+5. Disable each toggle to confirm only its own shapes disappear; enable atom labels to confirm angle changes do not remove them.
+
 # Frontend Task Checklist
 
 ## Setup
@@ -77,7 +99,7 @@
 
 ## 3Dmol.js Viewer (`src/components/viewer3d/Molecule3DViewer.tsx`)
 
-- [ ] Load MolBlock/SDF/PDB data from backend.
+- [x] Load MolBlock/SDF/PDB data from backend.
 - [x] Render molecule using 3Dmol.js.
 - [x] Add rotate support.
 - [x] Add zoom support.

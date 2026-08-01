@@ -44,6 +44,6 @@ def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
     return LewisStructure(
         atoms=atoms, bonds=bonds, central_atom_id="a0", total_valence_electrons=computed_total,
         resonance_forms=record.get("resonance_forms", 1), resonance_note_vi=record.get("resonance_note_vi"),
-        exception_flags=OctetExceptionFlags(**flags, note_vi=" ".join(notes) or None), source="curated",
+        exception_flags=OctetExceptionFlags(**flags, note_vi=" ".join(notes) or None), source="curated" if record["source"] == "curated" else "validated_connectivity",
         confidence=record["confidence"], review_status=record["review_status"],
     )

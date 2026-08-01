@@ -42,7 +42,7 @@ export default function AnalysisPage() {
             <div className="candidate-list">
               <p>{t("analysis.chooseStructure")}</p>
               {error.candidates.map((item) => (
-                <button key={item.id} onClick={() => void run({ molecule_id: item.id, include_explanation: true, language: lang })}>{item.formula} — {lang === "en" ? item.name_en : item.name_vi}</button>
+                <button key={item.id} onClick={() => void run(item.cid ? { formula: query.trim(), pubchem_cid: item.cid, include_explanation: true, language: lang } : { molecule_id: item.id, include_explanation: true, language: lang })}><strong>{lang === "en" ? item.name_en : item.name_vi}</strong><span>{item.formula} · {t("analysis.candidateCharge")}: {item.charge ?? 0} · CID {item.cid ?? "—"}</span>{item.canonical_smiles && <code>{item.canonical_smiles}</code>}<small>{item.source ?? "Curated"}</small></button>
               ))}
             </div>
           )}
@@ -63,9 +63,9 @@ export default function AnalysisPage() {
             <section className="workspace-main" aria-label={t("analysis.step.model3d")}>
               <header className="workspace-main-head"><span className="step-number" aria-hidden="true">4</span><h2>{t("analysis.step.model3d")}</h2></header>
               <Molecule3DViewer key={result.molecule.id} structure={result.structure3d} />
-              {result.notices.warnings_vi.length > 0 && (
+              {(lang === "en" ? result.notices.warnings_en : result.notices.warnings_vi).length > 0 && (
                 <div className="model-notes">
-                  {result.notices.warnings_vi.map((warning) => <p key={warning}>{warning}</p>)}
+                  {(lang === "en" ? result.notices.warnings_en : result.notices.warnings_vi).map((warning) => <p key={warning}>{warning}</p>)}
                 </div>
               )}
             </section>

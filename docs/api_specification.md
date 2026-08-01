@@ -1,52 +1,129 @@
 # API specification
 
-Base path: /api/v1. OpenAPI: /docs. Chemistry errors use:
+Base path: `/api/v1`; OpenAPI UI: `/docs`. Domain failures use:
 
-    { "detail": { "code": "UNSUPPORTED_MOLECULE", "message": "...", "candidates": [] } }
+```json
+{"detail":{"code":"UNSUPPORTED_MOLECULE","message":"..."}}
+```
 
-FastAPI request-shape errors retain its standard 422 response. Inputs are capped at 80 characters where applicable.
+Ambiguity uses HTTP 409 and adds `detail.candidates`. FastAPI request-shape failures retain standard 422 responses. Formula/name inputs are capped at 80 characters.
 
 ## Endpoints
 
-- GET /health — service status/version.
-- GET /formula?formula=SO4%5E2- — strict syntax, inventory, charge only.
-- GET /molecules/examples — curated summaries.
-- GET /molecules/search?q=nuoc — formula/name/alias search.
-- POST /analyze — complete versioned pipeline.
-- POST /explain — regenerate prose from an existing curated molecule ID.
-- GET /rules/vsepr — all 13 supported rules.
-- GET /rules/examples — curated rule examples.
-- POST /feedback — anonymous rating/report.
-- POST /survey — consented anonymous pre/post/Likert response.
-- GET /teacher/export?kind=survey — CSV with X-Teacher-Token.
+- `GET /health` — service status/version.
+- `GET /formula?formula=SO4%5E2-` — strict syntax, inventory, and charge only.
+- `GET /molecules/examples` and `GET /molecules/search?q=` — curated catalogue.
+- `POST /analyze` — identity, Lewis, VSEPR, properties, 3D, optional explanation, and notices.
+- `POST /explain` — explanation for a curated molecule ID.
+- `GET /rules/vsepr`, `GET /rules/examples` — deterministic rule data.
+- `POST /feedback`, `POST /survey`, `GET /teacher/export` — anonymous study workflow.
 
-## Analyze
+## Analyze request
 
-Request:
+```json
+{
+  "formula": "NF3",
+  "include_explanation": false,
+  "language": "en"
+}
+```
 
-    {
-      "formula": "H2O",
-      "include_explanation": true,
-      "explanation_level": "intermediate",
-      "language": "vi"
-    }
+`molecule_id` selects a curated record. When a formula returns several valid PubChem identities, select the candidate without editing the original formula:
 
-Use molecule_id instead of formula after candidate selection. The response schema_version is 1.0 and contains molecule, lewis, vsepr, properties, structure3d, explanation, and notices. Lewis atoms have stable IDs and 2D coordinates; 3D uses an atom/bond coordinate schema with source and is_illustrative.
+```json
+{
+  "formula": "NF3",
+  "pubchem_cid": 24553,
+  "include_explanation": false,
+  "language": "en"
+}
+```
 
-Examples of controlled results: CO2 → AX2/linear/180°; H2O → AX2E2/bent/~104.5°; ClF3 → AX3E2/T-shaped; XeF4 → AX4E2/square planar.
+Resolution order is exact curated record, validated formula-aware PubChem identity, then conservative deterministic Lewis/VSEPR inference. Curated facts are never overwritten.
 
-## Formula grammar
+## Ambiguous response
 
-Flat canonical symbols with optional positive counts. Supported charges: +, -, ^n+, ^n-. Repeated symbols accumulate. Parentheses, hydrates/dot notation, isotopes, coefficients, and incorrect capitalization are rejected rather than partially parsed.
+```json
+{
+  "detail": {
+    "code": "AMBIGUOUS_MOLECULE",
+    "message": "The formula may represent several structures. Please pick a specific substance.",
+    "candidates": [
+      {
+        "id": "pubchem:123",
+        "cid": 123,
+        "formula": "...",
+        "charge": 0,
+        "name_en": "...",
+        "name_vi": "...",
+        "canonical_smiles": "...",
+        "source": "PubChem",
+        "validation_status": "formula_charge_inventory_validated"
+      }
+    ]
+  }
+}
+```
 
-Parsing does not infer identity: CH3COOH can parse while remaining unsupported by the curated analysis set. Stable codes include INVALID_FORMULA, UNSUPPORTED_FORMULA_SYNTAX, UNSUPPORTED_ELEMENT, UNSUPPORTED_MOLECULE, AMBIGUOUS_MOLECULE, and CHEMISTRY_VALIDATION_ERROR.
+## Analysis response additions
 
-## Anonymous writes
+The version remains `1.0` for compatibility. `molecule` includes canonical identity, CID, SMILES/InChI fields, validation status, cache timestamp, and typed connectivity. `vsepr.ideal_angle` remains temporarily; `vsepr.reference_angles` explicitly identifies teaching/reference values.
 
-Feedback requires rating 1–5 and a controlled category; comment max is 1000. Survey requires consent=true, phase pre/post/likert, and at most 30 answer keys. A missing or invalid session ID is replaced by a random UUID. Do not send names or student numbers.
+`structure3d.format` is `coordinates`, `molblock`, `sdf`, or `pdb`; `data` contains native model text where applicable. Source is one of `curated_coordinates`, `pubchem_3d`, `rdkit_etkdg`, or `idealized_vsepr`. Provenance includes `source_label`, `is_illustrative`, `is_computed`, `is_experimental`, `pubchem_cid`, and bilingual warnings.
 
-Export returns UTF-8 CSV and prefixes spreadsheet-formula-like cells. If TEACHER_EXPORT_TOKEN is empty, export remains forbidden.
+`structure3d.angle_annotations` contains representative coordinate-derived angle classes and explicit atom triplets. Duplicate equivalent angles are omitted by default. `structure3d.electron_domains` contains bonding and illustrative lone-pair directions/positions; these do not alter molecular atom counts.
 
-## Language and sources
+`notices.external_services_used` is `[]`, `["PubChem"]`, or `["PubChem", "RDKit"]` according to actual use. `external_service_statuses` exposes typed degradation/cache states without stack traces. `offline_capable` is true only when the same analysis can remain usable without its external identity source.
 
-Vietnamese is the default explanation language; English is optional. Property rows declare curated, computed, or PubChem reference provenance. Claude and idealized 3D outputs carry explicit disclaimers.
+## Representative NF3 response (abridged only by unrelated property rows)
+
+```json
+{
+  "schema_version": "1.0",
+  "molecule": {
+    "id": "pubchem:24553",
+    "formula": "NF3",
+    "charge": 0,
+    "central_atom": "N",
+    "source": "PubChem reference",
+    "confidence": "medium",
+    "pubchem_cid": 24553,
+    "smiles": "N(F)(F)F",
+    "canonical_identity": "GQPLMRYTRLFLPF-UHFFFAOYSA-N",
+    "validation_status": "formula_charge_inventory_connectivity_lewis_vsepr_validated"
+  },
+  "lewis": {
+    "total_valence_electrons": 26,
+    "central_atom_id": "a0",
+    "source": "validated_connectivity"
+  },
+  "vsepr": {
+    "bonding_domains": 3,
+    "lone_pair_domains": 1,
+    "ax_en": "AX3E",
+    "electron_geometry": "tetrahedral",
+    "molecular_geometry": "trigonal pyramidal",
+    "ideal_angle": "~107°"
+  },
+  "structure3d": {
+    "format": "sdf",
+    "source": "pubchem_3d",
+    "source_label": "PubChem 3D conformer",
+    "is_computed": true,
+    "is_experimental": false,
+    "pubchem_cid": 24553,
+    "angle_annotations": [{"display_label": "109.5°", "category": "conformer"}],
+    "electron_domains": [{"kind": "lone_pair", "is_illustrative": true}]
+  },
+  "notices": {
+    "offline_capable": false,
+    "external_services_used": ["PubChem"]
+  }
+}
+```
+
+The exact coordinate angle depends on the returned conformer; the backend calculates it from that conformer's coordinates and never copies `~107°` onto a mismatching arc.
+
+## Formula grammar and stable errors
+
+Flat canonical symbols with optional positive counts are supported. Charges are `+`, `-`, `^n+`, or `^n-`; repeated symbols accumulate. Parentheses, hydrates, isotopes, coefficients, and incorrect capitalization are rejected. Stable codes include `INVALID_FORMULA`, `UNSUPPORTED_FORMULA_SYNTAX`, `UNSUPPORTED_ELEMENT`, `UNSUPPORTED_MOLECULE`, `AMBIGUOUS_MOLECULE`, `EXTERNAL_RESOLUTION_FAILED`, and `CHEMISTRY_VALIDATION_ERROR`.

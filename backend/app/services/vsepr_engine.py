@@ -5,7 +5,7 @@ from typing import Any
 from app.chemistry.hybridization import pedagogical_hybridization
 from app.chemistry.vsepr_rules import get_vsepr_rule
 from app.core.exceptions import ChemistryValidationError
-from app.schemas.vsepr_schema import VSEPRResult
+from app.schemas.vsepr_schema import ReferenceAngle, VSEPRResult
 
 
 def analyze_vsepr(record: dict[str, Any]) -> VSEPRResult:
@@ -21,7 +21,10 @@ def analyze_vsepr(record: dict[str, Any]) -> VSEPRResult:
         bonding_domains=bonding, lone_pair_domains=lone_pairs, steric_number=bonding + lone_pairs,
         ax_en=rule.ax_en, electron_geometry=rule.electron_geometry, electron_geometry_vi=rule.electron_geometry_vi,
         molecular_geometry=rule.molecular_geometry, molecular_geometry_vi=rule.molecular_geometry_vi,
-        ideal_angle=rule.ideal_angle, distortion_note_vi=record.get("distortion_note_vi"),
+        ideal_angle=rule.ideal_angle, reference_angles=[ReferenceAngle(
+            display_label=record.get("ideal_angle", rule.ideal_angle),
+            note_vi=record.get("distortion_note_vi"), note_en=record.get("distortion_note_en"),
+        )], distortion_note_vi=record.get("distortion_note_vi"),
         distortion_note_en=record.get("distortion_note_en"),
         teaching_note_vi=record.get("teaching_note_vi") or rule.teaching_note_vi,
         teaching_note_en=record.get("teaching_note_en") or rule.teaching_note_vi,
