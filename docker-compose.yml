@@ -1,8 +1,9 @@
 services:
   backend:
     build: ./backend
+    restart: unless-stopped
     environment:
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://vsepr.hungntt.me,http://localhost:8080}
       DATA_DIR: /data
       CACHE_DIR: /app/app/cache
       TEACHER_EXPORT_TOKEN: ${TEACHER_EXPORT_TOKEN:-}
@@ -12,17 +13,38 @@ services:
       ENABLE_RDKIT: ${ENABLE_RDKIT:-false}
     volumes:
       - study-data:/data
-    ports:
-      - "8000:8000"
+    # Container-to-container only. Never published to the host, so port 8000 is
+    # unreachable from the LAN and from the Internet.
+    expose:
+      - "8000"
+
   frontend:
     build:
       context: ./frontend
       args:
         VITE_API_BASE_URL: /api/v1
+    restart: unless-stopped
     depends_on:
       backend:
         condition: service_healthy
+    # Loopback-only publish: local testing works, the LAN cannot reach it.
+    # Public traffic arrives through cloudflared, not through this port.
     ports:
-      - "8080:80"
+      - "127.0.0.1:8081:80"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    # Token is read from .env (git-ignored) and never baked into an image.
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+      - --token
+      - ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      frontend:
+        condition: service_healthy
+
 volumes:
   study-data:

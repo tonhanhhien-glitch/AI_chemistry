@@ -28,7 +28,7 @@ const vi: Catalogue = {
   "home.hero.eyebrow": "Học Lewis · hiểu hình học",
   "home.hero.titlePrefix": "Từ công thức đến ",
   "home.hero.titleEm": "hình dạng phân tử",
-  "home.hero.lede": "Một quy trình tiếng Việt nối cấu trúc Lewis, miền electron, AXnEm, VSEPR và mô hình 3D. Kết luận hoá học đến từ bộ quy tắc xác định — AI chỉ giải thích.",
+  "home.hero.lede": "Nền tảng minh hoạ nối cấu trúc Lewis, miền electron, AXnEm, VSEPR và mô hình 3D. Kết luận hoá học đến từ bộ quy tắc xác định — AI chỉ giải thích.",
   "home.hero.visualAria": "Minh hoạ hình học phân tử",
   "home.trust.offline": "hoạt động offline với bộ ví dụ",
   "home.trust.axTypes": "kiểu AXnEm từ 2–6 miền",
