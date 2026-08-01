@@ -39,7 +39,7 @@ def validate_explanation_text(text: str, record: dict[str, Any]) -> tuple[bool, 
         problems.append("missing_or_contradictory_bonding_domains")
     if lone_pairs != {record["lone_pair_domains"]}:
         problems.append("missing_or_contradictory_lone_pair_domains")
-    notations = set(re.findall(r"AX\d(?:E\d)?", text, flags=re.IGNORECASE))
+    notations = set(re.findall(r"AX\d+(?:E\d*)?", text, flags=re.IGNORECASE))
     if notations and {item.upper() for item in notations} != {record["ax_en"].upper()}:
         problems.append("contradictory_ax_en")
     mentioned_geometries = {geometry for geometry in _GEOMETRIES if geometry.casefold() in normalized}
@@ -47,6 +47,11 @@ def validate_explanation_text(text: str, record: dict[str, Any]) -> tuple[bool, 
     if mentioned_geometries - allowed:
         problems.append("contradictory_geometry")
     expected_numbers = set(re.findall(r"\d+(?:\.\d+)?", record["ideal_angle"]))
+    for group in (record.get("_bond_angles") or {}).values():
+        if isinstance(group, list):
+            for evidence in group:
+                if isinstance(evidence, dict):
+                    expected_numbers.update(re.findall(r"\d+(?:\.\d+)?", str(evidence.get("display_label", ""))))
     angle_numbers = set(re.findall(r"(\d+(?:\.\d+)?)\s*°", text))
     if angle_numbers and not angle_numbers.issubset(expected_numbers):
         problems.append("contradictory_angle")

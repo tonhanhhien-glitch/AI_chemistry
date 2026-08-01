@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useI18n } from "../../i18n";
 import { useChat } from "../../hooks/useChat";
 
-export default function ChatPane({ moleculeId, formula }: { moleculeId: string; formula: string }) {
+export default function ChatPane({ moleculeId, formula, pubchemCid }: { moleculeId: string; formula: string; pubchemCid: number | null }) {
   const { t } = useI18n();
-  const { messages, isLoading, error, send } = useChat(moleculeId);
+  const { messages, isLoading, error, send } = useChat(moleculeId, formula, pubchemCid);
   const [draft, setDraft] = useState("");
   const logRef = useRef<HTMLDivElement>(null);
 

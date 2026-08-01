@@ -289,7 +289,7 @@
     },
     {
       "review_status": "internal_golden_pending_expert_signoff",
-      "pubchem_cid": null,
+      "pubchem_cid": 222,
       "source": "curated",
       "confidence": "high",
       "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
@@ -358,6 +358,8 @@
       "polarity_note_vi": "Phân tử phân cực do hình chóp tam giác.",
       "polarity_note_en": "The molecule is polar because of its trigonal pyramidal shape.",
       "smiles": "N",
+      "inchi": "InChI=1S/H3N/h1H3",
+      "inchikey": "QGZKDVFQNNGYKY-UHFFFAOYSA-N",
       "teaching_note_vi": "Bốn miền electron cho hình học miền tứ diện nhưng chỉ ba nguyên tử tạo hình chóp tam giác.",
       "teaching_note_en": "Four electron domains give a tetrahedral domain geometry, but only three atoms form a trigonal pyramid."
     },

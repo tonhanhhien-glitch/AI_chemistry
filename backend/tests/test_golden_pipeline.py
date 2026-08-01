@@ -19,7 +19,8 @@ def test_complete_golden_pipeline(molecule_id: str, formula: str, ax_en: str, ge
     represented = 2 * sum(bond.order for bond in result.lewis.bonds) + 2 * sum(atom.lone_pairs for atom in result.lewis.atoms)
     assert represented == result.lewis.total_valence_electrons
     assert len(result.structure3d.atoms) == len(result.lewis.atoms)
-    assert result.structure3d.is_illustrative is True
+    assert result.structure3d.is_illustrative or result.structure3d.is_experimental
+    assert all(domain.is_illustrative for domain in result.structure3d.electron_domains if domain.kind == "lone_pair")
     assert result.explanation is not None
     assert result.explanation.facts_validated is True
 

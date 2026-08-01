@@ -7,8 +7,8 @@
 - [ ] Configure CORS domain.
 - [ ] Build Docker image (`backend/Dockerfile`).
 - [ ] Run backend container.
-- [ ] Test `/health`.
-- [ ] Test `/api/v1/analyze`.
+- [ ] Test `/api/v1/health` and verify the PubChem/RDKit enabled flags.
+- [ ] Test `/api/v1/analyze`, including NF3 102.37° and NH3 106.67° experimental evidence.
 - [ ] Add HTTPS (see `nginx.conf`).
 - [x] Add logging.
 - [ ] Add error monitoring.

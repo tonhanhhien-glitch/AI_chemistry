@@ -20,13 +20,15 @@ PubChem formula hits are not accepted by position. Formula, charge, atom invento
 - VSEPR electron domains are pedagogical regions used to predict geometry. The 3D lone-pair lobes are illustrative and are not additional chemical atoms.
 - Quantum electron density is a calculated physical field. This application does not claim its translucent lobes are orbitals, literal electron paths, or quantum electron-density surfaces.
 
-## Three different angle concepts
+## Five separate angle concepts
 
-- The rendered-coordinate angle is calculated by vector dot product from the active 3D model and is the only value drawn on its arc.
-- An ideal VSEPR angle belongs to an idealized electron-domain template.
-- A teaching/reference angle may be approximate, a range, or an inequality (for example NH3 about 107° or H2O about 104.5°).
+- An experimental molecular angle is a sourced measurement tied to a phase and identity. Only the reviewed NIST CCCBDB NF3 (102.37°) and NH3 (106.67°) snapshots currently carry this label.
+- A curated molecule-specific teaching/reference angle is useful context, not a universal AXnEm rule.
+- A PubChem or RDKit conformer angle is calculated from computed coordinates and is never experimental.
+- A general VSEPR prediction is qualitative: AX3E and AX2E2 use <109.5°.
+- An idealized-model angle is calculated from fallback teaching coordinates.
 
-These values may differ and the UI labels their sources separately.
+The rendered arc always uses the active coordinate triplet. Evidence is never averaged, and genuinely distinct asymmetric angles retain their atom triplets.
 
 ## Review status
 

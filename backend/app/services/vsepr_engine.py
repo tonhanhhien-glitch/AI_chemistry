@@ -27,7 +27,7 @@ def analyze_vsepr(record: dict[str, Any]) -> VSEPRResult:
         )], distortion_note_vi=record.get("distortion_note_vi"),
         distortion_note_en=record.get("distortion_note_en"),
         teaching_note_vi=record.get("teaching_note_vi") or rule.teaching_note_vi,
-        teaching_note_en=record.get("teaching_note_en") or rule.teaching_note_vi,
+        teaching_note_en=record.get("teaching_note_en") or rule.teaching_note_en,
         pedagogical_hybridization=hybridization,
         hybridization_warning_vi=warning_vi, hybridization_warning_en=warning_en,
     )

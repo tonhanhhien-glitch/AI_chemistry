@@ -17,7 +17,7 @@ from app.schemas.molecule_schema import (
     ResolvedMolecule,
 )
 from app.services.deterministic_chemistry_service import build_deterministic_record
-from app.services.formula_parser import ParsedFormula
+from app.services.formula_parser import ParsedFormula, parse_formula
 from app.services.pubchem_service import lookup_pubchem_formula
 from app.utils.file_loader import load_json
 
@@ -139,6 +139,17 @@ def resolve_molecule(
     candidate, record = valid[0]
     record["_external_service_statuses"] = [lookup.status]
     return _resolved(record), record
+
+
+def resolve_request_record(molecule_id: str | None, formula: str | None, pubchem_cid: int | None = None) -> dict[str, Any]:
+    if molecule_id and not molecule_id.startswith(("deterministic:", "pubchem:")):
+        return get_record(molecule_id)
+    if formula:
+        _molecule, record = resolve_molecule(parse_formula(formula), None, pubchem_cid)
+        return record
+    if molecule_id:
+        return get_record(molecule_id)
+    raise UnsupportedMoleculeError("missing identity")
 
 
 def list_examples() -> list[MoleculeSummary]:

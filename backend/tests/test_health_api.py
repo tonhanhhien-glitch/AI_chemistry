@@ -11,4 +11,11 @@ def test_health_endpoint() -> None:
     response = client.get("/api/v1/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "version": "0.1.0"}
+    assert response.json() == {
+        "status": "ok",
+        "version": "0.1.0",
+        "integrations": {
+            "pubchem_enabled": False,
+            "rdkit_enabled": False,
+        },
+    }

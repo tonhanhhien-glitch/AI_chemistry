@@ -10,7 +10,9 @@ analysis service
     + curated resolver (authoritative teaching facts)
     + formula-aware PubChem resolver and typed status/cache
     + conservative deterministic connectivity/Lewis/VSEPR engine
-    + 3D resolver: PubChem SDF -> RDKit ETKDGv3 -> VSEPR template
+    + experimental identity matcher and reviewed NIST coordinate snapshot
+    + bond-angle evidence selector: experimental -> curated reference -> computed conformer -> VSEPR
+    + 3D resolver: local experimental -> PubChem SDF -> RDKit ETKDGv3 -> VSEPR template
     + property service with per-item provenance
     + explanation layer over immutable facts
 ```
@@ -31,8 +33,8 @@ RDKit is optional and receives only validated SMILES. It adds explicit hydrogen 
 
 `Structure3D` carries format/data, parsed atoms and bonds, source enum, source label, computed/illustrative/experimental flags, CID, central atom, coordinate-derived representative angle classes, and electron-domain annotations. SDF, MolBlock, PDB, and local coordinate responses are loaded using their real 3Dmol formats.
 
-Angle arcs are built from the same atom coordinates used for rendering. Teaching/reference VSEPR angles remain separate. Lone-pair lobes use deterministic VSEPR orientation and are independent translucent shapes; they never enter the molecule atom count or SDF/MolBlock.
+Angle arcs are built from the same atom coordinates used for rendering. The schema 1.1 bond-angle bundle keeps experimental, curated-reference, computed-conformer, general VSEPR, and idealized-coordinate values separate. Teaching/reference VSEPR angles remain separate. Lone-pair lobes use deterministic VSEPR orientation and are independent translucent shapes; they never enter the molecule atom count or SDF/MolBlock.
 
 ## Offline behavior
 
-Curated records remain usable with PubChem and RDKit disabled and fall back to VSEPR coordinates. `notices.offline_capable` is true for these analyses. An uncurated identity first obtained from PubChem reports false even if its returned structure falls back to VSEPR. `external_services_used` lists only services that materially supplied identity or coordinates.
+Curated records remain usable with PubChem and RDKit disabled. A safely matched local experimental snapshot is used first (including curated NH3); otherwise coordinates fall back to the idealized VSEPR model. `notices.offline_capable` is true for these analyses. An uncurated identity first obtained from PubChem reports false even if its returned structure falls back to VSEPR. `external_services_used` lists only services that materially supplied identity or coordinates.

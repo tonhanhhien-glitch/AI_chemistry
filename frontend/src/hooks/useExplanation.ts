@@ -11,9 +11,9 @@ export function useExplanation(initial: Explanation | null) {
   // Adopt a freshly fetched explanation (e.g. after a language switch re-runs
   // the analysis) instead of keeping the value captured at first render.
   useEffect(() => { setExplanation(initial); }, [initial]);
-  async function regenerate(moleculeId: string, level: ExplanationLevel, language: Lang) {
+  async function regenerate(moleculeId: string, formula: string, pubchemCid: number | null, level: ExplanationLevel, language: Lang) {
     setLoading(true); setError("");
-    try { setExplanation(await requestExplanation(moleculeId, level, language)); }
+    try { setExplanation(await requestExplanation(moleculeId, formula, pubchemCid, level, language)); }
     catch (caught) { setError(getApiErrorMessage(caught)); }
     finally { setLoading(false); }
   }

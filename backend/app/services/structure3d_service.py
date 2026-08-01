@@ -20,6 +20,7 @@ from app.schemas.structure3d_schema import (
     StructureSource,
     Vector3D,
 )
+from app.services.experimental_geometry_service import ExperimentalGeometryRecord, match_experimental_geometry
 from app.services.pubchem_service import fetch_pubchem_3d
 from app.services.rdkit_service import generate_rdkit_result
 from app.utils.file_loader import load_json
@@ -119,10 +120,14 @@ def _angle_annotations(
     for atom1_id, atom2_id in combinations(neighbors, 2):
         value = calculate_angle(by_id[atom1_id], by_id[center_id], by_id[atom2_id])
         measured.append((value, atom1_id, atom2_id))
-    representatives: list[tuple[float, str, str]] = []
-    for item in sorted(measured):
-        if not any(abs(item[0] - existing[0]) < 0.75 for existing in representatives):
-            representatives.append(item)
+    representatives: list[tuple[float, str, str, int]] = []
+    for value, atom1_id, atom2_id in sorted(measured):
+        match_index = next((index for index, existing in enumerate(representatives) if abs(value - existing[0]) < 0.01), None)
+        if match_index is None:
+            representatives.append((value, atom1_id, atom2_id, 1))
+        else:
+            existing = representatives[match_index]
+            representatives[match_index] = (*existing[:3], existing[3] + 1)
     return [
         BondAngleAnnotation(
             id=f"angle-{index}",
@@ -134,10 +139,11 @@ def _angle_annotations(
             category=category,
             source=source,
             is_approximate=category == "ideal_vsepr",
+            equivalent_count=equivalent_count,
             note_vi="Góc được tính trực tiếp từ tọa độ đang hiển thị.",
             note_en="Angle calculated directly from the rendered coordinates.",
         )
-        for index, (value, atom1_id, atom2_id) in enumerate(representatives)
+        for index, (value, atom1_id, atom2_id, equivalent_count) in enumerate(representatives)
     ]
 
 
@@ -206,6 +212,23 @@ def _from_block(record: dict[str, Any], data: str, *, source: StructureSource, s
     )
 
 
+def _experimental(record: dict[str, Any], experimental: ExperimentalGeometryRecord) -> Structure3D:
+    atoms = [Structure3DAtom(**atom.model_dump()) for atom in experimental.coordinates]
+    center_id = next(atom.id for atom in atoms if atom.element == record["central_atom"])
+    ligand_ids = [atom.id for atom in atoms if atom.id != center_id]
+    bonds = [Structure3DBond(atom1_id=center_id, atom2_id=atom_id, order=order) for atom_id, order in zip(ligand_ids, record["bond_orders"], strict=True)]
+    label = "NIST CCCBDB experimental gas-phase geometry"
+    annotations = _angle_annotations(atoms, bonds, center_id, "measured", label)
+    return Structure3D(
+        atoms=atoms, bonds=bonds, source=StructureSource.CURATED_COORDINATES, source_label=label,
+        is_illustrative=False, is_computed=False, is_experimental=True, pubchem_cid=experimental.pubchem_cid,
+        central_atom_id=center_id, angle_annotations=annotations,
+        electron_domains=_electron_domains(atoms, bonds, center_id, record, label),
+        warning_vi="Tọa độ nguyên tử là hình học pha khí thực nghiệm từ NIST CCCBDB; các miền cặp electron tự do vẫn chỉ là minh họa VSEPR.",
+        warning_en="Atomic coordinates are an experimental gas-phase geometry from NIST CCCBDB; lone-pair domains remain illustrative VSEPR overlays.",
+    )
+
+
 def _idealized(record: dict[str, Any]) -> Structure3D:
     template = _templates()[record["ax_en"]]
     coordinates = [[0.0, 0.0, 0.0], *template["ligands"]]
@@ -229,6 +252,9 @@ def _idealized(record: dict[str, Any]) -> Structure3D:
 
 def resolve_structure3d(record: dict[str, Any]) -> Structure3DResult:
     statuses: list[ExternalServiceStatus] = []
+    experimental = match_experimental_geometry(record)
+    if experimental is not None:
+        return Structure3DResult(_experimental(record, experimental), tuple(statuses))
     cid = record.get("pubchem_cid")
     if cid:
         pubchem = fetch_pubchem_3d(int(cid))

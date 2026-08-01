@@ -70,7 +70,8 @@ def test_supported_unique_formula_falls_back_deterministically_when_pubchem_disa
     result = analyze(AnalysisRequest(formula="NF3"))
     assert result.molecule.source == "deterministic"
     assert result.vsepr.ax_en == "AX3E"
-    assert result.structure3d.source is StructureSource.IDEALIZED_VSEPR
+    assert result.structure3d.source is StructureSource.CURATED_COORDINATES
+    assert result.structure3d.is_experimental
     assert result.notices.external_services_used == []
     assert result.notices.offline_capable is True
 
@@ -86,9 +87,9 @@ def test_nf3_resolves_from_mocked_pubchem_with_3d(monkeypatch: pytest.MonkeyPatc
     assert result.vsepr.lone_pair_domains == 1
     assert result.vsepr.ax_en == "AX3E"
     assert result.vsepr.molecular_geometry == "trigonal pyramidal"
-    assert result.structure3d.format == "sdf"
-    assert result.structure3d.source is StructureSource.PUBCHEM_3D
-    assert result.structure3d.data
+    assert result.structure3d.format == "coordinates"
+    assert result.structure3d.source is StructureSource.CURATED_COORDINATES
+    assert result.structure3d.is_experimental
     assert len([domain for domain in result.structure3d.electron_domains if domain.kind == "lone_pair"]) == 1
     assert result.notices.external_services_used == ["PubChem"]
     assert result.notices.offline_capable is False
@@ -131,6 +132,7 @@ def test_pubchem_timeout_is_typed(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_rdkit_is_second_structure_priority(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(structure3d_service, "match_experimental_geometry", lambda _record: None)
     patch_identity(monkeypatch, candidate())
     monkeypatch.setattr(structure3d_service, "fetch_pubchem_3d", lambda _cid: PubChemStructureResult(status=status("PubChem", ExternalServiceState.CONFORMER_UNAVAILABLE)))
     monkeypatch.setattr(structure3d_service, "generate_rdkit_result", lambda _smiles: RDKitResult(RDKitStructure(NF3_MOLBLOCK, force_field="UFF"), status("RDKit", ExternalServiceState.SUCCESS)))
@@ -142,6 +144,7 @@ def test_rdkit_is_second_structure_priority(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_vsepr_is_final_structure_fallback_and_angles_match(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(structure3d_service, "match_experimental_geometry", lambda _record: None)
     patch_identity(monkeypatch, candidate())
     patch_no_external_3d(monkeypatch)
     result = analyze(AnalysisRequest(formula="NF3"))
@@ -151,7 +154,7 @@ def test_vsepr_is_final_structure_fallback_and_angles_match(monkeypatch: pytest.
     actual = calculate_angle(atoms[annotation.atom1_id], atoms[annotation.center_atom_id], atoms[annotation.atom2_id])
     assert annotation.value_deg == pytest.approx(actual)
     assert annotation.display_label == f"{actual:.1f}°"
-    assert result.vsepr.reference_angles[0].display_label == "~107°"
+    assert result.vsepr.reference_angles[0].display_label == "<109.5°"
     assert annotation.display_label != result.vsepr.reference_angles[0].display_label
 
 

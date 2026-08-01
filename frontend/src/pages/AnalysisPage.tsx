@@ -56,21 +56,16 @@ export default function AnalysisPage() {
           <div className={`analysis-workspace${infoOpen ? "" : " info-collapsed"}${chatOpen ? "" : " chat-collapsed"}`}>
             <WorkspacePane side="left" title={t("analysis.pane.info")} open={infoOpen} onToggle={setInfoOpen}>
               <CollapsibleSection number={2} title={t("analysis.step.lewis")}><LewisViewer structure={result.lewis} /></CollapsibleSection>
-              <CollapsibleSection number={3} title={t("analysis.step.domains")} defaultOpen={false}><VSEPRCard result={result.vsepr} /></CollapsibleSection>
+              <CollapsibleSection number={3} title={t("analysis.step.domains")} defaultOpen={false}><VSEPRCard result={result.vsepr} angles={result.bond_angles} /></CollapsibleSection>
               <CollapsibleSection number={5} title={t("analysis.step.properties")} defaultOpen={false}><PropertyTable properties={result.properties} /><TeachingNoteCard note={lang === "en" ? result.vsepr.teaching_note_en : result.vsepr.teaching_note_vi} /></CollapsibleSection>
-              <CollapsibleSection number={6} title={t("analysis.step.explanation")} defaultOpen={false}><ExplanationPanel key={result.molecule.id} moleculeId={result.molecule.id} initial={result.explanation} /></CollapsibleSection>
+              <CollapsibleSection number={6} title={t("analysis.step.explanation")} defaultOpen={false}><ExplanationPanel key={result.molecule.id} moleculeId={result.molecule.id} formula={result.molecule.formula} pubchemCid={result.molecule.pubchem_cid} initial={result.explanation} /></CollapsibleSection>
             </WorkspacePane>
             <section className="workspace-main" aria-label={t("analysis.step.model3d")}>
               <header className="workspace-main-head"><span className="step-number" aria-hidden="true">4</span><h2>{t("analysis.step.model3d")}</h2></header>
               <Molecule3DViewer key={result.molecule.id} structure={result.structure3d} />
-              {(lang === "en" ? result.notices.warnings_en : result.notices.warnings_vi).length > 0 && (
-                <div className="model-notes">
-                  {(lang === "en" ? result.notices.warnings_en : result.notices.warnings_vi).map((warning) => <p key={warning}>{warning}</p>)}
-                </div>
-              )}
             </section>
             <WorkspacePane side="right" title={t("chat.title")} open={chatOpen} onToggle={setChatOpen}>
-              <ChatPane moleculeId={result.molecule.id} formula={result.molecule.formula} />
+              <ChatPane moleculeId={result.molecule.id} formula={result.molecule.formula} pubchemCid={result.molecule.pubchem_cid} />
             </WorkspacePane>
           </div>
         </>

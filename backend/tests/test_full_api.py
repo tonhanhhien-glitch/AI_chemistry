@@ -11,7 +11,7 @@ def test_analyze_success_offline() -> None:
     response = client.post("/api/v1/analyze", json={"formula": "H2O", "include_explanation": True})
     assert response.status_code == 200
     body = response.json()
-    assert body["schema_version"] == "1.0"
+    assert body["schema_version"] == "1.1"
     assert body["vsepr"]["ax_en"] == "AX2E2"
     assert body["lewis"]["total_valence_electrons"] == 8
     assert body["structure3d"]["is_illustrative"] is True

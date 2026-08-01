@@ -107,7 +107,7 @@ CORS_ORIGINS=https://vsepr.hungntt.me,http://localhost:8080
 TEACHER_EXPORT_TOKEN=<the openssl output>
 ANTHROPIC_API_KEY=
 ENABLE_CLAUDE=false
-ENABLE_PUBCHEM=false
+ENABLE_PUBCHEM=true
 ENABLE_RDKIT=false
 ```
 

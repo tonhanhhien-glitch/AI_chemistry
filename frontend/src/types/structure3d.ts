@@ -26,6 +26,7 @@ export interface BondAngleAnnotation {
   category: "measured" | "conformer" | "ideal_vsepr" | "curated_reference";
   source: string;
   is_approximate: boolean;
+  equivalent_count: number;
   note_vi: string | null;
   note_en: string | null;
 }

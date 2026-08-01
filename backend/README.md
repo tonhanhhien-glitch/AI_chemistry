@@ -1,6 +1,6 @@
 # Backend
 
-`app` is the only authoritative FastAPI application. The production analyzer is curated-first, then validates formula-aware PubChem candidates, then applies a deliberately conservative deterministic Lewis/VSEPR engine. 3D priority is PubChem 3D SDF, RDKit ETKDGv3 MolBlock, then an idealized VSEPR coordinate template. Automated tests never make live network calls.
+`app` is the only authoritative FastAPI application. The production analyzer is curated-first, then validates formula-aware PubChem candidates, then applies a deliberately conservative deterministic Lewis/VSEPR engine. 3D priority is the reviewed local experimental snapshot, PubChem 3D SDF, RDKit ETKDGv3 MolBlock, then an idealized VSEPR coordinate template. Automated tests never make live network calls.
 
 ## Run and test
 
@@ -13,9 +13,9 @@ pytest -q
 uvicorn app.main:app --reload
 ```
 
-Install `requirements-optional.txt` and set `ENABLE_RDKIT=true` for RDKit conformers. For Docker, also set the build-time `INSTALL_RDKIT=true` so the optional wheel is installed. Set `ENABLE_PUBCHEM=true` for uncurated identity and PubChem 3D lookup; PubChem requires outbound HTTPS but no key. `PUBCHEM_TIMEOUT_SECONDS`, `PUBCHEM_CACHE_TTL_SECONDS`, `PUBCHEM_MAX_REQUESTS_PER_SECOND`, `PUBCHEM_MAX_CANDIDATES`, and `PUBCHEM_RETRY_COUNT` control safe network behavior. With both flags false, curated molecules remain functional and use idealized coordinates. Cache files under `CACHE_DIR` are keyed by formula identity or CID/record type and expire by TTL.
+Install `requirements-optional.txt` and set `ENABLE_RDKIT=true` for RDKit conformers. For Docker, also set the build-time `INSTALL_RDKIT=true` so the optional wheel is installed. Set `ENABLE_PUBCHEM=true` for uncurated identity and PubChem 3D lookup; PubChem requires outbound HTTPS but no key. `PUBCHEM_TIMEOUT_SECONDS`, `PUBCHEM_CACHE_TTL_SECONDS`, `PUBCHEM_MAX_REQUESTS_PER_SECOND`, `PUBCHEM_MAX_CANDIDATES`, and `PUBCHEM_RETRY_COUNT` control safe network behavior. With both flags false, curated molecules remain functional; verified NH3 and formula-matched NF3 use local NIST coordinates, and other molecules use idealized coordinates. Cache files under `CACHE_DIR` are keyed by formula identity or CID/record type and expire by TTL.
 
-A rendered-coordinate angle is computed from the actual returned coordinates. `ideal_angle`/`reference_angles` are separate VSEPR teaching references. Lone-pair 3D domains are illustrative annotations, not atoms or quantum density.
+Schema 1.1 returns bond_angles with preferred, experimental, coordinate_derived, and vsepr_prediction groups. A rendered-coordinate angle is computed from the actual returned coordinates. Experimental NIST values, curated molecule references, computed conformers, general VSEPR predictions, and idealized-coordinate angles are kept separate; PubChem and RDKit are never experimental. Lone-pair 3D domains are illustrative annotations, not atoms or quantum density.
 
 # Backend Task Checklist
 

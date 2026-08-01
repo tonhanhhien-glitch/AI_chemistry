@@ -43,6 +43,7 @@ class BondAngleAnnotation(BaseModel):
     category: Literal["measured", "conformer", "ideal_vsepr", "curated_reference"]
     source: str
     is_approximate: bool = False
+    equivalent_count: int = Field(default=1, ge=1)
     note_vi: str | None = None
     note_en: str | None = None
 

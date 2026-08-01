@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "retrieval_date": "2026-08-01",
+  "records": [
+    {
+      "id": "nist-cccbdb-nf3-1998kuc",
+      "curated_molecule_id": null,
+      "formula": "NF3",
+      "charge": 0,
+      "atom_inventory": {"N": 1, "F": 3},
+      "formula_identity_unambiguous": true,
+      "cas_rn": "7783-54-2",
+      "pubchem_cid": 24553,
+      "inchi": "InChI=1S/F3N/c1-4(2)3",
+      "inchikey": "GVGCUCJTUSOZKP-UHFFFAOYSA-N",
+      "angle_pattern": {"atom1_element": "F", "center_element": "N", "atom2_element": "F"},
+      "experimental_angle_deg": 102.37,
+      "phase": "gas",
+      "point_group_conformation": "C3v",
+      "reference_label": "1998Kuc",
+      "source_name": "NIST CCCBDB",
+      "source_url": "https://cccbdb.nist.gov/exp2x.asp?casno=7783542",
+      "units": "angstrom",
+      "retrieval_date": "2026-08-01",
+      "coordinates": [
+        {"id": "a0", "element": "N", "x": 0.0000, "y": 0.0000, "z": 0.4731},
+        {"id": "a1", "element": "F", "x": 0.0000, "y": 1.2279, "z": -0.1226},
+        {"id": "a2", "element": "F", "x": 1.0634, "y": -0.6140, "z": -0.1226},
+        {"id": "a3", "element": "F", "x": -1.0634, "y": -0.6140, "z": -0.1226}
+      ]
+    },
+    {
+      "id": "nist-cccbdb-nh3-1966herzberg",
+      "curated_molecule_id": "nh3",
+      "formula": "NH3",
+      "charge": 0,
+      "atom_inventory": {"N": 1, "H": 3},
+      "formula_identity_unambiguous": true,
+      "cas_rn": "7664-41-7",
+      "pubchem_cid": 222,
+      "inchi": "InChI=1S/H3N/h1H3",
+      "inchikey": "QGZKDVFQNNGYKY-UHFFFAOYSA-N",
+      "angle_pattern": {"atom1_element": "H", "center_element": "N", "atom2_element": "H"},
+      "experimental_angle_deg": 106.67,
+      "phase": "gas",
+      "point_group_conformation": "C3v",
+      "reference_label": "1966Herzberg",
+      "source_name": "NIST CCCBDB",
+      "source_url": "https://cccbdb.nist.gov/exp2x.asp?casno=7664417",
+      "units": "angstrom",
+      "retrieval_date": "2026-08-01",
+      "coordinates": [
+        {"id": "a0", "element": "N", "x": 0.0000, "y": 0.0000, "z": 0.0000},
+        {"id": "a1", "element": "H", "x": 0.0000, "y": -0.9377, "z": -0.3816},
+        {"id": "a2", "element": "H", "x": 0.8121, "y": 0.4689, "z": -0.3816},
+        {"id": "a3", "element": "H", "x": -0.8121, "y": 0.4689, "z": -0.3816}
+      ]
+    }
+  ]
+}

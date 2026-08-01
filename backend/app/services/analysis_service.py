@@ -3,6 +3,7 @@
 from app.schemas.analysis_schema import AnalysisNotices, AnalysisRequest, AnalysisResponse
 from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceStatus
 from app.services.ai_explanation_service import generate_explanation
+from app.services.bond_angle_service import build_bond_angles
 from app.services.formula_parser import parse_formula
 from app.services.lewis_service import build_lewis_structure
 from app.services.molecule_resolver import get_record, resolve_molecule
@@ -30,6 +31,8 @@ def analyze(request: AnalysisRequest) -> AnalysisResponse:
     vsepr = analyze_vsepr(record)
     structure_result = resolve_structure3d(record)
     structure3d = structure_result.structure
+    bond_angles = build_bond_angles(record, structure3d)
+    record["_bond_angles"] = bond_angles.model_dump()
     explanation = None
     if request.include_explanation:
         explanation = generate_explanation(record, request.explanation_level, request.language)
@@ -61,6 +64,7 @@ def analyze(request: AnalysisRequest) -> AnalysisResponse:
         vsepr=vsepr,
         properties=get_properties(record),
         structure3d=structure3d,
+        bond_angles=bond_angles,
         explanation=explanation,
         notices=AnalysisNotices(
             offline_capable=record["source"] != "PubChem reference",

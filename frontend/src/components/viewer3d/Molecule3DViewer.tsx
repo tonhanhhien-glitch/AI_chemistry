@@ -49,8 +49,8 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
   const containerRef = useRef<HTMLDivElement>(null); const viewerRef = useRef<GLViewer | null>(null);
   const atomLabelsRef = useRef<LabelHandle[]>([]); const angleLabelRef = useRef<LabelHandle | null>(null);
   const angleShapesRef = useRef<ShapeHandle[]>([]); const lonePairShapesRef = useRef<ShapeHandle[]>([]);
-  const [style, setStyle] = useState<ViewerStyle>("ball-and-stick"); const [labels, setLabels] = useState(false);
-  const [angles, setAngles] = useState(false); const [lonePairs, setLonePairs] = useState(false); const [selectedAngleId, setSelectedAngleId] = useState(structure.angle_annotations[0]?.id ?? ""); const [failed, setFailed] = useState(false);
+  const [style, setStyle] = useState<ViewerStyle>("ball-and-stick"); const [labels, setLabels] = useState(true);
+  const [angles, setAngles] = useState(true); const [lonePairs, setLonePairs] = useState(true); const [selectedAngleId, setSelectedAngleId] = useState(structure.angle_annotations[0]?.id ?? ""); const [failed, setFailed] = useState(false);
   const selectedAngle = useMemo(() => structure.angle_annotations.find((item) => item.id === selectedAngleId) ?? structure.angle_annotations[0], [selectedAngleId, structure.angle_annotations]);
 
   useEffect(() => {
@@ -99,7 +99,6 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
   if (failed) return <ViewerFallback />;
   const lonePairCount = structure.electron_domains.filter((domain) => domain.kind === "lone_pair").length;
   return <div className="viewer-wrap">
-    <div className={`structure-source-badge source-${structure.source}`}>{structure.source_label}</div>
     <ViewerToolbar style={style} labels={labels} angles={angles} lonePairs={lonePairs} hasAngles={structure.angle_annotations.length > 0} hasLonePairs={lonePairCount > 0} onStyle={setStyle} onLabels={setLabels} onAngles={setAngles} onLonePairs={setLonePairs} onReset={() => { viewerRef.current?.zoomTo(); viewerRef.current?.render(); }} onFullscreen={() => { void containerRef.current?.parentElement?.requestFullscreen?.(); }} />
     {structure.angle_annotations.length > 1 && <label className="angle-selector">{t("viewer3d.angleSelect")}<select value={selectedAngle?.id} onChange={(event) => setSelectedAngleId(event.target.value)}>{structure.angle_annotations.map((annotation) => <option key={annotation.id} value={annotation.id}>{annotation.display_label} · {annotation.atom1_id}–{annotation.center_atom_id}–{annotation.atom2_id}</option>)}</select></label>}
     <div className="mol-viewer" ref={containerRef} aria-label={t("viewer3d.viewerAria")} />

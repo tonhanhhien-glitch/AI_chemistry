@@ -164,7 +164,7 @@ def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidat
         "distortion_note_vi": "Giá trị tham chiếu VSEPR có thể khác góc đo từ cấu dạng 3D.",
         "distortion_note_en": "The VSEPR teaching reference may differ from the angle measured in the 3D conformer.",
         "teaching_note_vi": rule.teaching_note_vi,
-        "teaching_note_en": rule.teaching_note_vi,
+        "teaching_note_en": rule.teaching_note_en,
         "polarity_note_vi": "Không tự động suy luận độ phân cực cho bản ghi chưa được tuyển chọn.",
         "polarity_note_en": "Polarity is not inferred automatically for an uncurated PubChem record.",
         "review_status": review_status,

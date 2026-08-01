@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.schemas.bond_angle_schema import BondAnglesResult
 from app.schemas.explanation_schema import ExplanationLevel, ExplanationResponse
 from app.schemas.lewis_schema import LewisStructure
 from app.schemas.molecule_schema import ExternalServiceStatus, PropertyItem, ResolvedMolecule
@@ -35,11 +36,12 @@ class AnalysisNotices(BaseModel):
 
 
 class AnalysisResponse(BaseModel):
-    schema_version: Literal["1.0"] = "1.0"
+    schema_version: Literal["1.1"] = "1.1"
     molecule: ResolvedMolecule
     lewis: LewisStructure
     vsepr: VSEPRResult
     properties: list[PropertyItem]
     structure3d: Structure3D
+    bond_angles: BondAnglesResult
     explanation: ExplanationResponse | None = None
     notices: AnalysisNotices

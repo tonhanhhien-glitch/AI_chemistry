@@ -8,7 +8,7 @@ services:
     envVars:
       - { key: DATA_DIR, value: /var/data }
       - { key: ENABLE_CLAUDE, value: "false" }
-      - { key: ENABLE_PUBCHEM, value: "false" }
+      - { key: ENABLE_PUBCHEM, value: "true" }
       - { key: ENABLE_RDKIT, value: "false" }
       - { key: TEACHER_EXPORT_TOKEN, sync: false }
     disk: { name: study-data, mountPath: /var/data, sizeGB: 1 }

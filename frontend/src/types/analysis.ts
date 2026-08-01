@@ -1,3 +1,4 @@
+import type { BondAnglesResult } from "./bondAngles";
 import type { Explanation, ExplanationLevel } from "./explanation";
 import type { LewisStructure } from "./lewis";
 import type { Molecule, PropertyItem } from "./molecule";
@@ -14,12 +15,13 @@ export interface AnalysisRequest {
 }
 
 export interface AnalysisResult {
-  schema_version: "1.0";
+  schema_version: "1.1";
   molecule: Molecule;
   lewis: LewisStructure;
   vsepr: VseprResult;
   properties: PropertyItem[];
   structure3d: Structure3D;
+  bond_angles: BondAnglesResult;
   explanation: Explanation | null;
   notices: {
     offline_capable: boolean;

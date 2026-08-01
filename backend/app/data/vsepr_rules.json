@@ -55,7 +55,7 @@
       "molecular_geometry": "trigonal pyramidal",
       "electron_geometry_vi": "tứ diện",
       "molecular_geometry_vi": "chóp tam giác",
-      "ideal_angle": "~107°"
+      "ideal_angle": "<109.5°"
     },
     {
       "ax_en": "AX2E2",
@@ -66,7 +66,7 @@
       "molecular_geometry": "bent",
       "electron_geometry_vi": "tứ diện",
       "molecular_geometry_vi": "gấp khúc",
-      "ideal_angle": "~104.5°"
+      "ideal_angle": "<109.5°"
     },
     {
       "ax_en": "AX5",
