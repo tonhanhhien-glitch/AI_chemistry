@@ -20,11 +20,15 @@ interface ViewerToolbarProps {
 export default function ViewerToolbar(props: ViewerToolbarProps) {
   const { t } = useI18n();
   return <div className="viewer-toolbar">
-    <StyleSelector value={props.style} onChange={props.onStyle} />
-    <AtomLabelToggle checked={props.labels} onChange={props.onLabels} />
-    <label className="check-control"><input type="checkbox" checked={props.angles} disabled={!props.hasAngles} onChange={(event) => props.onAngles(event.target.checked)} />{t("viewer3d.angles")}</label>
-    <label className="check-control"><input type="checkbox" checked={props.lonePairs} disabled={!props.hasLonePairs} onChange={(event) => props.onLonePairs(event.target.checked)} />{t("viewer3d.lonePairs")}</label>
-    <button className="secondary-button" onClick={props.onReset}>{t("viewer3d.reset")}</button>
-    <button className="secondary-button" onClick={props.onFullscreen}>{t("viewer3d.fullscreen")}</button>
+    <div className="viewer-toolbar-main">
+      <StyleSelector value={props.style} onChange={props.onStyle} />
+      <button className="secondary-button" onClick={props.onReset}>{t("viewer3d.reset")}</button>
+      <button className="secondary-button" onClick={props.onFullscreen}>{t("viewer3d.fullscreen")}</button>
+    </div>
+    <div className="viewer-toolbar-toggles">
+      <AtomLabelToggle checked={props.labels} onChange={props.onLabels} />
+      <label className="check-control"><input type="checkbox" checked={props.angles} disabled={!props.hasAngles} onChange={(event) => props.onAngles(event.target.checked)} />{t("viewer3d.angles")}</label>
+      <label className="check-control"><input type="checkbox" checked={props.lonePairs} disabled={!props.hasLonePairs} onChange={(event) => props.onLonePairs(event.target.checked)} />{t("viewer3d.lonePairs")}</label>
+    </div>
   </div>;
 }

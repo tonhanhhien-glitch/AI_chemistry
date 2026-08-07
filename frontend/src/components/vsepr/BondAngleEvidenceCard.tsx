@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n";
+import { ChemFormula } from "../../utils/chemFormula";
 import type { BondAnglesResult } from "../../types/bondAngles";
 
 export default function BondAngleEvidenceCard({ angles, notation }: { angles: BondAnglesResult; notation?: string }) {
@@ -35,7 +36,7 @@ export default function BondAngleEvidenceCard({ angles, notation }: { angles: Bo
     </div>}
     {showPrediction && prediction && <div>
       <span>{t("angles.vseprPrediction")}</span>
-      <strong>{notation && <>{notation}: </>}{prediction.display_label}</strong>
+      <strong>{notation && <><ChemFormula text={notation} />: </>}{prediction.display_label}</strong>
       <small>{t("angles.generalModel")}</small>
     </div>}
   </section>;

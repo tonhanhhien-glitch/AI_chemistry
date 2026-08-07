@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { searchMolecules } from "../api/moleculeApi";
 import CollapsibleSection from "../components/analysis/CollapsibleSection";
@@ -15,21 +15,28 @@ import Molecule3DViewer from "../components/viewer3d/Molecule3DViewer";
 import VSEPRCard from "../components/vsepr/VSEPRCard";
 import PipelineSummary from "../components/workflow/PipelineSummary";
 import { useI18n } from "../i18n";
+import { ChemFormula } from "../utils/chemFormula";
 import { useAnalyzeMolecule } from "../hooks/useAnalyzeMolecule";
+import type { AnalysisRequest } from "../types/analysis";
 
 export default function AnalysisPage() {
   const { t, lang } = useI18n();
-  const [params] = useSearchParams();
+  const [params, setSearchParams] = useSearchParams();
   const initialId = params.get("id"); const initialFormula = params.get("formula");
   const [query, setQuery] = useState(initialFormula || ""); const [localError, setLocalError] = useState("");
   const [infoOpen, setInfoOpen] = useState(true); const [chatOpen, setChatOpen] = useState(true);
   const { result, error, isLoading, run } = useAnalyzeMolecule();
-  useEffect(() => { if (initialId) void run({ molecule_id: initialId, include_explanation: true, language: lang }); else if (initialFormula) void run({ formula: initialFormula, include_explanation: true, language: lang }); }, [initialFormula, initialId, lang, run]);
+  const skipNextFetch = useRef(false);
+  useEffect(() => {
+    if (skipNextFetch.current) { skipNextFetch.current = false; return; }
+    if (initialId) void run({ molecule_id: initialId, include_explanation: true, language: lang }); else if (initialFormula) void run({ formula: initialFormula, include_explanation: true, language: lang });
+  }, [initialFormula, initialId, lang, run]);
+  function goTo(nextParams: Record<string, string>, request: AnalysisRequest) { skipNextFetch.current = true; setSearchParams(nextParams); void run(request); }
   async function submit() {
     setLocalError(""); const value = query.trim();
     if (!value) { setLocalError(t("analysis.error.empty")); return; }
-    if (/^[A-Z]/.test(value)) { void run({ formula: value, include_explanation: true, language: lang }); return; }
-    try { const matches = await searchMolecules(value); if (matches.length === 1) void run({ molecule_id: matches[0].id, include_explanation: true, language: lang }); else if (matches.length > 1) setLocalError(t("analysis.error.multi")); else setLocalError(t("analysis.error.notFound")); }
+    if (/^[A-Z]/.test(value)) { goTo({ formula: value }, { formula: value, include_explanation: true, language: lang }); return; }
+    try { const matches = await searchMolecules(value); if (matches.length === 1) goTo({ id: matches[0].id }, { molecule_id: matches[0].id, include_explanation: true, language: lang }); else if (matches.length > 1) setLocalError(t("analysis.error.multi")); else setLocalError(t("analysis.error.notFound")); }
     catch { setLocalError(t("analysis.error.searchFail")); }
   }
   return (
@@ -42,7 +49,7 @@ export default function AnalysisPage() {
             <div className="candidate-list">
               <p>{t("analysis.chooseStructure")}</p>
               {error.candidates.map((item) => (
-                <button key={item.id} onClick={() => void run(item.cid ? { formula: query.trim(), pubchem_cid: item.cid, include_explanation: true, language: lang } : { molecule_id: item.id, include_explanation: true, language: lang })}><strong>{lang === "en" ? item.name_en : item.name_vi}</strong><span>{item.formula} · {t("analysis.candidateCharge")}: {item.charge ?? 0} · CID {item.cid ?? "—"}</span>{item.canonical_smiles && <code>{item.canonical_smiles}</code>}<small>{item.source ?? "Curated"}</small></button>
+                <button key={item.id} onClick={() => void run(item.cid ? { formula: query.trim(), pubchem_cid: item.cid, include_explanation: true, language: lang } : { molecule_id: item.id, include_explanation: true, language: lang })}><strong>{item.name_en}</strong><span><ChemFormula text={item.formula} /> · {t("analysis.candidateCharge")}: {item.charge ?? 0} · CID {item.cid ?? "—"}</span>{item.canonical_smiles && <code>{item.canonical_smiles}</code>}<small>{item.source ?? "Curated"}</small></button>
               ))}
             </div>
           )}

@@ -37,7 +37,9 @@ describe("BondAngleEvidenceCard", () => {
     expect(screen.getByText("F–N–F: 102.37°")).toBeInTheDocument();
     expect(screen.getByText(/Thực nghiệm · pha khí/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "NIST CCCBDB" })).toHaveAttribute("href", "https://cccbdb.nist.gov/");
-    expect(screen.getByText("AX3E: <109.5°")).toBeInTheDocument();
+    // "AX3E" renders its "3" as a subscript element, so the label is split across
+    // nodes; match on the full element text content instead of a single text node.
+    expect(screen.getByText((_, element) => element?.tagName === "STRONG" && element.textContent === "AX3E: <109.5°")).toBeInTheDocument();
     expect(screen.getByText("Dự đoán VSEPR tổng quát")).toBeInTheDocument();
   });
 

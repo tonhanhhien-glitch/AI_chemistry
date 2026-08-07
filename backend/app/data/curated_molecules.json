@@ -18,7 +18,7 @@
         "verified_reference": false
       },
       "id": "co2",
-      "name_vi": "Cacbon đioxit",
+      "name_vi": "Carbon dioxide",
       "name_en": "Carbon dioxide",
       "aliases": [
         "carbon dioxide"
@@ -86,7 +86,7 @@
         "verified_reference": false
       },
       "id": "bf3",
-      "name_vi": "Bo triflorua",
+      "name_vi": "Boron trifluoride",
       "name_en": "Boron trifluoride",
       "aliases": [
         "boron trifluoride"
@@ -158,7 +158,7 @@
         "verified_reference": false
       },
       "id": "so2",
-      "name_vi": "Lưu huỳnh đioxit",
+      "name_vi": "Sulfur dioxide",
       "name_en": "Sulfur dioxide",
       "aliases": [
         "sulfur dioxide",
@@ -229,7 +229,7 @@
         "verified_reference": false
       },
       "id": "h2o",
-      "name_vi": "Nước",
+      "name_vi": "Water",
       "name_en": "Water",
       "aliases": [
         "water",
@@ -299,7 +299,7 @@
         "verified_reference": false
       },
       "id": "nh3",
-      "name_vi": "Amoniac",
+      "name_vi": "Ammonia",
       "name_en": "Ammonia",
       "aliases": [
         "ammonia",
@@ -375,7 +375,7 @@
         "verified_reference": false
       },
       "id": "ch4",
-      "name_vi": "Metan",
+      "name_vi": "Methane",
       "name_en": "Methane",
       "aliases": [
         "methane",
@@ -452,7 +452,7 @@
         "verified_reference": false
       },
       "id": "nh4-plus",
-      "name_vi": "Ion amoni",
+      "name_vi": "Ammonium ion",
       "name_en": "Ammonium ion",
       "aliases": [
         "ammonium",
@@ -529,7 +529,7 @@
         "verified_reference": false
       },
       "id": "pcl5",
-      "name_vi": "Photpho pentaclorua",
+      "name_vi": "Phosphorus pentachloride",
       "name_en": "Phosphorus pentachloride",
       "aliases": [
         "phosphorus pentachloride"
@@ -609,7 +609,7 @@
         "verified_reference": false
       },
       "id": "sf4",
-      "name_vi": "Lưu huỳnh tetraflorua",
+      "name_vi": "Sulfur tetrafluoride",
       "name_en": "Sulfur tetrafluoride",
       "aliases": [
         "sulfur tetrafluoride"
@@ -686,7 +686,7 @@
         "verified_reference": false
       },
       "id": "clf3",
-      "name_vi": "Clo triflorua",
+      "name_vi": "Chlorine trifluoride",
       "name_en": "Chlorine trifluoride",
       "aliases": [
         "chlorine trifluoride"
@@ -759,7 +759,7 @@
         "verified_reference": false
       },
       "id": "xef2",
-      "name_vi": "Xenon điflorua",
+      "name_vi": "Xenon difluoride",
       "name_en": "Xenon difluoride",
       "aliases": [
         "xenon difluoride"
@@ -827,7 +827,7 @@
         "verified_reference": false
       },
       "id": "sf6",
-      "name_vi": "Lưu huỳnh hexaflorua",
+      "name_vi": "Sulfur hexafluoride",
       "name_en": "Sulfur hexafluoride",
       "aliases": [
         "sulfur hexafluoride"
@@ -911,7 +911,7 @@
         "verified_reference": false
       },
       "id": "brf5",
-      "name_vi": "Brom pentaflorua",
+      "name_vi": "Bromine pentafluoride",
       "name_en": "Bromine pentafluoride",
       "aliases": [
         "bromine pentafluoride"
@@ -992,7 +992,7 @@
         "verified_reference": false
       },
       "id": "xef4",
-      "name_vi": "Xenon tetraflorua",
+      "name_vi": "Xenon tetrafluoride",
       "name_en": "Xenon tetrafluoride",
       "aliases": [
         "xenon tetrafluoride"
@@ -1068,7 +1068,7 @@
         "verified_reference": false
       },
       "id": "no3-minus",
-      "name_vi": "Ion nitrat",
+      "name_vi": "Nitrate ion",
       "name_en": "Nitrate ion",
       "aliases": [
         "nitrate",
@@ -1142,7 +1142,7 @@
         "verified_reference": false
       },
       "id": "co3-2minus",
-      "name_vi": "Ion cacbonat",
+      "name_vi": "Carbonate ion",
       "name_en": "Carbonate ion",
       "aliases": [
         "carbonate",
