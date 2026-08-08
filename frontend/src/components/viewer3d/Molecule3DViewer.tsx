@@ -14,8 +14,29 @@ function xyzData(structure: Structure3D): string {
   return [String(structure.atoms.length), structure.source_label, ...structure.atoms.map((atom) => `${atom.element} ${atom.x} ${atom.y} ${atom.z}`)].join("\n");
 }
 
+/**
+ * Serializes the engine's atoms *and* its explicit bond list as a V2000 molblock.
+ *
+ * XYZ carries no connectivity, so 3Dmol has to re-derive bonds from interatomic distance, and
+ * its covalent-radius cutoff (O+H+0.25 = 1.35 Å) is shorter than the uniform 1.55 Å bond of the
+ * idealized VSEPR models — every X–H bond of those models was silently dropped. V2000 is
+ * column-positional, hence the fixed field widths.
+ */
+function molblockData(structure: Structure3D): string {
+  const serials = new Map(structure.atoms.map((atom, index) => [atom.id, index + 1]));
+  const bonds = structure.bonds.filter((bond) => serials.has(bond.atom1_id) && serials.has(bond.atom2_id));
+  const column = (value: number) => String(value).padStart(3);
+  return [
+    structure.source_label, "  VSEPR-AI  3D", "",
+    `${column(structure.atoms.length)}${column(bonds.length)}  0  0  0  0  0  0  0  0999 V2000`,
+    ...structure.atoms.map((atom) => `${[atom.x, atom.y, atom.z].map((value) => value.toFixed(4).padStart(10)).join("")} ${atom.element.padEnd(3)} 0  0  0  0  0  0  0  0  0  0  0  0`),
+    ...bonds.map((bond) => `${column(serials.get(bond.atom1_id)!)}${column(serials.get(bond.atom2_id)!)}${column(Math.min(Math.max(Math.round(bond.order), 1), 3))}  0  0  0  0`),
+    "M  END", "",
+  ].join("\n");
+}
+
 function modelData(structure: Structure3D): { data: string; format: "xyz" | "mol" | "sdf" | "pdb" } {
-  if (structure.format === "coordinates") return { data: xyzData(structure), format: "xyz" };
+  if (structure.format === "coordinates") return structure.bonds.length ? { data: molblockData(structure), format: "mol" } : { data: xyzData(structure), format: "xyz" };
   if (!structure.data) throw new Error(`Missing ${structure.format} structure data`);
   return { data: structure.data, format: structure.format === "molblock" ? "mol" : structure.format };
 }
@@ -45,9 +66,28 @@ function angleArc(structure: Structure3D, annotation: BondAngleAnnotation): Vect
   });
 }
 
+/**
+ * Pushes the numeric label out along the angle bisector so it clears the central atom's sphere
+ * and both bond sticks while staying attached to its arc.
+ */
+function angleLabelPosition(center: Vector3D, arcMidpoint: Vector3D): Vector3D {
+  const offset = subtract(arcMidpoint, center);
+  return { x: center.x + offset.x * 1.45, y: center.y + offset.y * 1.45, z: center.z + offset.z * 1.45 };
+}
+
+/**
+ * 3Dmol style spec per display mode. Ball-and-stick needs both a sphere and a stick radius thick
+ * enough to read at normal zoom; stick and space-filling keep their single-primitive look.
+ */
+const STYLE_SPECS: Record<ViewerStyle, { sphere?: { scale: number }; stick?: { radius: number } }> = {
+  stick: { stick: { radius: 0.18 } },
+  "ball-and-stick": { stick: { radius: 0.15 }, sphere: { scale: 0.3 } },
+  "space-filling": { sphere: { scale: 0.95 } },
+};
+
 /** Sphere scale 3Dmol draws atoms at, used as the base scale for the lone-pair lobes. */
 function atomSphereScale(style: ViewerStyle): number {
-  return style === "space-filling" ? 0.95 : 0.28;
+  return STYLE_SPECS[style].sphere?.scale ?? 0.3;
 }
 
 /**
@@ -91,8 +131,7 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
 
   useEffect(() => {
     const viewer = viewerRef.current; if (!viewer) return;
-    const styles = style === "stick" ? { stick: { radius: 0.18 } } : style === "space-filling" ? { sphere: { scale: 0.95 } } : { stick: { radius: 0.14 }, sphere: { scale: 0.28 } };
-    viewer.setStyle({}, styles);
+    viewer.setStyle({}, STYLE_SPECS[style]);
     atomLabelsRef.current.forEach((label) => viewer.removeLabel(label)); atomLabelsRef.current = [];
     if (labels) atomLabelsRef.current = structure.atoms.map((atom) => viewer.addLabel(atom.element, { position: atom, backgroundOpacity: 0.75, fontColor: "white", backgroundColor: "#173f35" }));
     viewer.render();
@@ -107,7 +146,7 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
       const points = angleArc(structure, selectedAngle);
       if (center && atom1 && atom2 && points.length) {
         angleShapesRef.current = [viewer.addLine({ start: center, end: atom1, color: "#d0604c", linewidth: 2 }), viewer.addLine({ start: center, end: atom2, color: "#d0604c", linewidth: 2 }), viewer.addCurve({ points, color: "#d0604c", radius: 0.035 })];
-        angleLabelRef.current = viewer.addLabel(selectedAngle.display_label, { position: points[Math.floor(points.length / 2)], backgroundColor: "#8d3528", fontColor: "white", backgroundOpacity: 0.88 });
+        angleLabelRef.current = viewer.addLabel(selectedAngle.display_label, { position: angleLabelPosition(center, points[Math.floor(points.length / 2)]), backgroundColor: "#8d3528", fontColor: "white", backgroundOpacity: 0.88 });
       }
     }
     viewer.render();

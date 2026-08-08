@@ -1,17 +1,12 @@
 """Select molecule-specific bond-angle evidence without conflating provenance."""
 
-import re
 from typing import Any
 
 from app.chemistry.vsepr_rules import get_vsepr_rule
 from app.schemas.bond_angle_schema import BondAngleEvidence, BondAnglesResult
 from app.schemas.structure3d_schema import Structure3D, StructureSource
 from app.services.experimental_geometry_service import match_experimental_geometry
-
-
-def _first_number(label: str) -> float | None:
-    match = re.search(r"\d+(?:\.\d+)?", label)
-    return float(match.group()) if match else None
+from app.services.reference_angle_service import curated_reference_label, first_number
 
 
 def build_bond_angles(record: dict[str, Any], structure: Structure3D) -> BondAnglesResult:
@@ -48,16 +43,16 @@ def build_bond_angles(record: dict[str, Any], structure: Structure3D) -> BondAng
     outer = record["atom_symbols"][1] if len(record["atom_symbols"]) > 1 else "X"
     vsepr_prediction = [BondAngleEvidence(
         id=f"vsepr-{record['ax_en']}", atom1_element=outer, center_element=record["central_atom"], atom2_element=outer,
-        value_deg=_first_number(rule.ideal_angle), display_label=rule.ideal_angle, evidence_type="ideal_vsepr",
+        value_deg=first_number(rule.ideal_angle), display_label=rule.ideal_angle, evidence_type="ideal_vsepr",
         source_name="General VSEPR prediction", is_approximate=True,
     )]
 
     curated: list[BondAngleEvidence] = []
-    curated_label = record.get("ideal_angle")
-    if record.get("source") == "curated" and curated_label and curated_label != rule.ideal_angle:
+    curated_label = curated_reference_label(record)
+    if curated_label:
         curated = [BondAngleEvidence(
             id=f"curated-{record['id']}", atom1_element=outer, center_element=record["central_atom"], atom2_element=outer,
-            value_deg=_first_number(curated_label), display_label=curated_label, evidence_type="curated_reference",
+            value_deg=first_number(curated_label), display_label=curated_label, evidence_type="curated_reference",
             source_name="Curated molecule-specific teaching reference", is_approximate=True,
         )]
 

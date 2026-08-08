@@ -33,6 +33,21 @@ class StructureSource(StrEnum):
     IDEALIZED_VSEPR = "idealized_vsepr"
 
 
+class ReferenceBondAngle(BaseModel):
+    """The molecule-specific bond angle preferred over the generic AXnEm ideal angle.
+
+    ``ideal_vsepr`` marks the fallback used when no molecule-specific value exists, so a
+    consumer can tell "this molecule really bends to 104.5°" from "we only know the
+    electron-domain ideal".
+    """
+
+    value_deg: float
+    display_label: str
+    category: Literal["measured", "curated_reference", "ideal_vsepr"]
+    source: str
+    is_approximate: bool = True
+
+
 class BondAngleAnnotation(BaseModel):
     id: str
     atom1_id: str
@@ -73,6 +88,7 @@ class Structure3D(BaseModel):
     is_experimental: bool = False
     pubchem_cid: int | None = None
     central_atom_id: str | None = None
+    reference_bond_angle: ReferenceBondAngle | None = None
     angle_annotations: list[BondAngleAnnotation] = Field(default_factory=list)
     electron_domains: list[ElectronDomain3D] = Field(default_factory=list)
     warning_vi: str | None = None

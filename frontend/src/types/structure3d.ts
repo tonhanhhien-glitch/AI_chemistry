@@ -16,6 +16,18 @@ export interface Vector3D { x: number; y: number; z: number }
 
 export type StructureSource = "curated_coordinates" | "pubchem_3d" | "rdkit_etkdg" | "idealized_vsepr";
 
+/**
+ * The molecule-specific angle preferred over the generic AXnEm ideal. `ideal_vsepr` marks the
+ * fallback used when the molecule has no specific value of its own.
+ */
+export interface ReferenceBondAngle {
+  value_deg: number;
+  display_label: string;
+  category: "measured" | "curated_reference" | "ideal_vsepr";
+  source: string;
+  is_approximate: boolean;
+}
+
 export interface BondAngleAnnotation {
   id: string;
   atom1_id: string;
@@ -56,6 +68,7 @@ export interface Structure3D {
   is_experimental: boolean;
   pubchem_cid: number | null;
   central_atom_id: string | null;
+  reference_bond_angle: ReferenceBondAngle | null;
   angle_annotations: BondAngleAnnotation[];
   electron_domains: ElectronDomain3D[];
   warning_vi: string | null;

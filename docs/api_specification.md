@@ -71,7 +71,7 @@ The analysis schema version is `1.1`. `molecule` includes canonical identity, CI
 
 `structure3d.format` is `coordinates`, `molblock`, `sdf`, or `pdb`; `data` contains native model text where applicable. Source is one of `curated_coordinates`, `pubchem_3d`, `rdkit_etkdg`, or `idealized_vsepr`. Provenance includes `source_label`, `is_illustrative`, `is_computed`, `is_experimental`, `pubchem_cid`, and bilingual warnings.
 
-`bond_angles` is the schema 1.1 evidence contract: preferred follows experimental → curated reference → PubChem/RDKit conformer → general VSEPR; experimental, coordinate_derived, and vsepr_prediction preserve parallel evidence. `structure3d.angle_annotations` contains coordinate-derived classes and explicit atom triplets; symmetry-equivalent values carry equivalent_count, while genuinely distinct values remain separate. `structure3d.electron_domains` contains bonding and illustrative lone-pair directions/positions; these do not alter molecular atom counts.
+`bond_angles` is the schema 1.1 evidence contract: preferred follows experimental → curated reference → PubChem/RDKit conformer → general VSEPR; experimental, coordinate_derived, and vsepr_prediction preserve parallel evidence. `structure3d.reference_bond_angle` is the normalized molecule-specific angle behind that preference order — experimental measurement, curated molecule-specific reference, or `ideal_vsepr` when only the generic AXnEm value exists — and is what the idealized fallback model is shaped to, so the header and the 3D overlay never disagree (H2O bends to 104.5°, not the 109.5° electron-domain ideal). It is absent for geometries with several inequivalent angles. `structure3d.angle_annotations` contains coordinate-derived classes and explicit atom triplets; symmetry-equivalent values carry equivalent_count, while genuinely distinct values remain separate. `structure3d.electron_domains` contains bonding and illustrative lone-pair directions/positions; these do not alter molecular atom counts.
 
 `notices.external_services_used` is `[]`, `["PubChem"]`, or `["PubChem", "RDKit"]` according to actual use. `external_service_statuses` exposes typed degradation/cache states without stack traces. `offline_capable` is true only when the same analysis can remain usable without its external identity source.
 
@@ -112,6 +112,7 @@ The analysis schema version is `1.1`. `molecule` includes canonical identity, CI
     "is_computed": false,
     "is_experimental": true,
     "pubchem_cid": 24553,
+    "reference_bond_angle": {"value_deg": 102.37, "display_label": "102.37°", "category": "measured"},
     "angle_annotations": [{"display_label": "102.4°", "category": "measured", "equivalent_count": 3}],
     "electron_domains": [{"kind": "lone_pair", "is_illustrative": true}]
   },

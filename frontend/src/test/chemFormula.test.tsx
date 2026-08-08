@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { ChemFormula, readChemFormula } from "../utils/chemFormula";
+import { ChemFormula, formatChemText, readChemFormula } from "../utils/chemFormula";
 
 describe("ChemFormula", () => {
   it("renders a bare formula with no indices and no script stack", () => {
@@ -139,5 +139,71 @@ describe("ChemFormula", () => {
   it("carries the accessible label on the wrapping element", () => {
     const { container } = render(<ChemFormula text="CO3^2-" />);
     expect(container.querySelector(".chemical-formula")?.getAttribute("aria-label")).toBe("CO3 2−");
+  });
+});
+
+describe("formatChemText", () => {
+  const renderProse = (text: string) => render(<p>{formatChemText(text)}</p>);
+
+  it("formats a formula inside a sentence and leaves the rest of the prose alone", () => {
+    const { container } = renderProse("H2O có 8 electron hoá trị.");
+    const formula = container.querySelector(".chemical-formula");
+    expect(formula?.textContent).toBe("H2O");
+    expect(formula?.querySelector(".chemical-subscript")?.textContent).toBe("2");
+    expect(container.textContent).toBe("H2O có 8 electron hoá trị.");
+  });
+
+  it("stacks a charge above its subscript in prose, the same slot the rules page uses", () => {
+    const { container } = renderProse("The CO3^2- ion is trigonal planar.");
+    const stack = container.querySelector(".chemical-script-stack");
+    expect(stack?.querySelector(".chemical-superscript")?.textContent).toBe("2−");
+    expect(stack?.querySelector(".chemical-subscript")?.textContent).toBe("3");
+    expect(container.querySelectorAll(".chemical-script-stack").length).toBe(1);
+  });
+
+  it("formats every formula in a sentence, including AXE notation", () => {
+    const { container } = renderProse("NH4+ is AX4, while SO4^2- is AX4 as well.");
+    const formulas = Array.from(container.querySelectorAll(".chemical-formula"));
+    expect(formulas.map((node) => node.getAttribute("aria-label"))).toEqual(["NH4 +", "AX4", "SO4 2−", "AX4"]);
+  });
+
+  it("leaves ordinary words that only look like symbols as plain text", () => {
+    for (const prose of ["VSEPR mô tả hình học.", "The Lewis structure is bent.", "In water the bond angle is smaller."]) {
+      const { container } = renderProse(prose);
+      expect(container.querySelector(".chemical-formula")).toBeNull();
+      expect(container.textContent).toBe(prose);
+    }
+  });
+
+  it("ignores digit-bearing words that are not built from element symbols", () => {
+    const { container } = renderProse("COVID19 is not a molecule.");
+    expect(container.querySelector(".chemical-formula")).toBeNull();
+    expect(container.textContent).toBe("COVID19 is not a molecule.");
+  });
+
+  it("does not format a formula glued to surrounding word characters", () => {
+    const { container } = renderProse("xH2Oy stays put.");
+    expect(container.querySelector(".chemical-formula")).toBeNull();
+  });
+
+  it("drops a trailing hyphen from the charge when it joins the formula to a word", () => {
+    const { container } = renderProse("CO2-based fuels.");
+    const formula = container.querySelector(".chemical-formula");
+    expect(formula?.textContent).toBe("CO2");
+    expect(formula?.querySelector(".chemical-superscript")).toBeNull();
+    expect(container.textContent).toBe("CO2-based fuels.");
+  });
+
+  it("keeps punctuation next to a formula out of the formatted token", () => {
+    const { container } = renderProse("Xét (CO2), rồi NO3-.");
+    const formulas = Array.from(container.querySelectorAll(".chemical-formula"));
+    expect(formulas.map((node) => node.textContent)).toEqual(["CO2", "NO−3"]);
+    expect(container.textContent).toBe("Xét (CO2), rồi NO−3.");
+  });
+
+  it("returns prose without formulas unchanged and handles empty input", () => {
+    expect(formatChemText("")).toEqual([""]);
+    const { container } = renderProse("Hình học phân tử là gấp khúc.");
+    expect(container.textContent).toBe("Hình học phân tử là gấp khúc.");
   });
 });

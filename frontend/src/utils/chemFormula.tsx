@@ -67,6 +67,51 @@ export function formatChemFormula(text: string): ReactNode[] {
   return parts;
 }
 
+// Every element symbol, so a token that merely has the shape of a formula
+// ("COVID19", "IT4") stays plain prose instead of sprouting scripts.
+const ELEMENT_SYMBOLS = new Set(
+  ("H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr "
+    + "Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm "
+    + "Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No "
+    + "Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og").split(" "),
+);
+
+// AXE notation is not built from element symbols, so it needs its own check.
+const AXE_NOTATION = /^AX\d*(?:E\d*)?$/;
+// A formula-shaped run of capitalised symbols and counts, with an optional
+// trailing charge, taken only where it stands alone as a word. The lookarounds
+// keep "CO2" inside "CO2-based" or a Vietnamese word from being pulled apart,
+// and let the charge be dropped when a letter follows the sign.
+const FORMULA_TOKEN = /(?<![\p{L}\p{N}])(?:[A-Z][a-z]?\d*)+(?:\^\d*[+-]|[+-])?(?![\p{L}\p{N}])/gu;
+
+function isChemFormula(token: string): boolean {
+  const { base, charge } = parseChemFormula(token);
+  // Nothing to raise or lower — leave words like "VSEPR" or "Lewis" untouched.
+  if (!charge && !/\d/.test(base)) return false;
+  if (AXE_NOTATION.test(base)) return true;
+  const symbols = base.match(/[A-Z][a-z]?/g);
+  return symbols !== null && symbols.every((symbol) => ELEMENT_SYMBOLS.has(symbol));
+}
+
+// Renders a sentence of prose, giving every formula inside it the same
+// script-stack treatment a standalone <ChemFormula> gets, so a charge in
+// running text sits directly above its atom-count subscript just like on the
+// VSEPR rules page. Non-formula text is passed through verbatim.
+export function formatChemText(text: string): ReactNode[] {
+  if (!text) return [text];
+  const parts: ReactNode[] = [];
+  let cursor = 0;
+  for (const match of text.matchAll(FORMULA_TOKEN)) {
+    const token = match[0];
+    if (match.index === undefined || !isChemFormula(token)) continue;
+    if (match.index > cursor) parts.push(text.slice(cursor, match.index));
+    parts.push(<ChemFormula key={`formula-${match.index}`} text={token} />);
+    cursor = match.index + token.length;
+  }
+  if (cursor < text.length) parts.push(text.slice(cursor));
+  return parts;
+}
+
 export function ChemFormula({ text, className }: { text: string; className?: string }) {
   return (
     <span className={className ? `chemical-formula ${className}` : "chemical-formula"} aria-label={readChemFormula(text)}>
