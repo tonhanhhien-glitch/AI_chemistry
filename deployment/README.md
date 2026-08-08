@@ -4,6 +4,7 @@
 
 - [ ] Create production `backend/.env` from `backend/.env.example`.
 - [ ] Add OpenRouter API key securely.
+- [ ] Add the OpenAI fallback API key securely (optional; used only when OpenRouter fails).
 - [ ] Configure CORS domain.
 - [ ] Build Docker image (`backend/Dockerfile`).
 - [ ] Run backend container.

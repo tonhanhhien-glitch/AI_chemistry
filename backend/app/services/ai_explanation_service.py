@@ -3,9 +3,8 @@
 import hashlib
 import json
 from typing import Any, Literal
-from app.core.config import settings
 from app.schemas.explanation_schema import ExplanationResponse, ExplanationSections
-from app.services import openrouter_client
+from app.services import llm_client
 from app.services.validation_service import validate_explanation_text
 
 _PROMPT_VERSION = "1.1"
@@ -22,7 +21,7 @@ def _angle_facts(record: dict[str, Any]) -> tuple[str | None, str]:
 def _cache_key(record: dict[str, Any], language: str, level: str) -> str:
     facts = {key: record[key] for key in ("formula", "charge", "ax_en", "bonding_domains", "lone_pair_domains", "electron_geometry", "molecular_geometry", "ideal_angle")}
     facts["bond_angles"] = record.get("_bond_angles")
-    raw = json.dumps([facts, language, level, _PROMPT_VERSION, settings.OPENROUTER_MODEL], sort_keys=True, ensure_ascii=False)
+    raw = json.dumps([facts, language, level, _PROMPT_VERSION, llm_client.model_fingerprint()], sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
@@ -84,37 +83,37 @@ def _strip_code_fence(text: str) -> str:
     return body.rsplit("```", 1)[0].strip()
 
 
-def _call_openrouter(record: dict[str, Any], level: str, language: str, correction: str | None = None) -> ExplanationSections:
+def _call_llm(record: dict[str, Any], level: str, language: str, correction: str | None = None) -> tuple[ExplanationSections, llm_client.ProviderName]:
     suffix = "en" if language == "en" else "vi"
     facts = {key: record[key] for key in ("formula", "charge", "total_valence_electrons", "bonding_domains", "lone_pair_domains", "ax_en", "electron_geometry", "molecular_geometry", "ideal_angle")}
     facts.update(bond_angles=record.get("_bond_angles"), polarity_note=record[f"polarity_note_{suffix}"], teaching_note=record[f"teaching_note_{suffix}"])
     system = _SYSTEM_PROMPT + "\n\nLanguage: " + language + "\nLevel: " + level
     if correction:
         system += "\n\nPrevious output failed validation: " + correction
-    text = openrouter_client.complete(
+    completion = llm_client.complete(
         system,
         [{"role": "user", "content": json.dumps(facts, ensure_ascii=False)}],
         temperature=0,
         max_tokens=1000,
     )
-    return ExplanationSections.model_validate(json.loads(_strip_code_fence(text)))
+    return ExplanationSections.model_validate(json.loads(_strip_code_fence(completion.text))), completion.provider
 
 
 def generate_explanation(record: dict[str, Any], level: Literal["basic", "intermediate", "advanced"] = "intermediate", language: Literal["vi", "en"] = "vi") -> ExplanationResponse:
     key = _cache_key(record, language, level)
     if key in _CACHE:
         return _CACHE[key]
-    if not openrouter_client.is_configured():
+    if not llm_client.is_configured():
         result = deterministic_explanation(record, level, language, "The AI explanation service is not configured; using the deterministic explanation.")
         _CACHE[key] = result
         return result
     problems: list[str] = []
     for attempt in range(2):
         try:
-            sections = _call_openrouter(record, level, language, ", ".join(problems) if attempt else None)
+            sections, provider = _call_llm(record, level, language, ", ".join(problems) if attempt else None)
             valid, problems = validate_explanation_text(" ".join(sections.model_dump().values()), record)
             if valid:
-                result = ExplanationResponse(formula=record["formula"], level=level, language=language, sections=sections, source="openrouter", prompt_version=_PROMPT_VERSION)
+                result = ExplanationResponse(formula=record["formula"], level=level, language=language, sections=sections, source=provider, prompt_version=_PROMPT_VERSION)
                 _CACHE[key] = result
                 return result
         except Exception as exc:

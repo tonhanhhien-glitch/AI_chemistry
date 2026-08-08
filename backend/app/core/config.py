@@ -17,6 +17,12 @@ class Settings(BaseSettings):
     # validation pass, so the worst case is roughly twice this value -- keep it
     # under half the frontend's /explain timeout.
     OPENROUTER_TIMEOUT_SECONDS: float = 20.0
+    # OpenAI is the fallback narrator: it is tried only after OpenRouter fails,
+    # so a paid key is spent only when the free tier is down or rate limited.
+    OPENAI_API_KEY: str = ""
+    OPENAI_MODEL: str = "gpt-4o-mini"
+    OPENAI_BASE_URL: str = "https://api.openai.com/v1"
+    OPENAI_TIMEOUT_SECONDS: float = 20.0
     CORS_ORIGINS: str = "http://localhost:5173"
     PUBCHEM_TIMEOUT_SECONDS: float = 8.0
     PUBCHEM_CACHE_TTL_SECONDS: int = 86400
@@ -29,6 +35,7 @@ class Settings(BaseSettings):
     ENABLE_PUBCHEM: bool = False
     ENABLE_RDKIT: bool = False
     ENABLE_OPENROUTER: bool = False
+    ENABLE_OPENAI: bool = False
     MAX_INPUT_LENGTH: int = 80
     LOG_LEVEL: str = "info"
 

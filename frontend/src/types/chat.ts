@@ -5,6 +5,6 @@ export interface ChatMessage {
 
 export interface ChatResponse {
   reply: string;
-  source: "openrouter" | "deterministic_fallback";
+  source: "openrouter" | "openai" | "deterministic_fallback";
   fallback_reason: string | null;
 }

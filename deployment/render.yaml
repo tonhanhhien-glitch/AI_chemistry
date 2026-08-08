@@ -10,6 +10,9 @@ services:
       - { key: ENABLE_OPENROUTER, value: "false" }
       - { key: OPENROUTER_MODEL, value: "google/gemma-4-31b-it:free" }
       - { key: OPENROUTER_API_KEY, sync: false }
+      - { key: ENABLE_OPENAI, value: "false" }
+      - { key: OPENAI_MODEL, value: "gpt-4o-mini" }
+      - { key: OPENAI_API_KEY, sync: false }
       - { key: ENABLE_PUBCHEM, value: "true" }
       - { key: ENABLE_RDKIT, value: "false" }
       - { key: TEACHER_EXPORT_TOKEN, sync: false }

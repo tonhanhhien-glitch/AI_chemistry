@@ -28,7 +28,7 @@ Schema 1.1 returns bond_angles with preferred, experimental, coordinate_derived,
 - [x] Install Pydantic.
 - [x] Install RDKit.
 - [x] Install PubChemPy.
-- [x] Call OpenRouter over httpx (no extra SDK).
+- [x] Call OpenRouter over httpx (no extra SDK), with OpenAI as the fallback provider.
 - [ ] Install python-dotenv.
 - [x] Install pytest.
 - [x] Create `app/main.py`.
@@ -138,7 +138,7 @@ Schema 1.1 returns bond_angles with preferred, experimental, coordinate_derived,
 
 - [x] Create prompt templates.
 - [x] Add explanation levels: Basic, Intermediate, Advanced.
-- [x] Send only verified backend facts to the OpenRouter API.
+- [x] Send only verified backend facts to the LLM provider (OpenRouter, falling back to OpenAI).
 - [x] Prevent AI from changing chemistry conclusions.
 - [x] Generate English/Vietnamese explanation.
 - [x] Explain Lewis structure.

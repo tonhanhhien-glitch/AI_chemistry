@@ -3,7 +3,7 @@
 import json
 from typing import Any
 from app.schemas.chat_schema import ChatMessage, ChatResponse
-from app.services import openrouter_client
+from app.services import llm_client
 
 _SYSTEM_RULES = (
     "Answer only using the supplied molecule facts.\n"
@@ -31,7 +31,7 @@ def _fallback_reply(record: dict[str, Any], language: str, reason: str | None) -
 
 
 def generate_chat_reply(record: dict[str, Any], messages: list[ChatMessage], language: str = "vi") -> ChatResponse:
-    if not openrouter_client.is_configured():
+    if not llm_client.is_configured():
         return _fallback_reply(record, language, "The AI assistant is not configured.")
     system = (
         _SYSTEM_RULES
@@ -40,14 +40,14 @@ def generate_chat_reply(record: dict[str, Any], messages: list[ChatMessage], lan
         + json.dumps(_facts(record, language), ensure_ascii=False)
     )
     try:
-        text = openrouter_client.complete(
+        completion = llm_client.complete(
             system,
             [{"role": item.role, "content": item.content} for item in messages],
             temperature=0.2,
             max_tokens=700,
         )
-    except openrouter_client.OpenRouterError as exc:
+    except llm_client.LLMError as exc:
         return _fallback_reply(record, language, str(exc))
     except Exception as exc:
         return _fallback_reply(record, language, type(exc).__name__)
-    return ChatResponse(reply=text, source="openrouter")
+    return ChatResponse(reply=completion.text, source=completion.provider)
