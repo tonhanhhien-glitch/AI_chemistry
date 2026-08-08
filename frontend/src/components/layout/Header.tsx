@@ -8,7 +8,6 @@ const links: Array<[string, string]> = [
   ["/", "nav.home"],
   ["/examples", "nav.examples"],
   ["/rules", "nav.rules"],
-  ["/survey", "nav.survey"],
 ];
 
 export default function Header({ search }: { search?: ReactNode }) {
