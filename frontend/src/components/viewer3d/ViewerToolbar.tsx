@@ -13,8 +13,6 @@ interface ViewerToolbarProps {
   onLabels: (value: boolean) => void;
   onAngles: (value: boolean) => void;
   onLonePairs: (value: boolean) => void;
-  onReset: () => void;
-  onFullscreen: () => void;
 }
 
 export default function ViewerToolbar(props: ViewerToolbarProps) {
@@ -22,8 +20,6 @@ export default function ViewerToolbar(props: ViewerToolbarProps) {
   return <div className="viewer-toolbar">
     <div className="viewer-toolbar-main">
       <StyleSelector value={props.style} onChange={props.onStyle} />
-      <button className="secondary-button" onClick={props.onReset}>{t("viewer3d.reset")}</button>
-      <button className="secondary-button" onClick={props.onFullscreen}>{t("viewer3d.fullscreen")}</button>
     </div>
     <div className="viewer-toolbar-toggles">
       <AtomLabelToggle checked={props.labels} onChange={props.onLabels} />

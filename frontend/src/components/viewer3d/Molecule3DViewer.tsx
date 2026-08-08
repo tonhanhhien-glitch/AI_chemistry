@@ -99,11 +99,10 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
   if (failed) return <ViewerFallback />;
   const lonePairCount = structure.electron_domains.filter((domain) => domain.kind === "lone_pair").length;
   return <div className="viewer-wrap">
-    <ViewerToolbar style={style} labels={labels} angles={angles} lonePairs={lonePairs} hasAngles={structure.angle_annotations.length > 0} hasLonePairs={lonePairCount > 0} onStyle={setStyle} onLabels={setLabels} onAngles={setAngles} onLonePairs={setLonePairs} onReset={() => { viewerRef.current?.zoomTo(); viewerRef.current?.render(); }} onFullscreen={() => { void containerRef.current?.parentElement?.requestFullscreen?.(); }} />
+    <ViewerToolbar style={style} labels={labels} angles={angles} lonePairs={lonePairs} hasAngles={structure.angle_annotations.length > 0} hasLonePairs={lonePairCount > 0} onStyle={setStyle} onLabels={setLabels} onAngles={setAngles} onLonePairs={setLonePairs} />
     {structure.angle_annotations.length > 1 && <label className="angle-selector">{t("viewer3d.angleSelect")}<select value={selectedAngle?.id} onChange={(event) => setSelectedAngleId(event.target.value)}>{structure.angle_annotations.map((annotation) => <option key={annotation.id} value={annotation.id}>{annotation.display_label} · {annotation.atom1_id}–{annotation.center_atom_id}–{annotation.atom2_id}</option>)}</select></label>}
     <div className="mol-viewer" ref={containerRef} aria-label={t("viewer3d.viewerAria")} />
     <div className="viewer-legend" aria-label={t("viewer3d.legend")}><span>● {t("viewer3d.legendAtom")}</span><span>━ {t("viewer3d.legendBond")}</span><span className="legend-lone-pair">●● {t("viewer3d.legendLonePair")}</span></div>
-    {selectedAngle && <p className="viewer-angle-note">{t("viewer3d.coordinateAngle")}: {selectedAngle.display_label} · {selectedAngle.source}</p>}
     <p className="viewer-help">{t("viewer3d.help")} {lonePairCount > 0 && (lang === "en" ? "Lone-pair lobes are illustrative regions, not calculated electron-density surfaces." : "Các thùy cặp electron tự do là vùng minh họa, không phải bề mặt mật độ electron được tính toán.")}</p>
   </div>;
 }

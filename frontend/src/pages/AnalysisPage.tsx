@@ -9,8 +9,6 @@ import FormulaInput from "../components/input/FormulaInput";
 import InputValidationMessage from "../components/input/InputValidationMessage";
 import PageContainer from "../components/layout/PageContainer";
 import LewisViewer from "../components/lewis/LewisViewer";
-import PropertyTable from "../components/properties/PropertyTable";
-import TeachingNoteCard from "../components/properties/TeachingNoteCard";
 import Molecule3DViewer from "../components/viewer3d/Molecule3DViewer";
 import VSEPRCard from "../components/vsepr/VSEPRCard";
 import PipelineSummary from "../components/workflow/PipelineSummary";
@@ -64,11 +62,10 @@ export default function AnalysisPage() {
             <WorkspacePane side="left" title={t("analysis.pane.info")} open={infoOpen} onToggle={setInfoOpen}>
               <CollapsibleSection number={2} title={t("analysis.step.lewis")}><LewisViewer structure={result.lewis} /></CollapsibleSection>
               <CollapsibleSection number={3} title={t("analysis.step.domains")} defaultOpen={false}><VSEPRCard result={result.vsepr} angles={result.bond_angles} /></CollapsibleSection>
-              <CollapsibleSection number={5} title={t("analysis.step.properties")} defaultOpen={false}><PropertyTable properties={result.properties} /><TeachingNoteCard note={lang === "en" ? result.vsepr.teaching_note_en : result.vsepr.teaching_note_vi} /></CollapsibleSection>
               <CollapsibleSection number={6} title={t("analysis.step.explanation")} defaultOpen={false}><ExplanationPanel key={result.molecule.id} moleculeId={result.molecule.id} formula={result.molecule.formula} pubchemCid={result.molecule.pubchem_cid} initial={result.explanation} /></CollapsibleSection>
             </WorkspacePane>
             <section className="workspace-main" aria-label={t("analysis.step.model3d")}>
-              <header className="workspace-main-head"><span className="step-number" aria-hidden="true">4</span><h2>{t("analysis.step.model3d")}</h2></header>
+              <header className="workspace-main-head"><h2>{t("analysis.step.model3d")}</h2></header>
               <Molecule3DViewer key={result.molecule.id} structure={result.structure3d} />
             </section>
             <WorkspacePane side="right" title={t("chat.title")} open={chatOpen} onToggle={setChatOpen}>

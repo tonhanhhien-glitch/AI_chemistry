@@ -8,7 +8,6 @@ export default function CollapsibleSection({ number, title, defaultOpen = true, 
     <section className="accordion-section">
       <h2 className="accordion-header">
         <button type="button" className="accordion-trigger" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-          {number != null && <span className="step-number" aria-hidden="true">{number}</span>}
           <span className="accordion-title">{title}</span>
           <span className="accordion-chevron" aria-hidden="true">{open ? "▾" : "▸"}</span>
         </button>

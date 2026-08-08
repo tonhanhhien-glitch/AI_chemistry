@@ -43,6 +43,8 @@ npm run build
 npm run dev
 ```
 
-For optional RDKit support, install `backend/requirements-optional.txt` (or a compatible RDKit build for the deployment platform) and set `ENABLE_RDKIT=true`. PubChem needs outbound HTTPS but no API key. With both integrations disabled, curated records remain usable; NH3 and deterministic NF3 use the reviewed local NIST snapshots, while records without local coordinates use idealized VSEPR coordinates. Live deployment examples enable PubChem, but CI keeps PubChem and RDKit disabled. GET /api/v1/health reports both integration flags.
-
-See [API specification](docs/api_specification.md), [system architecture](docs/system_architecture.md), and [chemistry scope](docs/chemistry_scope.md).
+## Deployment
+Reploy to the hosting service
+```bash
+docker compose up -d --build
+```

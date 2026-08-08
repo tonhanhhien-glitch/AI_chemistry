@@ -46,7 +46,6 @@ describe("Molecule3DViewer", () => {
     await userEvent.click(screen.getByRole("checkbox", { name: "Góc liên kết" }));
     await waitFor(() => expect(viewer.addCurve).toHaveBeenCalled());
     expect(viewer.addLabel).toHaveBeenCalledWith("109.5°", expect.any(Object));
-    expect(screen.getByText(/Góc từ tọa độ hiển thị.*109.5°/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole("checkbox", { name: "Góc liên kết" }));
     expect(viewer.removeShape).toHaveBeenCalled();
   });
