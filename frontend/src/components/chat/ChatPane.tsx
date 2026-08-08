@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import remarkBreaks from "remark-breaks";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import { useI18n } from "../../i18n";
 import { useChat } from "../../hooks/useChat";
 
@@ -32,7 +37,9 @@ export default function ChatPane({ moleculeId, formula, pubchemCid }: { molecule
           </div>
         ) : (
           messages.map((message, index) => (
-            <p key={index} className={`chat-msg chat-${message.role}`}>{message.content}</p>
+            <div key={index} className={`chat-msg chat-${message.role}`}>
+              <ReactMarkdown remarkPlugins={[remarkMath, remarkBreaks]} rehypePlugins={[rehypeKatex]}>{message.content}</ReactMarkdown>
+            </div>
           ))
         )}
         {isLoading && <p className="chat-msg chat-assistant chat-typing" aria-label={t("chat.sending")}><span /><span /><span /></p>}

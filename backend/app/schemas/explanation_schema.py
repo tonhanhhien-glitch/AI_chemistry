@@ -37,7 +37,7 @@ class ExplanationResponse(BaseModel):
     level: ExplanationLevel
     language: ExplanationLanguage
     sections: ExplanationSections
-    source: Literal["claude", "deterministic_fallback"]
+    source: Literal["openrouter", "deterministic_fallback"]
     fallback_reason: str | None = None
     prompt_version: str = "1.0"
     facts_validated: bool = True

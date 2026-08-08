@@ -27,14 +27,14 @@ export default function AnalysisPage() {
   const skipNextFetch = useRef(false);
   useEffect(() => {
     if (skipNextFetch.current) { skipNextFetch.current = false; return; }
-    if (initialId) void run({ molecule_id: initialId, include_explanation: true, language: lang }); else if (initialFormula) void run({ formula: initialFormula, include_explanation: true, language: lang });
+    if (initialId) void run({ molecule_id: initialId, include_explanation: false, language: lang }); else if (initialFormula) void run({ formula: initialFormula, include_explanation: false, language: lang });
   }, [initialFormula, initialId, lang, run]);
   function goTo(nextParams: Record<string, string>, request: AnalysisRequest) { skipNextFetch.current = true; setSearchParams(nextParams); void run(request); }
   async function submit() {
     setLocalError(""); const value = query.trim();
     if (!value) { setLocalError(t("analysis.error.empty")); return; }
-    if (/^[A-Z]/.test(value)) { goTo({ formula: value }, { formula: value, include_explanation: true, language: lang }); return; }
-    try { const matches = await searchMolecules(value); if (matches.length === 1) goTo({ id: matches[0].id }, { molecule_id: matches[0].id, include_explanation: true, language: lang }); else if (matches.length > 1) setLocalError(t("analysis.error.multi")); else setLocalError(t("analysis.error.notFound")); }
+    if (/^[A-Z]/.test(value)) { goTo({ formula: value }, { formula: value, include_explanation: false, language: lang }); return; }
+    try { const matches = await searchMolecules(value); if (matches.length === 1) goTo({ id: matches[0].id }, { molecule_id: matches[0].id, include_explanation: false, language: lang }); else if (matches.length > 1) setLocalError(t("analysis.error.multi")); else setLocalError(t("analysis.error.notFound")); }
     catch { setLocalError(t("analysis.error.searchFail")); }
   }
   return (
@@ -47,7 +47,7 @@ export default function AnalysisPage() {
             <div className="candidate-list">
               <p>{t("analysis.chooseStructure")}</p>
               {error.candidates.map((item) => (
-                <button key={item.id} onClick={() => void run(item.cid ? { formula: query.trim(), pubchem_cid: item.cid, include_explanation: true, language: lang } : { molecule_id: item.id, include_explanation: true, language: lang })}><strong>{item.name_en}</strong><span><ChemFormula text={item.formula} /> · {t("analysis.candidateCharge")}: {item.charge ?? 0} · CID {item.cid ?? "—"}</span>{item.canonical_smiles && <code>{item.canonical_smiles}</code>}<small>{item.source ?? "Curated"}</small></button>
+                <button key={item.id} onClick={() => void run(item.cid ? { formula: query.trim(), pubchem_cid: item.cid, include_explanation: false, language: lang } : { molecule_id: item.id, include_explanation: false, language: lang })}><strong>{item.name_en}</strong><span><ChemFormula text={item.formula} /> · {t("analysis.candidateCharge")}: {item.charge ?? 0} · CID {item.cid ?? "—"}</span>{item.canonical_smiles && <code>{item.canonical_smiles}</code>}<small>{item.source ?? "Curated"}</small></button>
               ))}
             </div>
           )}

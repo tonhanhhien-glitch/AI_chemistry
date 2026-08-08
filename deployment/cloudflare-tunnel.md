@@ -105,8 +105,9 @@ Edit `.env` (`nano .env`) and fill in:
 CLOUDFLARE_TUNNEL_TOKEN=<the real tunnel token from step 1>
 CORS_ORIGINS=https://vsepr.hungntt.me,http://localhost:8080
 TEACHER_EXPORT_TOKEN=<the openssl output>
-ANTHROPIC_API_KEY=
-ENABLE_CLAUDE=false
+OPENROUTER_API_KEY=
+OPENROUTER_MODEL=google/gemma-4-31b-it:free
+ENABLE_OPENROUTER=false
 ENABLE_PUBCHEM=true
 ENABLE_RDKIT=false
 ```

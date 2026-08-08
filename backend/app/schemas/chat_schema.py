@@ -28,5 +28,5 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
-    source: Literal["claude", "deterministic_fallback"]
+    source: Literal["openrouter", "deterministic_fallback"]
     fallback_reason: str | None = None

@@ -1,10 +1,11 @@
-"""Claude may explain immutable facts; deterministic fallback is always available."""
+"""The AI may explain immutable facts; deterministic fallback is always available."""
 
 import hashlib
 import json
 from typing import Any, Literal
 from app.core.config import settings
 from app.schemas.explanation_schema import ExplanationResponse, ExplanationSections
+from app.services import openrouter_client
 from app.services.validation_service import validate_explanation_text
 
 _PROMPT_VERSION = "1.1"
@@ -21,7 +22,7 @@ def _angle_facts(record: dict[str, Any]) -> tuple[str | None, str]:
 def _cache_key(record: dict[str, Any], language: str, level: str) -> str:
     facts = {key: record[key] for key in ("formula", "charge", "ax_en", "bonding_domains", "lone_pair_domains", "electron_geometry", "molecular_geometry", "ideal_angle")}
     facts["bond_angles"] = record.get("_bond_angles")
-    raw = json.dumps([facts, language, level, _PROMPT_VERSION, settings.ANTHROPIC_MODEL], sort_keys=True, ensure_ascii=False)
+    raw = json.dumps([facts, language, level, _PROMPT_VERSION, settings.OPENROUTER_MODEL], sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
@@ -48,34 +49,72 @@ def deterministic_explanation(record: dict[str, Any], level: str = "intermediate
     return ExplanationResponse(formula=record["formula"], level=level, language=language, sections=sections, source="deterministic_fallback", fallback_reason=reason, prompt_version=_PROMPT_VERSION)
 
 
-def _call_claude(record: dict[str, Any], level: str, language: str, correction: str | None = None) -> ExplanationSections:
-    from anthropic import Anthropic
+_SYSTEM_PROMPT = (
+    "The supplied JSON chemistry facts and bond-angle provenance are immutable. "
+    "Do not calculate, replace, select, average, infer, invent, or relabel chemistry values.\n\n"
+    "Your task is only to explain the supplied facts pedagogically.\n\n"
+    "Return ONLY a valid JSON object containing exactly these keys:\n\n"
+    "lewis\nax_en\nelectron_geometry\nmolecular_geometry\nstructure_property\nlearning_tip\ndisclaimer\n\n"
+    "Do not wrap the JSON in markdown.\nDo not add ```json fences.\nDo not include additional keys.\n\n"
+    # Downstream validation matches these phrases literally; omitting them rejects
+    # the answer even when its chemistry is right.
+    "Every section must restate the supplied numbers using this exact wording:\n"
+    "- 'lewis' must contain the formula, '<total_valence_electrons> valence electrons', "
+    "and state that the formal charges sum to <charge>.\n"
+    "- 'ax_en' must contain '<bonding_domains> bonding domains' and "
+    "'<lone_pair_domains> lone-pair domains', plus the AXnEm symbol exactly as supplied.\n"
+    "In Vietnamese use: '<n> electron hoá trị', '<n> miền liên kết', '<n> miền cặp electron tự do', "
+    "and state 'tổng điện tích hình thức bằng <charge>'.\n"
+    "Mention only the supplied geometry names, and write angles only as the supplied "
+    "display labels. Never state an angle number that is not in the supplied facts."
+)
+
+
+def _strip_code_fence(text: str) -> str:
+    """Free models often fence JSON despite instructions; unwrap before parsing."""
+
+    stripped = text.strip()
+    if not stripped.startswith("```"):
+        return stripped
+    body = stripped[3:]
+    if "\n" in body:
+        first, rest = body.split("\n", 1)
+        # Drop the language tag ("json") but keep a fence opened directly on content.
+        body = rest if not first.strip() or first.strip().isalpha() else body
+    return body.rsplit("```", 1)[0].strip()
+
+
+def _call_openrouter(record: dict[str, Any], level: str, language: str, correction: str | None = None) -> ExplanationSections:
     suffix = "en" if language == "en" else "vi"
     facts = {key: record[key] for key in ("formula", "charge", "total_valence_electrons", "bonding_domains", "lone_pair_domains", "ax_en", "electron_geometry", "molecular_geometry", "ideal_angle")}
     facts.update(bond_angles=record.get("_bond_angles"), polarity_note=record[f"polarity_note_{suffix}"], teaching_note=record[f"teaching_note_{suffix}"])
-    system = "The supplied JSON facts and angle provenance are immutable. Never select, invent, average, or relabel an angle. Return JSON with exactly lewis, ax_en, electron_geometry, molecular_geometry, structure_property, learning_tip, disclaimer. Language: " + language + ". Level: " + level + "."
+    system = _SYSTEM_PROMPT + "\n\nLanguage: " + language + "\nLevel: " + level
     if correction:
-        system += " Previous output failed validation: " + correction
-    response = Anthropic(api_key=settings.ANTHROPIC_API_KEY, timeout=settings.PUBCHEM_TIMEOUT_SECONDS).messages.create(model=settings.ANTHROPIC_MODEL, max_tokens=1000, temperature=0, system=system, messages=[{"role": "user", "content": json.dumps(facts, ensure_ascii=False)}])
-    text = "".join(block.text for block in response.content if getattr(block, "type", "") == "text")
-    return ExplanationSections.model_validate(json.loads(text))
+        system += "\n\nPrevious output failed validation: " + correction
+    text = openrouter_client.complete(
+        system,
+        [{"role": "user", "content": json.dumps(facts, ensure_ascii=False)}],
+        temperature=0,
+        max_tokens=1000,
+    )
+    return ExplanationSections.model_validate(json.loads(_strip_code_fence(text)))
 
 
 def generate_explanation(record: dict[str, Any], level: Literal["basic", "intermediate", "advanced"] = "intermediate", language: Literal["vi", "en"] = "vi") -> ExplanationResponse:
     key = _cache_key(record, language, level)
     if key in _CACHE:
         return _CACHE[key]
-    if not (settings.ENABLE_CLAUDE and settings.ANTHROPIC_API_KEY):
-        result = deterministic_explanation(record, level, language, "Claude is not configured; using the deterministic explanation.")
+    if not openrouter_client.is_configured():
+        result = deterministic_explanation(record, level, language, "The AI explanation service is not configured; using the deterministic explanation.")
         _CACHE[key] = result
         return result
     problems: list[str] = []
     for attempt in range(2):
         try:
-            sections = _call_claude(record, level, language, ", ".join(problems) if attempt else None)
+            sections = _call_openrouter(record, level, language, ", ".join(problems) if attempt else None)
             valid, problems = validate_explanation_text(" ".join(sections.model_dump().values()), record)
             if valid:
-                result = ExplanationResponse(formula=record["formula"], level=level, language=language, sections=sections, source="claude", prompt_version=_PROMPT_VERSION)
+                result = ExplanationResponse(formula=record["formula"], level=level, language=language, sections=sections, source="openrouter", prompt_version=_PROMPT_VERSION)
                 _CACHE[key] = result
                 return result
         except Exception as exc:

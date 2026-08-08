@@ -8,7 +8,7 @@ Run backend pytest, frontend npm test/lint/build, docker compose config, and ima
 
 Set CORS_ORIGINS to the exact frontend origin, DATA_DIR to persistent writable storage, and TEACHER_EXPORT_TOKEN to a long random secret. Set VITE_API_BASE_URL before the frontend build; Vite variables cannot be changed at container runtime without rebuilding.
 
-Claude requires ANTHROPIC_API_KEY plus ENABLE_CLAUDE=true and remains disabled in checked-in deployment examples. Live lookup configurations set ENABLE_PUBCHEM=true; CI explicitly sets ENABLE_PUBCHEM=false and ENABLE_RDKIT=false. PubChem/RDKit are optional and must never be required for curated analysis. Install optional backend dependencies when enabling them.
+The AI explanation layer uses OpenRouter: it requires OPENROUTER_API_KEY plus ENABLE_OPENROUTER=true and remains disabled in checked-in deployment examples. OPENROUTER_MODEL selects the model (default google/gemma-4-31b-it:free) and can be changed without touching Python source. Live lookup configurations set ENABLE_PUBCHEM=true; CI explicitly sets ENABLE_PUBCHEM=false and ENABLE_RDKIT=false. PubChem/RDKit are optional and must never be required for curated analysis. Install optional backend dependencies when enabling them.
 
 ## Smoke test
 

@@ -1,6 +1,7 @@
 """Optional deterministic RDKit ETKDG conformer generation from validated SMILES."""
 
 from dataclasses import dataclass
+from functools import lru_cache
 
 from app.core.config import settings
 from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceStatus
@@ -30,20 +31,35 @@ def generate_rdkit_result(smiles: str | None) -> RDKitResult:
         return RDKitResult(None, _status(ExternalServiceState.DISABLED))
     if not smiles:
         return RDKitResult(None, _status(ExternalServiceState.CONFORMER_UNAVAILABLE, "No validated SMILES was available."))
+    structure, state, message = _embed_cached(smiles)
+    # The status model is mutable, so build a fresh one per call rather than
+    # handing every request a shared instance out of the cache.
+    return RDKitResult(structure, _status(state, message))
+
+
+@lru_cache(maxsize=256)
+def _embed_cached(smiles: str) -> tuple[RDKitStructure | None, ExternalServiceState, str | None]:
+    """Embed and optimize once per SMILES.
+
+    ETKDG plus force-field optimization is the slowest deterministic stage of
+    /analyze, and the seed is fixed, so the same SMILES always yields the same
+    conformer. Only frozen values are cached.
+    """
+
     try:
         from rdkit import Chem
         from rdkit.Chem import AllChem
     except ImportError:
-        return RDKitResult(None, _status(ExternalServiceState.UNAVAILABLE, "RDKit is not installed."))
+        return None, ExternalServiceState.UNAVAILABLE, "RDKit is not installed."
     try:
         base = Chem.MolFromSmiles(smiles)
         if base is None:
-            return RDKitResult(None, _status(ExternalServiceState.INVALID_RESPONSE, "Validated SMILES could not be parsed."))
+            return None, ExternalServiceState.INVALID_RESPONSE, "Validated SMILES could not be parsed."
         molecule = Chem.AddHs(base)
         parameters = AllChem.ETKDGv3()
         parameters.randomSeed = 0xC0FFEE
         if AllChem.EmbedMolecule(molecule, parameters) != 0:
-            return RDKitResult(None, _status(ExternalServiceState.CONFORMER_UNAVAILABLE, "ETKDG embedding failed."))
+            return None, ExternalServiceState.CONFORMER_UNAVAILABLE, "ETKDG embedding failed."
         force_field = "none"
         if AllChem.MMFFHasAllMoleculeParams(molecule):
             AllChem.MMFFOptimizeMolecule(molecule, maxIters=250)
@@ -51,12 +67,10 @@ def generate_rdkit_result(smiles: str | None) -> RDKitResult:
         else:
             AllChem.UFFOptimizeMolecule(molecule, maxIters=250)
             force_field = "UFF"
-        return RDKitResult(
-            RDKitStructure(Chem.MolToMolBlock(molecule), force_field=force_field),
-            _status(ExternalServiceState.SUCCESS),
-        )
+        structure = RDKitStructure(Chem.MolToMolBlock(molecule), force_field=force_field)
+        return structure, ExternalServiceState.SUCCESS, None
     except (RuntimeError, ValueError, TypeError):
-        return RDKitResult(None, _status(ExternalServiceState.CONFORMER_UNAVAILABLE, "Conformer generation failed safely."))
+        return None, ExternalServiceState.CONFORMER_UNAVAILABLE, "Conformer generation failed safely."
 
 
 def generate_rdkit_molblock(smiles: str | None) -> RDKitStructure | None:

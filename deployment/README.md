@@ -3,7 +3,7 @@
 ## Backend Deployment
 
 - [ ] Create production `backend/.env` from `backend/.env.example`.
-- [ ] Add Anthropic API key securely.
+- [ ] Add OpenRouter API key securely.
 - [ ] Configure CORS domain.
 - [ ] Build Docker image (`backend/Dockerfile`).
 - [ ] Run backend container.

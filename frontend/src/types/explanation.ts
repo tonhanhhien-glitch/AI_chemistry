@@ -15,7 +15,7 @@ export interface Explanation {
   level: ExplanationLevel;
   language: "vi" | "en";
   sections: ExplanationSections;
-  source: "claude" | "deterministic_fallback";
+  source: "openrouter" | "deterministic_fallback";
   fallback_reason: string | null;
   prompt_version: string;
   facts_validated: boolean;

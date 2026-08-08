@@ -188,7 +188,7 @@ def test_asymmetric_angles_are_not_merged_by_the_old_tolerance() -> None:
 
 def test_chat_and_explanation_work_for_deterministic_nf3(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(molecule_resolver, "lookup_pubchem_formula", disabled_lookup)
-    monkeypatch.setattr(settings, "ENABLE_CLAUDE", False)
+    monkeypatch.setattr(settings, "ENABLE_OPENROUTER", False)
     chat = client.post("/api/v1/chat", json={
         "molecule_id": "deterministic:nf3", "formula": "NF3",
         "messages": [{"role": "user", "content": "What is the angle?"}], "language": "en",
@@ -214,7 +214,7 @@ def test_chat_and_explanation_work_for_pubchem_nf3(monkeypatch: pytest.MonkeyPat
         molecule_resolver, "lookup_pubchem_formula",
         lambda _parsed: PubChemLookupResult(candidates=[candidate], status=integration_status("PubChem", ExternalServiceState.SUCCESS)),
     )
-    monkeypatch.setattr(settings, "ENABLE_CLAUDE", False)
+    monkeypatch.setattr(settings, "ENABLE_OPENROUTER", False)
     payload = {"molecule_id": "pubchem:24553", "formula": "NF3", "pubchem_cid": 24553, "language": "en"}
     chat = client.post("/api/v1/chat", json=payload | {"messages": [{"role": "user", "content": "Angle?"}]})
     explanation = client.post("/api/v1/explain", json=payload)

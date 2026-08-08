@@ -8,12 +8,14 @@ import { waterAnalysis } from "./fixture";
 const mocks = vi.hoisted(() => ({ createViewer: vi.fn() }));
 vi.mock("3dmol", () => ({ createViewer: mocks.createViewer }));
 
+type ShapeSpecMock = { color?: string; opacity?: number; vertexArr?: unknown[]; normalArr?: unknown[]; faceArr?: number[] };
+
 function viewerMock() {
   return {
     addModel: vi.fn(), zoomTo: vi.fn(), render: vi.fn(), clear: vi.fn(), setStyle: vi.fn(),
     addLabel: vi.fn(() => ({ kind: "label" })), removeLabel: vi.fn(),
     addLine: vi.fn(() => ({ kind: "line" })), addCurve: vi.fn(() => ({ kind: "curve" })),
-    addSphere: vi.fn(() => ({ kind: "sphere" })), removeShape: vi.fn(),
+    addSphere: vi.fn((spec: ShapeSpecMock) => ({ kind: "sphere", spec })), addCustom: vi.fn((spec: ShapeSpecMock) => ({ kind: "custom", spec })), removeShape: vi.fn(),
   };
 }
 
@@ -58,6 +60,17 @@ describe("Molecule3DViewer", () => {
     expect(screen.getByText(/Các thùy cặp electron tự do là vùng minh họa/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole("checkbox", { name: "Miền cặp e tự do" }));
     expect(viewer.removeShape).toHaveBeenCalled();
+  });
+
+  it("draws one translucent domain lobe holding two opaque red electrons per lone pair", async () => {
+    const viewer = viewerMock(); mocks.createViewer.mockReturnValue(viewer);
+    render(<Molecule3DViewer structure={structure("coordinates")} />);
+    await waitFor(() => expect(viewer.addCustom).toHaveBeenCalledTimes(1));
+    const lobe = viewer.addCustom.mock.calls[0]![0];
+    expect(lobe.color).toBe("#8edff2"); expect(lobe.opacity).toBeLessThan(0.4); expect(lobe.opacity).toBeGreaterThan(0.15);
+    expect(lobe.faceArr!.length % 3).toBe(0); expect(lobe.normalArr).toHaveLength(lobe.vertexArr!.length);
+    expect(viewer.addSphere).toHaveBeenCalledTimes(2);
+    viewer.addSphere.mock.calls.forEach(([sphere]) => { expect(sphere.color).toBe("#ff1a1a"); expect(sphere.opacity).toBe(1); });
   });
 
   it("displays the structure provenance badge", () => {

@@ -11,7 +11,7 @@
 
 Ask students to predict Lewis structure and geometry before opening an example. In Analysis, compare electron geometry to molecular geometry, rotate the 3D model, and inspect resonance/exception notices. Treat sp3d/sp3d2 only as historical pedagogical labels. The yellow 3D notice means idealized illustration, not measured or quantum-optimized geometry.
 
-Claude can be disabled without losing chemistry functionality. If enabled, its text is explanatory; use the displayed source/fallback notice and report suspicious chemistry through feedback.
+The AI explanation layer can be disabled without losing chemistry functionality. If enabled, its text is explanatory; use the displayed source/fallback notice and report suspicious chemistry through feedback.
 
 ## Export
 

@@ -5,6 +5,7 @@ import type { BondAngleAnnotation, Structure3D, Vector3D } from "../../types/str
 import ViewerFallback from "./ViewerFallback";
 import ViewerToolbar from "./ViewerToolbar";
 import type { ViewerStyle } from "./StyleSelector";
+import { atomVisualRadius, disposeLonePairObjects, renderLonePairDomains, type LonePairDomainInput } from "./lonePairRenderer";
 
 type ShapeHandle = ReturnType<GLViewer["addLine"]>;
 type LabelHandle = ReturnType<GLViewer["addLabel"]>;
@@ -41,6 +42,32 @@ function angleArc(structure: Structure3D, annotation: BondAngleAnnotation): Vect
   return Array.from({ length: 25 }, (_, index) => {
     const angle = theta * index / 24;
     return { x: center.x + radius * (first.x * Math.cos(angle) + perpendicular.x * Math.sin(angle)), y: center.y + radius * (first.y * Math.cos(angle) + perpendicular.y * Math.sin(angle)), z: center.z + radius * (first.z * Math.cos(angle) + perpendicular.z * Math.sin(angle)) };
+  });
+}
+
+/** Sphere scale 3Dmol draws atoms at, used as the base scale for the lone-pair lobes. */
+function atomSphereScale(style: ViewerStyle): number {
+  return style === "space-filling" ? 0.95 : 0.28;
+}
+
+/**
+ * Turns the engine-supplied non-bonding electron domains into renderer inputs.
+ * Directions and domain distances come straight from `structure.electron_domains`; no chemistry
+ * is derived here, so the lobes follow whatever VSEPR orientation the backend produced.
+ */
+function lonePairInputs(structure: Structure3D, style: ViewerStyle): LonePairDomainInput[] {
+  const atoms = new Map(structure.atoms.map((atom) => [atom.id, atom]));
+  return structure.electron_domains.flatMap((domain) => {
+    if (domain.kind !== "lone_pair") return [];
+    const atom = atoms.get(domain.center_atom_id);
+    if (!atom || Math.hypot(domain.direction.x, domain.direction.y, domain.direction.z) < 1e-9) return [];
+    const atomPosition = { x: atom.x, y: atom.y, z: atom.z };
+    const distance = Math.hypot(domain.position.x - atom.x, domain.position.y - atom.y, domain.position.z - atom.z);
+    return [{
+      atomPosition, direction: domain.direction, electronCount: domain.occupancy || 2, domainType: "lonePair" as const,
+      atomRadius: atomVisualRadius(atom.element, atomSphereScale(style)),
+      domainDistance: distance > 1e-6 ? distance : 1.15,
+    }];
   });
 }
 
@@ -88,13 +115,10 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
 
   useEffect(() => {
     const viewer = viewerRef.current; if (!viewer) return;
-    lonePairShapesRef.current.forEach((shape) => viewer.removeShape(shape)); lonePairShapesRef.current = [];
-    if (lonePairs) structure.electron_domains.filter((domain) => domain.kind === "lone_pair").forEach((domain) => {
-      const direction = normalize(domain.direction); const perpendicular = normalize(Math.abs(direction.x) < 0.9 ? { x: 0, y: -direction.z, z: direction.y } : { x: -direction.y, y: direction.x, z: 0 });
-      [-0.13, 0.13].forEach((offset) => lonePairShapesRef.current.push(viewer.addSphere({ center: { x: domain.position.x + perpendicular.x * offset, y: domain.position.y + perpendicular.y * offset, z: domain.position.z + perpendicular.z * offset }, radius: 0.22, color: "#7257a8", opacity: 0.48 })));
-    });
+    disposeLonePairObjects(viewer, lonePairShapesRef.current); lonePairShapesRef.current = [];
+    if (lonePairs) lonePairShapesRef.current = renderLonePairDomains(viewer, lonePairInputs(structure, style));
     viewer.render();
-  }, [lonePairs, structure]);
+  }, [lonePairs, structure, style]);
 
   if (failed) return <ViewerFallback />;
   const lonePairCount = structure.electron_domains.filter((domain) => domain.kind === "lone_pair").length;
@@ -102,7 +126,7 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
     <ViewerToolbar style={style} labels={labels} angles={angles} lonePairs={lonePairs} hasAngles={structure.angle_annotations.length > 0} hasLonePairs={lonePairCount > 0} onStyle={setStyle} onLabels={setLabels} onAngles={setAngles} onLonePairs={setLonePairs} />
     {structure.angle_annotations.length > 1 && <label className="angle-selector">{t("viewer3d.angleSelect")}<select value={selectedAngle?.id} onChange={(event) => setSelectedAngleId(event.target.value)}>{structure.angle_annotations.map((annotation) => <option key={annotation.id} value={annotation.id}>{annotation.display_label} · {annotation.atom1_id}–{annotation.center_atom_id}–{annotation.atom2_id}</option>)}</select></label>}
     <div className="mol-viewer" ref={containerRef} aria-label={t("viewer3d.viewerAria")} />
-    <div className="viewer-legend" aria-label={t("viewer3d.legend")}><span>● {t("viewer3d.legendAtom")}</span><span>━ {t("viewer3d.legendBond")}</span><span className="legend-lone-pair">●● {t("viewer3d.legendLonePair")}</span></div>
+    <div className="viewer-legend" aria-label={t("viewer3d.legend")}><span>● {t("viewer3d.legendAtom")}</span><span>━ {t("viewer3d.legendBond")}</span><span className="legend-lone-pair"><i className="legend-domain-bubble" aria-hidden="true" />●● {t("viewer3d.legendLonePair")}</span></div>
     <p className="viewer-help">{t("viewer3d.help")} {lonePairCount > 0 && (lang === "en" ? "Lone-pair lobes are illustrative regions, not calculated electron-density surfaces." : "Các thùy cặp electron tự do là vùng minh họa, không phải bề mặt mật độ electron được tính toán.")}</p>
   </div>;
 }

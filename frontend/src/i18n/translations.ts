@@ -69,7 +69,7 @@ const vi: Catalogue = {
   "chat.placeholder": "Nhập câu hỏi…",
   "chat.send": "Gửi",
   "chat.sending": "Đang trả lời…",
-  "chat.disclaimer": "AI có thể sai sót. Mọi kết luận Lewis, AXnEm, hình học và góc đều đến từ bộ quy tắc xác định và không thể bị thay đổi.",
+  "chat.disclaimer": "AI có thể sai sót. Mọi kết luận Lewis, hình học và góc đều đến từ bộ quy tắc xác định và không thể bị thay đổi.",
   "chat.suggest.1": "Vì sao phân tử này có hình dạng như vậy?",
   "chat.suggest.2": "Phân tử này có phân cực không?",
   "chat.suggest.3": "Giải thích ký hiệu AXnEm giúp mình.",
@@ -145,7 +145,7 @@ const vi: Catalogue = {
   "notFound.home": "Về trang chủ",
 
   // AI disclaimer & explanation
-  "explanation.disclaimer.claude": "Claude đã diễn giải",
+  "explanation.disclaimer.ai": "AI hỗ trợ diễn giải",
   "explanation.disclaimer.deterministic": "Bản giải thích xác định",
   "explanation.disclaimer.body": "· Các kết luận Lewis, AXnEm, hình học và góc đến từ bộ quy tắc và không thể bị AI thay đổi.",
   "explanation.level.legend": "Mức độ giải thích",
@@ -206,7 +206,7 @@ const vi: Catalogue = {
   "viewer3d.viewerAria": "Mô hình phân tử 3D tương tác",
   "viewer3d.help": "Kéo để xoay · cuộn/chụm để thu phóng · hỗ trợ cảm ứng.",
   "viewer3d.styleLabel": "Kiểu hiển thị",
-  "viewer3d.style.stick": "Cầu và que",
+  "viewer3d.style.stick": "Que",
   "viewer3d.style.ballStick": "Cầu và que",
   "viewer3d.style.sphere": "Lấp đầy không gian",
   "viewer3d.angles": "Góc liên kết",
@@ -323,7 +323,7 @@ const en: Catalogue = {
   "chat.placeholder": "Type a question...",
   "chat.send": "Send",
   "chat.sending": "Thinking…",
-  "chat.disclaimer": "The AI may make mistakes. Every Lewis, AXnEm, geometry and angle conclusion comes from the deterministic rule set and cannot be changed.",
+  "chat.disclaimer": "The AI may make mistakes. Every Lewis, geometry and angle conclusion comes from the deterministic rule set and cannot be changed.",
   "chat.suggest.1": "Why does this molecule have this shape?",
   "chat.suggest.2": "Is this molecule polar?",
   "chat.suggest.3": "Explain the AXnEm notation for me.",
@@ -399,7 +399,7 @@ const en: Catalogue = {
   "notFound.home": "Back to home",
 
   // AI disclaimer & explanation
-  "explanation.disclaimer.claude": "Interpreted by Claude",
+  "explanation.disclaimer.ai": "AI-assisted explanation",
   "explanation.disclaimer.deterministic": "Deterministic explanation",
   "explanation.disclaimer.body": "· The Lewis, AXnEm, geometry and angle conclusions come from the rule set and cannot be changed by the AI.",
   "explanation.level.legend": "Explanation level",
@@ -460,7 +460,7 @@ const en: Catalogue = {
   "viewer3d.viewerAria": "Interactive 3D molecular model",
   "viewer3d.help": "Drag to rotate · scroll/pinch to zoom · touch supported.",
   "viewer3d.styleLabel": "Display style",
-  "viewer3d.style.stick": "Ball and stick",
+  "viewer3d.style.stick": "Stick",
   "viewer3d.style.ballStick": "Ball and stick",
   "viewer3d.style.sphere": "Space filling",
   "viewer3d.angles": "Bond angle",

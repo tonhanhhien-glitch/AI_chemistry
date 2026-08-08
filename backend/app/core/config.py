@@ -7,8 +7,16 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    ANTHROPIC_API_KEY: str = ""
-    ANTHROPIC_MODEL: str = "claude-3-5-haiku-latest"
+    OPENROUTER_API_KEY: str = ""
+    OPENROUTER_MODEL: str = "google/gemma-4-31b-it:free"
+    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
+    OPENROUTER_SITE_URL: str = ""
+    OPENROUTER_APP_NAME: str = "QNU VSEPR Learning WebApp"
+    # Free-tier models have far less predictable latency than PubChem, so the LLM
+    # gets its own budget. generate_explanation() may retry once after a failed
+    # validation pass, so the worst case is roughly twice this value -- keep it
+    # under half the frontend's /explain timeout.
+    OPENROUTER_TIMEOUT_SECONDS: float = 20.0
     CORS_ORIGINS: str = "http://localhost:5173"
     PUBCHEM_TIMEOUT_SECONDS: float = 8.0
     PUBCHEM_CACHE_TTL_SECONDS: int = 86400
@@ -20,7 +28,7 @@ class Settings(BaseSettings):
     TEACHER_EXPORT_TOKEN: str = ""
     ENABLE_PUBCHEM: bool = False
     ENABLE_RDKIT: bool = False
-    ENABLE_CLAUDE: bool = True
+    ENABLE_OPENROUTER: bool = False
     MAX_INPUT_LENGTH: int = 80
     LOG_LEVEL: str = "info"
 

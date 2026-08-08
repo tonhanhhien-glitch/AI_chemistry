@@ -1,5 +1,10 @@
 """Orchestrate the curated-first deterministic analysis pipeline."""
 
+import logging
+import time
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
+
 from app.schemas.analysis_schema import AnalysisNotices, AnalysisRequest, AnalysisResponse
 from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceStatus
 from app.services.ai_explanation_service import generate_explanation
@@ -12,6 +17,20 @@ from app.services.structure3d_service import resolve_structure3d
 from app.services.vsepr_engine import analyze_vsepr
 
 
+logger = logging.getLogger(__name__)
+
+
+@contextmanager
+def _timed(stage: str, record_to: Callable[[str, float], None]) -> Iterator[None]:
+    """Record wall time per pipeline stage so slow requests can be attributed."""
+
+    started = time.perf_counter()
+    try:
+        yield
+    finally:
+        record_to(stage, time.perf_counter() - started)
+
+
 def _deduplicate_statuses(statuses: list[ExternalServiceStatus]) -> list[ExternalServiceStatus]:
     result: list[ExternalServiceStatus] = []
     for status in statuses:
@@ -21,21 +40,36 @@ def _deduplicate_statuses(statuses: list[ExternalServiceStatus]) -> list[Externa
 
 
 def analyze(request: AnalysisRequest) -> AnalysisResponse:
-    if request.molecule_id:
-        selected = get_record(request.molecule_id)
-        parsed = parse_formula(request.formula or selected["formula"])
-    else:
-        parsed = parse_formula(request.formula or "")
-    molecule, record = resolve_molecule(parsed, request.molecule_id, request.pubchem_cid)
-    lewis = build_lewis_structure(record)
-    vsepr = analyze_vsepr(record)
-    structure_result = resolve_structure3d(record)
-    structure3d = structure_result.structure
-    bond_angles = build_bond_angles(record, structure3d)
-    record["_bond_angles"] = bond_angles.model_dump()
+    timings: dict[str, float] = {}
+    started = time.perf_counter()
+
+    with _timed("resolve", timings.__setitem__):
+        if request.molecule_id:
+            selected = get_record(request.molecule_id)
+            parsed = parse_formula(request.formula or selected["formula"])
+        else:
+            parsed = parse_formula(request.formula or "")
+        molecule, record = resolve_molecule(parsed, request.molecule_id, request.pubchem_cid)
+    with _timed("lewis", timings.__setitem__):
+        lewis = build_lewis_structure(record)
+    with _timed("vsepr", timings.__setitem__):
+        vsepr = analyze_vsepr(record)
+    with _timed("structure3d", timings.__setitem__):
+        structure_result = resolve_structure3d(record)
+        structure3d = structure_result.structure
+    with _timed("bond_angles", timings.__setitem__):
+        bond_angles = build_bond_angles(record, structure3d)
+        record["_bond_angles"] = bond_angles.model_dump()
     explanation = None
-    if request.include_explanation:
-        explanation = generate_explanation(record, request.explanation_level, request.language)
+    with _timed("explanation", timings.__setitem__):
+        if request.include_explanation:
+            explanation = generate_explanation(record, request.explanation_level, request.language)
+    timings["total"] = time.perf_counter() - started
+    logger.info(
+        "analyze formula=%s timings=%s",
+        record["formula"],
+        " ".join(f"{stage}={seconds:.3f}s" for stage, seconds in timings.items()),
+    )
 
     warnings_vi = [structure3d.warning_vi] if structure3d.warning_vi else []
     warnings_en = [structure3d.warning_en] if structure3d.warning_en else []

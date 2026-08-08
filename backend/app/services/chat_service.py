@@ -2,8 +2,16 @@
 
 import json
 from typing import Any
-from app.core.config import settings
 from app.schemas.chat_schema import ChatMessage, ChatResponse
+from app.services import openrouter_client
+
+_SYSTEM_RULES = (
+    "Answer only using the supplied molecule facts.\n"
+    "Do not invent bond angles.\n"
+    "Do not modify the AXnEm classification.\n"
+    "Do not override the Lewis or VSEPR results.\n"
+    "Clearly state when the supplied facts do not answer a question.\n"
+)
 
 
 def _facts(record: dict[str, Any], language: str) -> dict[str, Any]:
@@ -23,13 +31,23 @@ def _fallback_reply(record: dict[str, Any], language: str, reason: str | None) -
 
 
 def generate_chat_reply(record: dict[str, Any], messages: list[ChatMessage], language: str = "vi") -> ChatResponse:
-    if not (settings.ENABLE_CLAUDE and settings.ANTHROPIC_API_KEY):
-        return _fallback_reply(record, language, "Claude is not configured.")
+    if not openrouter_client.is_configured():
+        return _fallback_reply(record, language, "The AI assistant is not configured.")
+    system = (
+        _SYSTEM_RULES
+        + ("Answer in English.\n" if language == "en" else "Answer in Vietnamese.\n")
+        + "Reply briefly. The following molecule facts are immutable: "
+        + json.dumps(_facts(record, language), ensure_ascii=False)
+    )
     try:
-        from anthropic import Anthropic
-        system = "Use only the immutable JSON facts. Never select, invent, average, or relabel bond angles. Reply briefly in " + ("English" if language == "en" else "Vietnamese") + ". Facts: " + json.dumps(_facts(record, language), ensure_ascii=False)
-        response = Anthropic(api_key=settings.ANTHROPIC_API_KEY, timeout=settings.PUBCHEM_TIMEOUT_SECONDS).messages.create(model=settings.ANTHROPIC_MODEL, max_tokens=700, temperature=0.3, system=system, messages=[{"role": item.role, "content": item.content} for item in messages])
-        text = "".join(block.text for block in response.content if getattr(block, "type", "") == "text").strip()
-        return ChatResponse(reply=text, source="claude") if text else _fallback_reply(record, language, "The AI returned an empty response.")
+        text = openrouter_client.complete(
+            system,
+            [{"role": item.role, "content": item.content} for item in messages],
+            temperature=0.2,
+            max_tokens=700,
+        )
+    except openrouter_client.OpenRouterError as exc:
+        return _fallback_reply(record, language, str(exc))
     except Exception as exc:
         return _fallback_reply(record, language, type(exc).__name__)
+    return ChatResponse(reply=text, source="openrouter")
