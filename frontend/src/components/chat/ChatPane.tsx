@@ -28,7 +28,6 @@ export default function ChatPane({ moleculeId, formula, pubchemCid }: { molecule
       <div className="chat-log" ref={logRef} aria-live="polite">
         {messages.length === 0 ? (
           <div className="chat-intro">
-            <p>{t("chat.empty", { formula })}</p>
             <div className="chat-suggestions">
               {suggestions.map((suggestion) => (
                 <button key={suggestion} type="button" className="chat-chip" onClick={() => ask(suggestion)}>{suggestion}</button>
