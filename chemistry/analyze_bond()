@@ -1,0 +1,251 @@
+"""
+Bond Polarity Engine
+
+Calculates electronegativity difference (Δχ)
+and classifies chemical bonds.
+"""
+
+from chemistry.periodic_table import get_electronegativity
+
+
+NONPOLAR_LIMIT = 0.4
+IONIC_LIMIT = 1.7
+
+
+def get_atom_symbol(atom_id: str):
+
+    for index, character in enumerate(atom_id):
+
+        if character.isdigit():
+
+            return atom_id[:index]
+
+    return atom_id
+
+
+def calculate_electronegativity_difference(
+    atom1: str,
+    atom2: str
+):
+
+    electronegativity_1 = get_electronegativity(atom1)
+    electronegativity_2 = get_electronegativity(atom2)
+
+    if electronegativity_1 is None:
+
+        raise ValueError(
+            f"Electronegativity is not available for {atom1}"
+        )
+
+    if electronegativity_2 is None:
+
+        raise ValueError(
+            f"Electronegativity is not available for {atom2}"
+        )
+
+    return abs(
+        electronegativity_1 - electronegativity_2
+    )
+
+
+def classify_bond_polarity(
+    atom1: str,
+    atom2: str
+):
+
+    electronegativity_1 = get_electronegativity(atom1)
+    electronegativity_2 = get_electronegativity(atom2)
+
+    difference = calculate_electronegativity_difference(
+        atom1,
+        atom2
+    )
+
+    if difference < NONPOLAR_LIMIT:
+
+        classification = "nonpolar covalent"
+
+    elif difference < IONIC_LIMIT:
+
+        classification = "polar covalent"
+
+    else:
+
+        classification = "ionic"
+
+    if electronegativity_1 > electronegativity_2:
+
+        more_electronegative_atom = atom1
+        less_electronegative_atom = atom2
+
+    elif electronegativity_2 > electronegativity_1:
+
+        more_electronegative_atom = atom2
+        less_electronegative_atom = atom1
+
+    else:
+
+        more_electronegative_atom = None
+        less_electronegative_atom = None
+
+    return {
+
+        "atom1": atom1,
+
+        "atom2": atom2,
+
+        "electronegativity_1": electronegativity_1,
+
+        "electronegativity_2": electronegativity_2,
+
+        "delta_chi": round(
+            difference,
+            2
+        ),
+
+        "classification": classification,
+
+        "more_electronegative_atom":
+            more_electronegative_atom,
+
+        "less_electronegative_atom":
+            less_electronegative_atom
+    }
+
+
+def analyze_bond(bond: dict):
+
+    atom1_id = bond["atom1"]
+
+    atom2_id = bond["atom2"]
+
+    atom1 = get_atom_symbol(atom1_id)
+
+    atom2 = get_atom_symbol(atom2_id)
+
+    polarity_info = classify_bond_polarity(
+        atom1,
+        atom2
+    )
+
+    return {
+
+        "atom1": atom1_id,
+
+        "atom2": atom2_id,
+
+        "bond_order":
+            bond["bond_order"],
+
+        "electronegativity_1":
+            polarity_info[
+                "electronegativity_1"
+            ],
+
+        "electronegativity_2":
+            polarity_info[
+                "electronegativity_2"
+            ],
+
+        "delta_chi":
+            polarity_info[
+                "delta_chi"
+            ],
+
+        "polarity":
+            polarity_info[
+                "classification"
+            ],
+
+        "more_electronegative_atom":
+            polarity_info[
+                "more_electronegative_atom"
+            ],
+
+        "less_electronegative_atom":
+            polarity_info[
+                "less_electronegative_atom"
+            ]
+    }
+
+
+def analyze_bonds(bonds: list):
+
+    analyzed_bonds = []
+
+    for bond in bonds:
+
+        analyzed_bond = analyze_bond(
+            bond
+        )
+
+        analyzed_bonds.append(
+            analyzed_bond
+        )
+
+    return analyzed_bonds
+
+
+if __name__ == "__main__":
+
+    print(
+        "===== BOND POLARITY ENGINE ====="
+    )
+
+    print()
+
+    test_bond = {
+
+        "atom1": "C1",
+
+        "atom2": "O1",
+
+        "bond_order": 1
+    }
+
+    print(
+        "Single Bond:"
+    )
+
+    print(
+        analyze_bond(
+            test_bond
+        )
+    )
+
+    print()
+
+    test_bonds = [
+
+        {
+
+            "atom1": "C1",
+
+            "atom2": "O1",
+
+            "bond_order": 1
+        },
+
+        {
+
+            "atom1": "C1",
+
+            "atom2": "O2",
+
+            "bond_order": 1
+        }
+    ]
+
+    print(
+        "===== ALL BONDS TEST ====="
+    )
+
+    analyzed_bonds = analyze_bonds(
+        test_bonds
+    )
+
+    for bond in analyzed_bonds:
+
+        print(
+            bond
+        )
