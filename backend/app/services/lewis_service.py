@@ -1,19 +1,12 @@
 """Build and validate frontend-ready Lewis structures from curated connectivity."""
 
-import math
 from typing import Any
 
 from app.chemistry.formal_charge import validate_formal_charge_sum
 from app.chemistry.valence_rules import total_valence_electrons
 from app.core.exceptions import ChemistryValidationError
 from app.schemas.lewis_schema import LewisAtom, LewisBond, LewisStructure, OctetExceptionFlags
-
-
-def _positions(count: int) -> list[tuple[float, float]]:
-    if count == 2:
-        return [(55.0, 140.0), (265.0, 140.0)]
-    radius = 105.0
-    return [(160.0 + radius * math.cos(-math.pi / 2 + 2 * math.pi * i / count), 140.0 + radius * math.sin(-math.pi / 2 + 2 * math.pi * i / count)) for i in range(count)]
+from app.services.lewis_layout import compute_lewis_layout
 
 
 def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
@@ -30,7 +23,9 @@ def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
     if computed_total != record["total_valence_electrons"] or represented_total != computed_total:
         raise ChemistryValidationError("The Lewis representation does not conserve valence electrons.")
     validate_formal_charge_sum(charges, record["charge"])
-    positions = [(160.0, 140.0), *_positions(len(symbols) - 1)]
+    # Where the atoms are drawn follows the VSEPR classification already in the record:
+    # see services/lewis_layout.py. The electron accounting above is unaffected by it.
+    positions = compute_lewis_layout(record).atom_positions
     atoms = [LewisAtom(id=f"a{i}", element=symbol, x=positions[i][0], y=positions[i][1], lone_pairs=lone_pairs[i], formal_charge=charges[i]) for i, symbol in enumerate(symbols)]
     bonds = [LewisBond(id=f"b{i}", atom1_id="a0", atom2_id=f"a{i + 1}", order=order) for i, order in enumerate(orders)]
     flags = dict(record["exception_flags"])
