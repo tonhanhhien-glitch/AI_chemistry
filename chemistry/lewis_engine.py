@@ -1,4 +1,8 @@
 from chemistry.valence_rules import calculate_total_valence
+from chemistry.multiple_bond import (
+    form_all_multiple_bonds
+)
+from chemistry.periodic_table import get_element
 
 def create_atom_objects(atoms: dict):
 
@@ -62,6 +66,53 @@ def create_skeleton(
 
     return bonds
 
+def update_atom_bond_information(
+    atom_objects: dict,
+    bonds: list
+):
+    """
+    Update bond count and bonding electrons
+    for each atom based on the current Lewis skeleton.
+    """
+
+    for atom in atom_objects.values():
+
+        atom["bond_count"] = 0
+        atom["bonding_electrons"] = 0
+
+    for bond in bonds:
+
+        atom1_id = bond["atom1"]
+        atom2_id = bond["atom2"]
+
+        bond_order = bond["bond_order"]
+
+        bonding_electrons = (
+            bond_order * 2
+        )
+
+        atom_objects[
+            atom1_id
+        ]["bond_count"] += 1
+
+        atom_objects[
+            atom2_id
+        ]["bond_count"] += 1
+
+        atom_objects[
+            atom1_id
+        ]["bonding_electrons"] += (
+            bonding_electrons
+        )
+
+        atom_objects[
+            atom2_id
+        ]["bonding_electrons"] += (
+            bonding_electrons
+        )
+
+    return atom_objects
+
 def count_bonding_electrons(bonds: list):
 
     total = 0
@@ -70,7 +121,6 @@ def count_bonding_electrons(bonds: list):
         total += bond["bond_order"] * 2
 
     return total
-
 
 def calculate_remaining_electrons(
     atoms: dict,
@@ -89,6 +139,198 @@ def calculate_remaining_electrons(
         "remaining_electrons": remaining,
     }
 
+def distribute_lone_electrons(
+    atom_objects: dict,
+    bonds: list,
+    remaining_electrons: int
+):
+    """
+    Distribute remaining electrons as lone pairs.
+
+    Step 1:
+    Give electrons to terminal atoms that need
+    electrons to complete their octet.
+
+    Step 2:
+    Give any remaining electrons to the central
+    atom.
+
+    Hydrogen follows the duet rule and does not
+    receive lone-pair electrons.
+    """
+
+    # -----------------------------------------
+    # STEP 1: Terminal atoms
+    # -----------------------------------------
+
+    for atom_id, atom in atom_objects.items():
+
+        if atom["symbol"] == "H":
+            continue
+
+        bonded_atoms = []
+
+        for bond in bonds:
+
+            if bond["atom1"] == atom_id:
+
+                bonded_atoms.append(
+                    bond["atom2"]
+                )
+
+            elif bond["atom2"] == atom_id:
+
+                bonded_atoms.append(
+                    bond["atom1"]
+                )
+
+        # Terminal atom = exactly one bond
+        if len(bonded_atoms) == 1:
+
+            electrons_needed = (
+                8
+                - atom["bonding_electrons"]
+                - atom["lone_electrons"]
+            )
+
+            if electrons_needed > 0:
+
+                electrons_to_add = min(
+                    electrons_needed,
+                    remaining_electrons
+                )
+
+                atom["lone_electrons"] += (
+                    electrons_to_add
+                )
+
+                remaining_electrons -= (
+                    electrons_to_add
+                )
+
+        if remaining_electrons <= 0:
+            return remaining_electrons
+
+    # -----------------------------------------
+    # STEP 2: Central atom
+    # -----------------------------------------
+
+    central_atom = None
+    central_id = None
+
+    for atom_id, atom in atom_objects.items():
+
+        bonded_atoms = []
+
+        for bond in bonds:
+
+            if bond["atom1"] == atom_id:
+
+                bonded_atoms.append(
+                    bond["atom2"]
+                )
+
+            elif bond["atom2"] == atom_id:
+
+                bonded_atoms.append(
+                    bond["atom1"]
+                )
+
+        # Non-terminal atom = central atom
+        if len(bonded_atoms) > 1:
+
+            central_id = atom_id
+            central_atom = atom
+
+            break
+
+    if central_atom is not None:
+
+        electrons_needed = (
+            8
+            - central_atom["bonding_electrons"]
+            - central_atom["lone_electrons"]
+        )
+
+        if electrons_needed > 0:
+
+            electrons_to_add = min(
+                electrons_needed,
+                remaining_electrons
+            )
+
+            central_atom["lone_electrons"] += (
+                electrons_to_add
+            )
+
+            remaining_electrons -= (
+                electrons_to_add
+            )
+
+    return remaining_electrons
+
+def check_octet(atom_objects: dict):
+    """
+    Check whether each atom satisfies its electron rule.
+
+    Hydrogen follows the duet rule.
+
+    Other atoms use the maximum allowed electron
+    count defined in the periodic table.
+    """
+
+    for atom in atom_objects.values():
+
+        symbol = atom["symbol"]
+
+        element = get_element(symbol)
+
+        if element is None:
+
+            atom["octet"] = False
+
+            continue
+
+        electron_count = (
+            atom["bonding_electrons"]
+            + atom["lone_electrons"]
+        )
+
+        if symbol == "H":
+
+            target_electrons = 2
+
+        else:
+
+            target_electrons = element[
+                "max_octet"
+            ]
+
+        atom["octet"] = (
+            electron_count == target_electrons
+        )
+
+    return atom_objects
+
+def find_octet_deficient_atoms(
+    atom_objects: dict
+ ):
+    """
+    Find atoms that do not satisfy their
+    electron rule.
+    """
+
+    deficient_atoms = []
+
+    for atom_id, atom in atom_objects.items():
+
+        if not atom["octet"]:
+
+            deficient_atoms.append(
+                atom_id
+            )
+
+    return deficient_atoms
 
 if __name__ == "__main__":
 
@@ -124,11 +366,22 @@ if __name__ == "__main__":
         print("Atoms:", atoms)
         print("Central:", center)
 
-        atom_objects = create_atom_objects(atoms)
-
         bonds = create_skeleton(
             atom_objects,
             center
+        )
+
+        update_atom_bond_information(
+            atom_objects,
+            bonds
+        )
+
+        print(
+            "Updated Atom Objects:"
+        )
+
+        print(
+            atom_objects
         )
 
         print("Skeleton:")
@@ -145,9 +398,119 @@ if __name__ == "__main__":
             bonds,
         )
 
-        print()
+        remaining_electrons = electron_info[
+            "remaining_electrons"
+        ]
 
+        print()
         print("Electron Summary:")
         print(electron_info)
 
+        remaining_electrons = distribute_lone_electrons(
+            atom_objects,
+            bonds,
+            remaining_electrons
+        )
+
+        print()
+        print("After Lone Electron Distribution:")
+        print(atom_objects)
+
+        print(
+            "Remaining electrons:",
+            remaining_electrons
+        )
+
+        check_octet(
+            atom_objects
+        )
+
+        print()
+        print("After Octet Check:")
+        print(atom_objects)
+
+        deficient_atoms = find_octet_deficient_atoms(
+            atom_objects
+        )
+
+        multiple_bond_result = form_all_multiple_bonds(
+            atom_objects,
+            bonds,
+            deficient_atoms,
+            check_octet
+        )
+
+        atom_objects = multiple_bond_result[
+            "atom_objects"
+        ]
+
+        bonds = multiple_bond_result[
+            "bonds"
+        ]
+
+        deficient_atoms = multiple_bond_result[
+            "deficient_atoms"
+        ]
+
+        print()
+        print("After Multiple Bond Formation:")
+        print(atom_objects)
+
+        print()
+        print("Final Bonds:")
+        print(bonds)
+
+        print()
+        print(
+            "Final Octet Deficient Atoms:",
+            deficient_atoms
+        )
+
+        print()
+        print(
+            "Octet deficient atoms:",
+            deficient_atoms
+        )
+
         print("-" * 40)
+
+    print()
+    print("===== REMAINING ELECTRONS TEST =====")
+
+    test_atoms = {
+        "C": 1,
+        "O": 2
+    }
+
+    test_bonds = [
+        {
+            "atom1": "C1",
+            "atom2": "O1",
+            "bond_order": 1
+        },
+        {
+            "atom1": "C1",
+            "atom2": "O2",
+            "bond_order": 1
+        }
+    ]
+
+    remaining_electrons = calculate_remaining_electrons(
+        test_atoms,
+        test_bonds
+    )
+
+    print(
+        "Atoms:",
+        test_atoms
+    )
+
+    print(
+        "Bonding electrons:",
+        count_bonding_electrons(test_bonds)
+    )
+
+    print(
+        "Remaining electrons:",
+        remaining_electrons
+    )
