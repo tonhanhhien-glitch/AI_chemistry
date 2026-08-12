@@ -34,13 +34,12 @@ def find_multiple_bond_candidate(
             if other_atom["symbol"] == "H":
                 continue
 
-            # Avoid forming a third bond with the same
-            # donor atom in the current basic Lewis stage.
-            if bond["bond_order"] >= 2:
-                continue
-
             # Terminal atom must have a lone pair
             if other_atom["lone_electrons"] < 2:
+                continue
+
+            # Multiple bond engine only creates double bonds  
+            if bond["bond_order"] >= 2:
                 continue
 
             return {
@@ -163,49 +162,36 @@ def form_all_multiple_bonds(
 
 if __name__ == "__main__":
 
-    print("===== MULTIPLE BOND ENGINE TEST =====")
+    print("===== TRIPLE BOND ENGINE TEST =====")
 
     atom_objects = {
-        "C1": {
-            "symbol": "C",
-            "bond_count": 2,
-            "bonding_electrons": 4,
-            "lone_electrons": 0,
+        "N1": {
+            "symbol": "N",
+            "bond_count": 1,
+            "bonding_electrons": 2,
+            "lone_electrons": 6,
+            "octet": True
+        },
+
+        "N2": {
+            "symbol": "N",
+            "bond_count": 1,
+            "bonding_electrons": 2,
+            "lone_electrons": 2,
             "octet": False
-        },
-
-        "O1": {
-            "symbol": "O",
-            "bond_count": 1,
-            "bonding_electrons": 2,
-            "lone_electrons": 6,
-            "octet": True
-        },
-
-        "O2": {
-            "symbol": "O",
-            "bond_count": 1,
-            "bonding_electrons": 2,
-            "lone_electrons": 6,
-            "octet": True
         }
     }
 
     bonds = [
         {
-            "atom1": "C1",
-            "atom2": "O1",
-            "bond_order": 1
-        },
-        {
-            "atom1": "C1",
-            "atom2": "O2",
+            "atom1": "N1",
+            "atom2": "N2",
             "bond_order": 1
         }
     ]
 
     deficient_atoms = [
-        "C1"
+        "N2"
     ]
 
     def test_check_octet(atom_objects):
@@ -233,9 +219,7 @@ if __name__ == "__main__":
 
     print()
     print("Before:")
-    print("Atoms:")
     print(atom_objects)
-    print("Bonds:")
     print(bonds)
 
     result = form_all_multiple_bonds(
@@ -246,14 +230,15 @@ if __name__ == "__main__":
     )
 
     print()
-    print("After Multiple Bond Formation:")
-    print("Atoms:")
+    print("After:")
     print(result["atom_objects"])
 
     print()
-    print("Bonds:")
+    print("Final Bonds:")
     print(result["bonds"])
 
     print()
-    print("Remaining deficient atoms:")
-    print(result["deficient_atoms"])
+    print(
+        "Remaining deficient atoms:",
+        result["deficient_atoms"]
+    )

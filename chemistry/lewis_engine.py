@@ -1,6 +1,15 @@
-from chemistry.valence_rules import calculate_total_valence
+from chemistry.valence_rules import (
+    calculate_total_valence,
+)
 from chemistry.multiple_bond import (
     form_all_multiple_bonds
+)
+from chemistry.formal_charge import (
+    calculate_formal_charges,
+    calculate_total_formal_charge
+)
+from chemistry.resonance_detector import (
+    resolve_resonance
 )
 from chemistry.periodic_table import get_element
 
@@ -137,6 +146,38 @@ def calculate_remaining_electrons(
         "total_valence": total_valence,
         "bonding_electrons": bonding,
         "remaining_electrons": remaining,
+    }
+
+def calculate_remaining_electrons_with_charge(
+    atoms: dict,
+    bonds: list,
+    charge: int
+):
+    """
+    Calculate remaining electrons while
+    accounting for molecular or ionic charge.
+    """
+
+    total_valence = calculate_total_valence(
+        atoms
+    )
+
+    # Positive charge removes electrons
+    # Negative charge adds electrons
+    total_valence -= charge
+
+    bonding = count_bonding_electrons(
+        bonds
+    )
+
+    remaining = (
+        total_valence - bonding
+    )
+
+    return {
+        "total_valence": total_valence,
+        "bonding_electrons": bonding,
+        "remaining_electrons": remaining
     }
 
 def distribute_lone_electrons(
@@ -331,6 +372,212 @@ def find_octet_deficient_atoms(
             )
 
     return deficient_atoms
+
+def build_lewis_structure(
+    atoms: dict,
+    central_atom: str,
+    expected_charge: int = 0
+):
+    """
+    Build a complete Lewis structure.
+
+    Pipeline:
+    1. Create atom objects
+    2. Create skeleton
+    3. Update bond information
+    4. Calculate valence electrons
+    5. Distribute lone electrons
+    6. Check octet / duet
+    7. Resolve multiple bonds
+    8. Calculate formal charges
+    9. Validate final charge
+    """
+
+    # -----------------------------------------
+    # STEP 1: Atom objects
+    # -----------------------------------------
+
+    atom_objects = create_atom_objects(
+        atoms
+    )
+
+    # -----------------------------------------
+    # STEP 2: Skeleton
+    # -----------------------------------------
+
+    bonds = create_skeleton(
+        atom_objects,
+        central_atom
+    )
+
+    # -----------------------------------------
+    # STEP 3: Bond information
+    # -----------------------------------------
+
+    update_atom_bond_information(
+        atom_objects,
+        bonds
+    )
+
+    # -----------------------------------------
+    # STEP 4: Electron calculation
+    # -----------------------------------------
+
+    electron_info = (
+        calculate_remaining_electrons_with_charge(
+            atoms,
+            bonds,
+            expected_charge
+        )
+    )
+
+    remaining_electrons = (
+        electron_info["remaining_electrons"]
+    )
+
+    # -----------------------------------------
+    # STEP 5: Lone electrons
+    # -----------------------------------------
+
+    remaining_electrons = (
+        distribute_lone_electrons(
+            atom_objects,
+            bonds,
+            remaining_electrons
+        )
+    )
+
+    # -----------------------------------------
+    # STEP 6: Octet check
+    # -----------------------------------------
+
+    check_octet(
+        atom_objects
+    )
+
+    # -----------------------------------------
+    # STEP 7: Multiple bond resolution
+    # -----------------------------------------
+
+    deficient_atoms = (
+        find_octet_deficient_atoms(
+            atom_objects
+        )
+    )
+
+    while deficient_atoms:
+
+        from chemistry.multiple_bond import (
+            find_multiple_bond_candidate,
+            form_multiple_bond
+        )
+
+        candidate = find_multiple_bond_candidate(
+            atom_objects,
+            bonds,
+            deficient_atoms
+        )
+
+        if candidate is None:
+            break
+
+        result = form_multiple_bond(
+            atom_objects,
+            bonds,
+            candidate
+        )
+
+        if not result:
+            break
+
+        update_atom_bond_information(
+            atom_objects,
+            bonds
+        )
+
+        check_octet(
+            atom_objects
+        )
+
+        deficient_atoms = (
+            find_octet_deficient_atoms(
+                atom_objects
+            )
+        )
+
+    # -----------------------------------------
+    # STEP 7B: Resonance resolution
+    # -----------------------------------------
+
+    if deficient_atoms:
+
+        resonance_result = resolve_resonance(
+            atom_objects,
+            bonds,
+            expected_charge
+        )
+
+        atom_objects = resonance_result[
+            "atom_objects"
+        ]
+
+        bonds = resonance_result[
+            "bonds"
+        ]
+
+        update_atom_bond_information(
+            atom_objects,
+            bonds
+        )
+
+        check_octet(
+            atom_objects
+        )
+
+        deficient_atoms = (
+            find_octet_deficient_atoms(
+                atom_objects
+            )
+        )
+
+    # -----------------------------------------
+    # STEP 8: Formal charge
+    # -----------------------------------------
+
+    formal_charges = calculate_formal_charges(
+        atom_objects
+    )
+
+    total_formal_charge = (
+        calculate_total_formal_charge(
+            formal_charges
+        )
+    )
+
+    # -----------------------------------------
+    # STEP 9: Charge validation
+    # -----------------------------------------
+
+    charge_valid = (
+        total_formal_charge
+        == expected_charge
+    )
+
+    return {
+        "atom_objects": atom_objects,
+        "bonds": bonds,
+        "electron_info": electron_info,
+        "remaining_electrons": remaining_electrons,
+        "formal_charges": formal_charges,
+        "total_formal_charge": (
+            total_formal_charge
+        ),
+        "expected_charge": expected_charge,
+        "charge_valid": charge_valid,
+        "octet_deficient_atoms": (
+            deficient_atoms
+        )
+    }
 
 if __name__ == "__main__":
 
