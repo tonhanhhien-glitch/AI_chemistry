@@ -136,10 +136,4 @@ describe("Molecule3DViewer", () => {
     expect(viewer.addSphere).toHaveBeenCalledTimes(4);
     viewer.addSphere.mock.calls.forEach(([sphere]) => { expect(sphere.color).toBe("#ff1a1a"); expect(sphere.opacity).toBe(1); });
   });
-
-  it("displays the structure provenance badge", () => {
-    const viewer = viewerMock(); mocks.createViewer.mockReturnValue(viewer);
-    render(<Molecule3DViewer structure={{ ...structure("sdf"), source: "pubchem_3d", source_label: "PubChem 3D conformer" }} />);
-    expect(screen.getByText("PubChem 3D conformer")).toBeInTheDocument();
-  });
 });

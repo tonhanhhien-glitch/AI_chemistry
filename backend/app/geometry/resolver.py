@@ -92,14 +92,15 @@ def resolve_geometry(
 
     ordered: list[GeometryEvidenceProvider] = [*experimental_providers(), *computed_providers()]
     for provider in ordered:
-        if time.monotonic() >= deadline:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
             statuses.append(provider_status(
                 provider.service, ExternalServiceState.TIMEOUT,
                 message="Skipped: the geometry stage exceeded its wall-clock budget.",
             ))
             continue
         try:
-            result: GeometryProviderResult = provider.fetch(query)
+            result: GeometryProviderResult = provider.fetch(query.with_timeout(remaining))
         except Exception:  # noqa: BLE001 - a provider must never break local analysis
             logger.exception("Geometry provider %s failed; continuing with the next source", provider.name)
             statuses.append(provider_status(provider.service, ExternalServiceState.TEMPORARY_FAILURE))

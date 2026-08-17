@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import GeometryProvenanceBadge from "../components/viewer3d/GeometryProvenanceBadge";
 import Molecule3DViewer from "../components/viewer3d/Molecule3DViewer";
 import { I18nProvider } from "../i18n";
 import type { Structure3D } from "../types/structure3d";
@@ -27,6 +28,11 @@ function renderViewer(structure: Structure3D, lang: "vi" | "en" = "en") {
   return viewer;
 }
 
+function renderBadge(structure: Structure3D, lang: "vi" | "en" = "en") {
+  window.localStorage.setItem("vsepr-lang", lang);
+  render(<I18nProvider><GeometryProvenanceBadge structure={structure} /></I18nProvider>);
+}
+
 describe("3D viewer provenance and angle view", () => {
   beforeEach(() => {
     Object.defineProperty(window, "WebGLRenderingContext", { configurable: true, value: function WebGLRenderingContext() {} });
@@ -41,7 +47,7 @@ describe("3D viewer provenance and angle view", () => {
   });
 
   it("shows an experimental source badge with the reference and phase", () => {
-    renderViewer(chlorineTrifluorideAnalysis.structure3d);
+    renderBadge(chlorineTrifluorideAnalysis.structure3d);
     expect(screen.getByText("Experimental measurement")).toBeInTheDocument();
     expect(screen.getByText("NIST CCCBDB experimental gas-phase geometry")).toBeInTheDocument();
     expect(screen.getByText("1953Smith")).toBeInTheDocument();
@@ -51,13 +57,13 @@ describe("3D viewer provenance and angle view", () => {
   });
 
   it("says a coordinate set was fitted from the source's internal coordinates", () => {
-    renderViewer(chlorineTrifluorideAnalysis.structure3d);
+    renderBadge(chlorineTrifluorideAnalysis.structure3d);
     expect(chlorineTrifluorideAnalysis.structure3d.geometry_evidence!.coordinates_are_fitted).toBe(true);
     expect(screen.getByText(/fitted from the source's internal coordinates/)).toBeInTheDocument();
   });
 
   it("labels an idealized model as a teaching illustration, never as a real angle", () => {
-    renderViewer(waterAnalysis.structure3d);
+    renderBadge(waterAnalysis.structure3d);
     expect(screen.getByText("Idealized VSEPR illustration")).toBeInTheDocument();
     expect(screen.getByText(/teaching illustration/)).toBeInTheDocument();
     expect(screen.queryByText(/real angle/i)).not.toBeInTheDocument();
@@ -76,7 +82,7 @@ describe("3D viewer provenance and angle view", () => {
         provenance_label_vi: "Cấu dạng tính toán", provenance_label_en: "Computed conformer",
       },
     };
-    renderViewer(computed);
+    renderBadge(computed);
     expect(screen.getByText("Computed conformer")).toBeInTheDocument();
     expect(screen.getByText(/not an experimental measurement/)).toBeInTheDocument();
   });

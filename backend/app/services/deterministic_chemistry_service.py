@@ -22,7 +22,12 @@ from app.chemistry.lewis_solver import LewisSolution, resonance_note, solve_lewi
 from app.chemistry.vsepr_rules import get_vsepr_rule
 from app.core.exceptions import ChemistryValidationError
 from app.schemas.molecule_schema import PubChemCandidate
-from app.services.connectivity_service import MolecularGraph, resolve_connectivity
+from app.services.connectivity_service import (
+    MolecularGraph,
+    TopologyResolutionStatus,
+    check_formula_topology_eligibility,
+    resolve_connectivity,
+)
 from app.services.formula_parser import ParsedFormula
 
 MIN_SUPPORTED_ATOMS = 3
@@ -69,14 +74,22 @@ def solve_structure(
         raise ChemistryValidationError(
             f"Automatic inference supports {MIN_SUPPORTED_ATOMS} to {MAX_SUPPORTED_ATOMS} atoms in one covalent unit."
         )
-    central = central_override or choose_central_atom(parsed.atoms)
     if graph is not None:
-        center_id = graph.single_center_id(central)
+        central_guess = central_override or choose_central_atom(parsed.atoms)
+        center_id = graph.single_center_id(central_guess)
         if center_id is None:
             raise ChemistryValidationError("Connectivity is not a supported single-centre star graph.")
         central = next(atom.element for atom in graph.atoms if atom.id == center_id)
         ligands = [atom.element for atom in graph.atoms if atom.id != center_id]
     else:
+        # Check conservative formula topology eligibility before guessing connectivity
+        is_eligible, central_elem, status, reason = check_formula_topology_eligibility(parsed)
+        if not is_eligible or central_elem is None:
+            raise ChemistryValidationError(
+                reason or "The molecular formula alone does not uniquely determine the connectivity for this species. "
+                "Please enter a chemical name or select a resolved structure."
+            )
+        central = central_override or central_elem
         ligands = ligand_symbols(parsed.atoms, central)
     return central, solve_lewis(central, ligands, parsed.charge, atom_inventory=parsed.atoms)
 
@@ -85,7 +98,8 @@ def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidat
     """Return a record compatible with the Lewis/VSEPR services, or fail safely."""
 
     smiles = (candidate.canonical_smiles or candidate.isomeric_smiles) if candidate else None
-    connectivity = resolve_connectivity(smiles=smiles)
+    pubchem_cid = candidate.cid if candidate else None
+    connectivity = resolve_connectivity(smiles=smiles, pubchem_cid=pubchem_cid)
     graph = connectivity.graph
     if graph is not None:
         central_guess = choose_central_atom(parsed.atoms)
@@ -117,6 +131,16 @@ def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidat
         inchi = inchikey = canonical_identity = cache_timestamp = molecular_weight = None
         validation_status = "formula_unique_scope_lewis_vsepr_validated"
 
+    resonance_structures = [
+        {
+            "form_index": idx + 1,
+            "bond_orders": list(form.bond_orders),
+            "lone_pairs": list(form.lone_pairs),
+            "formal_charges": list(form.formal_charges),
+        }
+        for idx, form in enumerate(solution.equivalent)
+    ]
+
     return {
         "id": record_id,
         "formula": parsed.formula,
@@ -132,6 +156,7 @@ def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidat
         "lone_pairs": list(structure.lone_pairs),
         "formal_charges": list(structure.formal_charges),
         "resonance_forms": solution.resonance_forms,
+        "resonance_structures": resonance_structures,
         "resonance_note_vi": resonance_note(solution, "vi"),
         "resonance_note_en": resonance_note(solution, "en"),
         "exception_flags": {

@@ -12,6 +12,7 @@ const CATEGORY_LABEL_KEYS: Record<PropertyCategory, string> = {
 
 const EVIDENCE_LABEL_KEYS: Record<string, string> = {
   experimental: "property.evidence.experimental",
+  source_annotation: "property.evidence.source_annotation",
   computed: "property.evidence.computed",
   curated: "property.evidence.curated",
   deterministic: "property.evidence.deterministic",
@@ -48,20 +49,25 @@ export default function PropertyTable({
 
   return <div className="property-groups">
     {partial && failed.length > 0 && (
-      <p className="callout" role="status">
-        {t("property.partial")} {failed.map((status) => `${status.service}: ${status.state}`).join(", ")}
-      </p>
+      <div className="property-warning" role="status">
+        <p className="callout">
+          <strong>{t("property.partial")}</strong>{" "}
+          {failed.map((status) => `${status.service}: ${status.state}`).join(", ")}
+        </p>
+      </div>
     )}
+
     {CATEGORY_ORDER.map((category) => {
       const rows = properties.filter((item) => item.category === category);
       if (!rows.length) return null;
-      return <section key={category}>
+      return <section key={category} className="property-category">
         <h3>{t(CATEGORY_LABEL_KEYS[category])}</h3>
         <table>
           <tbody>
             {rows.map((item) => {
               const conditions = formatConditions(item);
               const notes = en ? item.notes_en : item.notes_vi;
+              const obsCount = item.observations?.length ?? 0;
               return <tr key={item.key} data-applicability={item.applicability}>
                 <th scope="row">{en ? item.label_en : item.label_vi}</th>
                 <td>
@@ -83,6 +89,7 @@ export default function PropertyTable({
                       : item.source_name}
                     {item.source_reference ? ` · ${item.source_reference}` : ""}
                     {conditions ? ` · ${conditions}` : ""}
+                    {obsCount > 1 ? ` · (${obsCount} ${en ? "observations" : "quan sát"})` : ""}
                   </small>
                   {notes && <small className="property-note">{notes}</small>}
                 </td>

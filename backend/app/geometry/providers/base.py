@@ -32,6 +32,24 @@ class GeometryQuery:
     curated_molecule_id: str | None = None
     smiles: str | None = None
     record: dict[str, Any] | None = None
+    timeout: float | None = None
+
+    def with_timeout(self, timeout: float) -> "GeometryQuery":
+        return GeometryQuery(
+            formula=self.formula,
+            charge=self.charge,
+            atom_inventory=self.atom_inventory,
+            central_atom=self.central_atom,
+            inchikey=self.inchikey,
+            inchi=self.inchi,
+            cas_rn=self.cas_rn,
+            pubchem_cid=self.pubchem_cid,
+            canonical_identity=self.canonical_identity,
+            curated_molecule_id=self.curated_molecule_id,
+            smiles=self.smiles,
+            record=self.record,
+            timeout=timeout,
+        )
 
     @classmethod
     def from_record(cls, record: dict[str, Any]) -> "GeometryQuery":

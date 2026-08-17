@@ -281,6 +281,36 @@ def lookup_pubchem(query: str) -> list[PubChemCandidate]:
         return []
 
 
+def fetch_pubchem_2d(cid: int) -> PubChemStructureResult:
+    """Fetch 2D SDF/molfile connectivity from PubChem."""
+    if not settings.ENABLE_PUBCHEM:
+        return PubChemStructureResult(status=_status(ExternalServiceState.DISABLED))
+    cache_path = settings.CACHE_DIR / "pubchem_structure_cache.json"
+    cache = read_json_cache(cache_path)
+    key = f"{cid}:2d:sdf"
+    now = time.time()
+    cached = cache.get(key)
+    if isinstance(cached, dict) and now - float(cached.get("cached_at", 0)) <= settings.PUBCHEM_CACHE_TTL_SECONDS:
+        data = cached.get("data")
+        if isinstance(data, str) and data.strip():
+            return PubChemStructureResult(data=data, status=_status(ExternalServiceState.CACHE_HIT, cache_hit=True))
+    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/SDF?record_type=2d"
+    raw, state = _request_bytes(url)
+    if raw is None:
+        if state is ExternalServiceState.NOT_FOUND:
+            state = ExternalServiceState.CONFORMER_UNAVAILABLE
+        return PubChemStructureResult(status=_status(state))
+    try:
+        data = raw.decode("utf-8")
+        if "V2000" not in data and "V3000" not in data:
+            raise ValueError("not a molfile")
+    except (UnicodeDecodeError, ValueError):
+        return PubChemStructureResult(status=_status(ExternalServiceState.INVALID_RESPONSE))
+    cache[key] = {"cached_at": now, "data": data}
+    write_json_cache(cache_path, cache)
+    return PubChemStructureResult(data=data, status=_status(ExternalServiceState.SUCCESS))
+
+
 def fetch_pubchem_3d(cid: int) -> PubChemStructureResult:
     if not settings.ENABLE_PUBCHEM:
         return PubChemStructureResult(status=_status(ExternalServiceState.DISABLED))

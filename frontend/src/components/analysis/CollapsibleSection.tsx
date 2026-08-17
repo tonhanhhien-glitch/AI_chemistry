@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 
 // One accordion row inside the analysis info pane. The header is a real heading
 // wrapping a button, following the WAI-ARIA accordion pattern.
-export default function CollapsibleSection({ number, title, defaultOpen = true, children }: { number?: number; title: string; defaultOpen?: boolean; children: ReactNode }) {
+export default function CollapsibleSection({ title, defaultOpen = true, children }: { number?: number; title: string; defaultOpen?: boolean; children: ReactNode }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <section className="accordion-section">

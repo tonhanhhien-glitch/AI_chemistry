@@ -181,10 +181,10 @@ def list_examples() -> list[MoleculeSummary]:
 
 
 def search_molecules(query: str) -> list[MoleculeSummary]:
-    """Search curated records first, then the wider local identity registry.
+    """Search curated records first, then local identities, then PubChem if enabled.
 
-    Search is no longer limited to ``curated_records()``: a name that only exists in
-    the identity registry still appears, marked as pending deterministic analysis so
+    Search is no longer limited to ``curated_records()``: a name that exists in
+    the identity registry or in PubChem appears, marked as pending deterministic analysis so
     the UI never implies a reviewed VSEPR classification it does not have.
     """
 
@@ -214,4 +214,26 @@ def search_molecules(query: str) -> list[MoleculeSummary]:
                 molecular_geometry_vi="đang chờ phân tích tất định",
                 review_status="identity_registry_pending_analysis",
             ))
+    from app.core.config import settings
+    from app.services.pubchem_service import lookup_pubchem_name
+    if settings.ENABLE_PUBCHEM and len(matches) < 10 and len(needle) >= 2:
+        try:
+            lookup = lookup_pubchem_name(query.strip())
+            for candidate in lookup.candidates:
+                key = (candidate.formula, candidate.charge)
+                if key in seen_formulas:
+                    continue
+                seen_formulas.add(key)
+                matches.append(MoleculeSummary(
+                    id=candidate.id,
+                    formula=candidate.formula,
+                    name_vi=candidate.name_vi,
+                    name_en=candidate.name_en,
+                    ax_en="pending",
+                    molecular_geometry="pending deterministic analysis",
+                    molecular_geometry_vi="đang chờ phân tích tất định",
+                    review_status="pubchem_identity_pending_analysis",
+                ))
+        except Exception:
+            pass
     return matches[:20]

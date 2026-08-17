@@ -53,6 +53,16 @@ class GeometrySource(BaseModel):
     retrieved_at: datetime | None = None
 
 
+class GeometryObservationSource(BaseModel):
+    """Provenance for a single geometric measurement or constraint."""
+
+    source_name: str | None = None
+    source_reference: str | None = None
+    source_url: str | None = None
+    comment: str | None = None
+    retrieval_timestamp: datetime | None = None
+
+
 class GeometryAtom(BaseModel):
     id: str
     element: str
@@ -81,6 +91,7 @@ class BondLengthObservation(BaseModel):
     uncertainty_angstrom: float | None = Field(default=None, ge=0.0)
     equivalent_count: int = Field(default=1, ge=1)
     label: str | None = None
+    source: GeometryObservationSource | None = None
 
 
 class BondAngleObservation(BaseModel):
@@ -92,6 +103,7 @@ class BondAngleObservation(BaseModel):
     uncertainty_deg: float | None = Field(default=None, ge=0.0)
     equivalent_count: int = Field(default=1, ge=1)
     label: str | None = None
+    source: GeometryObservationSource | None = None
 
 
 class DihedralObservation(BaseModel):
@@ -104,6 +116,7 @@ class DihedralObservation(BaseModel):
     uncertainty_deg: float | None = Field(default=None, ge=0.0)
     equivalent_count: int = Field(default=1, ge=1)
     label: str | None = None
+    source: GeometryObservationSource | None = None
 
 
 class GeometryIdentity(BaseModel):

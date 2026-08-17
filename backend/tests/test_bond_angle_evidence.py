@@ -84,7 +84,8 @@ def test_offline_analysis_prefers_nist_experimental_geometry(
         atoms[annotation.atom1_id], atoms[annotation.center_atom_id], atoms[annotation.atom2_id],
     )
     assert actual == pytest.approx(expected, abs=0.01)
-    assert annotation.value_deg == pytest.approx(actual)
+    assert annotation.coordinate_value_deg == pytest.approx(actual)
+    assert annotation.value_deg == pytest.approx(actual, abs=0.01)
     assert all(domain.is_illustrative for domain in result.structure3d.electron_domains if domain.kind == "lone_pair")
 
 

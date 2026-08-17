@@ -58,6 +58,7 @@ class GeometryFitResult:
     coordinates: tuple[GeometryCoordinate, ...] | None
     checks: tuple[ConstraintCheck, ...] = ()
     accepted: bool = False
+    coordinates_are_fitted: bool = False
     rejection_reason: str | None = None
     iterations: int = 0
     residual_norm: float = field(default=math.inf)
@@ -412,22 +413,43 @@ def fit_cartesian_coordinates(
 ) -> GeometryFitResult:
     """Fit coordinates satisfying every observation in ``evidence``, or reject the record.
 
-    A record that already carries Cartesian coordinates is still validated against
-    its own observations, so an inconsistent published block is rejected rather
-    than silently drawn.
+    If authoritative Cartesian coordinates are present and validate against the source's
+    own constraints, they are accepted directly without rebuilding with a fitter.
     """
 
     constraints = _constraints(evidence)
     atom_count = len(evidence.atoms)
     if atom_count < 2:
         return GeometryFitResult(None, rejection_reason="A geometry needs at least two atoms.")
-    if not constraints:
-        if evidence.coordinates is None:
-            return GeometryFitResult(None, rejection_reason="No coordinates and no geometric observations to fit.")
-        order = {atom.id: index for index, atom in enumerate(evidence.atoms)}
-        points = sorted(evidence.coordinates, key=lambda item: order[item.id])
-        return GeometryFitResult(tuple(points), (), True, None, 0, 0.0)
+    order = {atom.id: index for index, atom in enumerate(evidence.atoms)}
 
+    tolerances = {
+        "bond_length": length_tolerance,
+        "bond_angle": angle_tolerance_deg,
+        "dihedral": dihedral_tolerance_deg,
+    }
+
+    # Step 1: If direct Cartesian coordinates exist, test them directly against constraints
+    if evidence.coordinates is not None and len(evidence.coordinates) == atom_count:
+        sorted_coords = sorted(evidence.coordinates, key=lambda item: order[item.id])
+        coord_matrix = [[item.x, item.y, item.z] for item in sorted_coords]
+        if not constraints:
+            return GeometryFitResult(tuple(sorted_coords), (), True, coordinates_are_fitted=False, iterations=0, residual_norm=0.0)
+        direct_checks = tuple(_check(constraints, coord_matrix))
+        direct_violations = [
+            f"{check.kind} {check.observation_id}: expected {check.expected:.4f}, actual {check.actual:.4f}"
+            for check in direct_checks
+            if math.isnan(check.actual) or check.deviation > tolerances[check.kind]
+        ]
+        if not direct_violations:
+            return GeometryFitResult(
+                tuple(sorted_coords), direct_checks, True, coordinates_are_fitted=False, iterations=0, residual_norm=0.0
+            )
+
+    if not constraints:
+        return GeometryFitResult(None, rejection_reason="No coordinates and no geometric observations to fit.")
+
+    # Step 2: Fit internal coordinates with Levenberg-Marquardt
     slots = _variable_slots(atom_count)
     best: tuple[list[list[float]], float, int] | None = None
     for guess in _initial_guesses(evidence, constraints):
@@ -441,11 +463,6 @@ def fit_cartesian_coordinates(
     assert best is not None
     coordinates, norm, iterations = best
     checks = tuple(_check(constraints, coordinates))
-    tolerances = {
-        "bond_length": length_tolerance,
-        "bond_angle": angle_tolerance_deg,
-        "dihedral": dihedral_tolerance_deg,
-    }
     violations = [
         f"{check.kind} {check.observation_id}: expected {check.expected:.4f}, fitted {check.actual:.4f}"
         for check in checks
@@ -453,12 +470,12 @@ def fit_cartesian_coordinates(
     ]
     if violations:
         return GeometryFitResult(
-            None, checks, False,
-            "Fitted coordinates do not reproduce the source constraints: " + "; ".join(violations),
-            iterations, norm,
+            None, checks, False, coordinates_are_fitted=True,
+            rejection_reason="Fitted coordinates do not reproduce the source constraints: " + "; ".join(violations),
+            iterations=iterations, residual_norm=norm,
         )
     fitted = tuple(
         GeometryCoordinate(id=atom.id, element=atom.element, x=point[0], y=point[1], z=point[2])
         for atom, point in zip(evidence.atoms, coordinates, strict=True)
     )
-    return GeometryFitResult(fitted, checks, True, None, iterations, norm)
+    return GeometryFitResult(fitted, checks, True, coordinates_are_fitted=True, rejection_reason=None, iterations=iterations, residual_norm=norm)

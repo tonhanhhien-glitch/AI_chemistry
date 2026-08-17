@@ -158,7 +158,13 @@ class NistCccbdbProvider:
                 message="CCCBDB is addressed by CAS number; none was resolved for this identity.",
             ))
 
-        html, state = fetch_cccbdb_geometry_html(query.cas_rn)
+        if query.timeout is not None:
+            try:
+                html, state = fetch_cccbdb_geometry_html(query.cas_rn, timeout=query.timeout)
+            except TypeError:
+                html, state = fetch_cccbdb_geometry_html(query.cas_rn)
+        else:
+            html, state = fetch_cccbdb_geometry_html(query.cas_rn)
         if html is None:
             logger.info("CCCBDB geometry fetch ended with state=%s", state.value)
             return GeometryProviderResult(None, provider_status(self.service, state))
@@ -175,6 +181,9 @@ class NistCccbdbProvider:
             ))
         _store(query, evidence)
         return GeometryProviderResult(evidence, provider_status(self.service, ExternalServiceState.SUCCESS))
+
+
+NistCccbdbGeometryProvider = NistCccbdbProvider
 
 
 def snapshot_identity_payloads() -> list[dict[str, Any]]:

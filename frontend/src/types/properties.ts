@@ -1,13 +1,28 @@
 /** Mirrors `backend/app/properties/schema.py`. */
 
 export type PropertyCategory = "identity" | "structural" | "physical" | "chemical";
-export type PropertyEvidenceType = "experimental" | "computed" | "curated" | "deterministic";
+export type PropertyEvidenceType = "experimental" | "source_annotation" | "computed" | "curated" | "deterministic";
 export type PropertyApplicability = "applicable" | "not_applicable" | "unavailable";
 
 export interface PropertyConditions {
   temperature: string | null;
   pressure: string | null;
   solvent: string | null;
+  note: string | null;
+}
+
+export interface PropertyObservation {
+  value: string | number;
+  unit: string | null;
+  uncertainty: string | number | null;
+  temperature: string | null;
+  pressure: string | null;
+  phase: string | null;
+  method: string | null;
+  evidence_type: PropertyEvidenceType;
+  source_name: string;
+  source_reference: string | null;
+  source_url: string | null;
   note: string | null;
 }
 
@@ -29,6 +44,7 @@ export interface NormalizedProperty {
   retrieved_at: string | null;
   notes_vi: string | null;
   notes_en: string | null;
+  observations?: PropertyObservation[];
 }
 
 export interface PropertyProviderStatus {

@@ -14,6 +14,13 @@ export interface LewisBond {
   order: 1 | 2 | 3;
 }
 
+export interface ResonanceForm {
+  form_index: number;
+  bond_orders: number[];
+  lone_pairs: number[];
+  formal_charges: number[];
+}
+
 export interface LewisStructure {
   atoms: LewisAtom[];
   bonds: LewisBond[];
@@ -21,6 +28,7 @@ export interface LewisStructure {
   total_valence_electrons: number;
   resonance_forms: number;
   resonance_note_vi: string | null;
+  resonance_structures?: ResonanceForm[];
   exception_flags: {
     electron_deficient: boolean;
     expanded_octet: boolean;

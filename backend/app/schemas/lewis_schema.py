@@ -21,6 +21,13 @@ class LewisBond(BaseModel):
     order: Literal[1, 2, 3]
 
 
+class ResonanceForm(BaseModel):
+    form_index: int
+    bond_orders: list[int]
+    lone_pairs: list[int]
+    formal_charges: list[int]
+
+
 class OctetExceptionFlags(BaseModel):
     electron_deficient: bool = False
     expanded_octet: bool = False
@@ -35,6 +42,7 @@ class LewisStructure(BaseModel):
     total_valence_electrons: int = Field(ge=0)
     resonance_forms: int = Field(default=1, ge=1)
     resonance_note_vi: str | None = None
+    resonance_structures: list[ResonanceForm] = Field(default_factory=list)
     exception_flags: OctetExceptionFlags
     source: Literal["curated", "validated_connectivity"]
     confidence: Literal["high", "medium", "low"]

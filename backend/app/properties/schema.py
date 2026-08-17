@@ -31,6 +31,7 @@ class PropertyCategory(StrEnum):
 
 class PropertyEvidenceType(StrEnum):
     EXPERIMENTAL = "experimental"
+    SOURCE_ANNOTATION = "source_annotation"
     COMPUTED = "computed"
     CURATED = "curated"
     DETERMINISTIC = "deterministic"
@@ -54,6 +55,23 @@ class PropertyConditions(BaseModel):
         return not any((self.temperature, self.pressure, self.solvent, self.note))
 
 
+class PropertyObservation(BaseModel):
+    """One individual measurement or quoted observation for a property."""
+
+    value: str | float | int
+    unit: str | None = None
+    uncertainty: str | float | None = None
+    temperature: str | None = None
+    pressure: str | None = None
+    phase: str | None = None
+    method: str | None = None
+    evidence_type: PropertyEvidenceType = PropertyEvidenceType.EXPERIMENTAL
+    source_name: str
+    source_reference: str | None = None
+    source_url: str | None = None
+    note: str | None = None
+
+
 class NormalizedProperty(BaseModel):
     key: str
     category: PropertyCategory
@@ -72,6 +90,7 @@ class NormalizedProperty(BaseModel):
     retrieved_at: datetime | None = None
     notes_vi: str | None = None
     notes_en: str | None = None
+    observations: list[PropertyObservation] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _missing_values_must_be_explained(self) -> "NormalizedProperty":

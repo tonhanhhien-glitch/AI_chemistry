@@ -274,7 +274,7 @@ def solve_lewis(
     return LewisSolution(
         representative=representative,
         resonance_forms=len(winners),
-        equivalent=tuple(_canonical(candidate) for candidate in winners),
+        equivalent=tuple(winners),
         total_valence_electrons=total,
         score=best_score,
     )

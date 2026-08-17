@@ -20,7 +20,11 @@ from __future__ import annotations
 import logging
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Literal
+from enum import StrEnum
+from typing import TYPE_CHECKING, Literal
+
+if TYPE_CHECKING:
+    from app.services.formula_parser import ParsedFormula
 
 from app.core.config import settings
 from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceStatus
@@ -28,6 +32,14 @@ from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceSta
 logger = logging.getLogger(__name__)
 
 ConnectivitySource = Literal["rdkit_smiles", "molfile", "curated_record"]
+
+
+class TopologyResolutionStatus(StrEnum):
+    VALIDATED = "validated"
+    UNIQUE_FORMULA_TOPOLOGY = "unique_formula_topology"
+    AMBIGUOUS = "ambiguous"
+    UNSUPPORTED = "unsupported"
+    EXTERNAL_LOOKUP_FAILED = "external_lookup_failed"
 
 
 @dataclass(frozen=True, slots=True)
@@ -254,28 +266,116 @@ def parse_smiles(smiles: str) -> MolecularGraph | None:
     )
 
 
-# --------------------------------------------------------------------------- #
-# Resolution
-# --------------------------------------------------------------------------- #
+def check_formula_topology_eligibility(
+    parsed: "ParsedFormula",
+) -> tuple[bool, str | None, TopologyResolutionStatus, str | None]:
+    """Determine whether a molecular formula uniquely defines a single-center star topology.
+
+    Returns:
+        (is_eligible, central_atom_symbol, status, reason_or_message)
+    """
+
+    atom_count = sum(parsed.atoms.values())
+    if not (3 <= atom_count <= 7):
+        return (
+            False,
+            None,
+            TopologyResolutionStatus.UNSUPPORTED,
+            f"Automatic inference supports 3 to 7 atoms in one covalent unit (formula has {atom_count}).",
+        )
+
+    # Homonuclear triatomics: e.g. O3, I3-
+    if len(parsed.atoms) == 1 and atom_count == 3:
+        elem = next(iter(parsed.atoms.keys()))
+        return (True, elem, TopologyResolutionStatus.UNIQUE_FORMULA_TOPOLOGY, None)
+
+    # Oxoacids with H + O + another nonmetal (e.g. HNO2, HNO3, H2SO4, H3PO4, HClO):
+    # In oxoacids, H is bonded to O (-OH), creating a multi-center network rather than
+    # direct H-to-central-atom bonding.
+    elements = set(parsed.atoms.keys())
+    if "H" in elements and "O" in elements and len(elements - {"H", "O"}) >= 1:
+        return (
+            False,
+            None,
+            TopologyResolutionStatus.AMBIGUOUS,
+            "The molecular formula alone does not uniquely determine the connectivity for this oxoacid species. "
+            "Please enter a chemical name or select a resolved structure.",
+        )
+
+    from app.chemistry.central_atom_rules import choose_central_atom
+    from app.chemistry.periodic_table import get_element
+
+    # If the least electronegative non-hydrogen element occurs more than once (e.g. N in N2O, O in H2O2),
+    # the candidate central atom is repeated and connectivity cannot be uniquely determined as a single-center star.
+    non_h = [e for e in parsed.atoms if e != "H"]
+    if non_h:
+        least_en = min(
+            non_h,
+            key=lambda e: (
+                get_element(e).electronegativity if get_element(e).electronegativity is not None else 99.0,
+                get_element(e).atomic_number,
+            ),
+        )
+        if parsed.atoms[least_en] > 1:
+            return (
+                False,
+                None,
+                TopologyResolutionStatus.AMBIGUOUS,
+                f"The least electronegative element '{least_en}' occurs multiple times in the formula. "
+                "Connectivity cannot be uniquely assigned a single-center star topology from formula alone. "
+                "Please enter a chemical name or select a resolved structure.",
+            )
+
+    try:
+        central = choose_central_atom(parsed.atoms)
+    except Exception as exc:
+        return (
+            False,
+            None,
+            TopologyResolutionStatus.AMBIGUOUS,
+            f"Could not uniquely determine the central atom from the formula alone: {exc}",
+        )
+
+    # The chosen central atom must be present exactly once in a single-center topology.
+    if parsed.atoms.get(central, 0) != 1:
+        return (
+            False,
+            None,
+            TopologyResolutionStatus.AMBIGUOUS,
+            f"The potential central element '{central}' occurs multiple times in the formula. "
+            "Connectivity cannot be uniquely assigned a single-center topology from formula alone. "
+            "Please enter a chemical name or select a resolved structure.",
+        )
+
+    return (True, central, TopologyResolutionStatus.UNIQUE_FORMULA_TOPOLOGY, None)
 
 
 def resolve_connectivity(
     *,
     smiles: str | None = None,
     molfile: str | None = None,
+    pubchem_cid: int | None = None,
 ) -> ConnectivityResult:
     """Obtain a molecular graph from the best parser available.
 
     RDKit is preferred when enabled because it parses the full SMILES grammar; a
-    PubChem molfile/SDF block is the validated fallback. When neither is available
-    the deterministic layer proceeds from the formula alone rather than from a
-    home-grown parser's partial understanding.
+    PubChem molfile/SDF block (retrieved directly or via pubchem_cid) is the validated fallback.
+    When neither is available the deterministic layer evaluates formula-topology uniqueness.
     """
 
     if molfile:
         graph = parse_molfile(molfile)
         if graph is not None:
             return ConnectivityResult(graph, _status("PubChem", ExternalServiceState.SUCCESS))
+
+    if pubchem_cid is not None:
+        from app.services.pubchem_service import fetch_pubchem_2d
+        lookup = fetch_pubchem_2d(pubchem_cid)
+        if lookup.data:
+            graph = parse_molfile(lookup.data)
+            if graph is not None:
+                return ConnectivityResult(graph, _status("PubChem", ExternalServiceState.SUCCESS))
+
     if smiles and settings.ENABLE_RDKIT:
         graph = parse_smiles(smiles)
         if graph is not None:

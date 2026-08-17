@@ -5,7 +5,13 @@ from typing import Any
 from app.chemistry.formal_charge import validate_formal_charge_sum
 from app.chemistry.valence_rules import total_valence_electrons
 from app.core.exceptions import ChemistryValidationError
-from app.schemas.lewis_schema import LewisAtom, LewisBond, LewisStructure, OctetExceptionFlags
+from app.schemas.lewis_schema import (
+    LewisAtom,
+    LewisBond,
+    LewisStructure,
+    OctetExceptionFlags,
+    ResonanceForm,
+)
 from app.services.lewis_layout import compute_lewis_layout
 
 
@@ -36,9 +42,28 @@ def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
         notes.append("The Lewis representation uses an expanded octet.")
     if flags["odd_electron"]:
         notes.append("The species has an odd number of valence electrons.")
+
+    raw_resonance = record.get("resonance_structures", [])
+    resonance_structures = [
+        ResonanceForm(
+            form_index=item.get("form_index", i + 1),
+            bond_orders=item["bond_orders"],
+            lone_pairs=item["lone_pairs"],
+            formal_charges=item["formal_charges"],
+        )
+        for i, item in enumerate(raw_resonance)
+    ]
+
     return LewisStructure(
-        atoms=atoms, bonds=bonds, central_atom_id="a0", total_valence_electrons=computed_total,
-        resonance_forms=record.get("resonance_forms", 1), resonance_note_vi=record.get("resonance_note_vi"),
-        exception_flags=OctetExceptionFlags(**flags, note_vi=" ".join(notes) or None), source="curated" if record["source"] == "curated" else "validated_connectivity",
-        confidence=record["confidence"], review_status=record["review_status"],
+        atoms=atoms,
+        bonds=bonds,
+        central_atom_id="a0",
+        total_valence_electrons=computed_total,
+        resonance_forms=record.get("resonance_forms", 1),
+        resonance_note_vi=record.get("resonance_note_vi"),
+        resonance_structures=resonance_structures,
+        exception_flags=OctetExceptionFlags(**flags, note_vi=" ".join(notes) or None),
+        source="curated" if record["source"] == "curated" else "validated_connectivity",
+        confidence=record["confidence"],
+        review_status=record["review_status"],
     )

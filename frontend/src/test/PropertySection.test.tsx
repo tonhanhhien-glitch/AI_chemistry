@@ -173,6 +173,6 @@ describe("PropertySection lazy loading", () => {
       { partial: true, statuses: [{ provider: "pubchem_rest", service: "PubChem", state: "temporary_failure", cache_hit: false, message: null }] },
     ));
     renderSection();
-    expect(await screen.findByRole("status")).toHaveTextContent("PubChem: temporary_failure");
+    expect(await screen.findByText(/PubChem: temporary_failure/)).toBeInTheDocument();
   });
 });

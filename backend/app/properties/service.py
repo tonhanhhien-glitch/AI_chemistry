@@ -66,7 +66,8 @@ def full_properties(query: PropertyQuery, *, budget_seconds: float | None = None
 
     for provider_class in _PROVIDER_ORDER:
         provider = provider_class()
-        if provider.name != "computed" and time.monotonic() >= deadline:
+        remaining = deadline - time.monotonic()
+        if provider.name != "computed" and remaining <= 0:
             statuses.append(PropertyProviderStatus(
                 provider=provider.name, service=provider.service, state="timeout",
                 message="Skipped: the property stage exceeded its wall-clock budget.",

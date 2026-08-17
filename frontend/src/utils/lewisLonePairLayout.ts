@@ -60,7 +60,7 @@ const MIN_PAIR_SEPARATION = 40;
 const CANDIDATE_MERGE_TOLERANCE = 2;
 const MAX_CONFIGURATIONS = 20000;
 
-const WEIGHTS = { bondClearance: 5, spacing: 3, symmetry: 3 };
+const WEIGHTS = { bondClearance: 4, spacing: 4, symmetry: 3, pairSeparation: 2 };
 /** Breaks exact ties towards the upper side of the atom, the conventional choice. */
 const UP = 270;
 const TIE_BREAK_WEIGHT = 0.001;
@@ -69,6 +69,11 @@ const TIE_BREAK_WEIGHT = 0.001;
 
 export function normalizeAngle(angle: number): number {
   return ((angle % 360) + 360) % 360;
+}
+
+export function cleanAngle(a: number): number {
+  const r = Math.round(a);
+  return Math.abs(a - r) < 1e-4 ? r : Math.round(a * 1e4) / 1e4;
 }
 
 /** Shortest angular distance between two directions, in [0, 180]. */
@@ -175,6 +180,8 @@ function evenlySpacedFallback(lonePairCount: number): number[] {
 export function generateCandidateAngles(bonds: BondDirection[] = [], lonePairCount = 0): number[] {
   const angles: number[] = [];
   for (let angle = 0; angle < 360; angle += CANDIDATE_STEP) angles.push(angle);
+  const freeAxis = getFreeAxis(bonds);
+  angles.push(freeAxis);
   const domainCount = bonds.length + lonePairCount;
   if (domainCount > 0) {
     for (const bond of bonds) {
@@ -182,11 +189,22 @@ export function generateCandidateAngles(bonds: BondDirection[] = [], lonePairCou
     }
   }
   angles.push(...distributeAcrossFreeGaps(bonds, lonePairCount));
+
+  // Sort candidate angles giving priority to exact 15° grid angles and the free axis
+  const sorted = [...angles].sort((a, b) => {
+    const isSpecialA = angularDistance(a, freeAxis) < 1e-3 || Math.abs(a % 15) < 1e-3 ? 0 : 1;
+    const isSpecialB = angularDistance(b, freeAxis) < 1e-3 || Math.abs(b % 15) < 1e-3 ? 0 : 1;
+    if (isSpecialA !== isSpecialB) return isSpecialA - isSpecialB;
+    return a - b;
+  });
+
   const unique: number[] = [];
-  for (const angle of angles.sort((a, b) => a - b)) {
-    if (!unique.some((kept) => angularDistance(kept, angle) < CANDIDATE_MERGE_TOLERANCE)) unique.push(angle);
+  for (const angle of sorted) {
+    if (!unique.some((kept) => angularDistance(kept, angle) < CANDIDATE_MERGE_TOLERANCE)) {
+      unique.push(cleanAngle(angle));
+    }
   }
-  return unique;
+  return unique.sort((a, b) => a - b);
 }
 
 // --- Step 4: combinations -----------------------------------------------------
@@ -256,18 +274,51 @@ export function spacingScore(config: number[], bonds: BondDirection[]): number {
   const gaps = domains.map((angle, i) => normalizeAngle(domains[(i + 1) % domains.length] - angle));
   const minGap = Math.min(...gaps);
   const meanDeviation = gaps.reduce((sum, gap) => sum + Math.abs(gap - idealGap), 0) / gaps.length;
-  return 0.6 * clamp01(minGap / idealGap) + 0.4 * clamp01(1 - meanDeviation / idealGap);
+
+  let localCenteringDeviation = 0;
+  for (const angle of config) {
+    const idx = domains.indexOf(normalizeAngle(angle));
+    if (idx !== -1) {
+      const before = gaps[(idx - 1 + gaps.length) % gaps.length];
+      const after = gaps[idx];
+      localCenteringDeviation += Math.abs(before - after);
+    }
+  }
+  const avgLocalCentering = localCenteringDeviation / (config.length || 1);
+  const centeringScore = clamp01(1 - avgLocalCentering / idealGap);
+
+  return 0.4 * clamp01(minGap / idealGap) + 0.3 * clamp01(1 - meanDeviation / idealGap) + 0.3 * centeringScore;
 }
 
-/** How well the lone-pair set maps onto itself when mirrored about the free axis. */
+/** How well the lone-pair set maps onto itself when mirrored about the free axis or inverted. */
 export function symmetryScore(config: number[], freeAxis: number): number {
   if (config.length === 0) return 1;
-  const error =
+  const mirrorError =
     config.reduce((sum, angle) => {
       const mirrored = normalizeAngle(2 * freeAxis - angle);
       return sum + Math.min(...config.map((other) => angularDistance(mirrored, other)));
     }, 0) / config.length;
-  return clamp01(1 - error / 45);
+
+  const inversionError =
+    config.reduce((sum, angle) => {
+      const inverted = normalizeAngle(angle + 180);
+      return sum + Math.min(...config.map((other) => angularDistance(inverted, other)));
+    }, 0) / config.length;
+
+  const bestError = Math.min(mirrorError, inversionError);
+  return clamp01(1 - bestError / 45);
+}
+
+export function pairSeparationScore(config: number[]): number {
+  if (config.length < 2) return 1;
+  let minDistance = 180;
+  for (let i = 0; i < config.length; i++) {
+    for (let j = i + 1; j < config.length; j++) {
+      const dist = angularDistance(config[i], config[j]);
+      if (dist < minDistance) minDistance = dist;
+    }
+  }
+  return clamp01(minDistance / (360 / config.length));
 }
 
 export function scoreConfiguration(config: number[], context: ScoringContext): number {
@@ -276,6 +327,7 @@ export function scoreConfiguration(config: number[], context: ScoringContext): n
     WEIGHTS.bondClearance * bondClearanceScore(config, context.bonds) +
     WEIGHTS.spacing * spacingScore(config, context.bonds) +
     WEIGHTS.symmetry * symmetryScore(config, context.freeAxis) +
+    WEIGHTS.pairSeparation * pairSeparationScore(config) +
     TIE_BREAK_WEIGHT * upBias
   );
 }
@@ -383,9 +435,9 @@ export function placeLonePairs(atom: AtomLike, atoms: AtomLike[], bonds: BondLik
       (config) => !attempt.checkCollisions || isConfigurationCollisionFree(atom, config, collisionGeometry),
     );
     const best = chooseBestConfiguration(configurations, context);
-    if (best) return [...best].sort((a, b) => a - b);
+    if (best) return [...best].map(cleanAngle).sort((a, b) => a - b);
   }
-  return distributeAcrossFreeGaps(bondAngles, atom.lone_pairs);
+  return distributeAcrossFreeGaps(bondAngles, atom.lone_pairs).map(cleanAngle);
 }
 
 /** Lone-pair dot positions for every atom of a structure, keyed by atom id. */
