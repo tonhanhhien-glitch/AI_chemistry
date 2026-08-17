@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "note": "Local curated chemical identities: names and aliases a student may type, mapped to a formula, charge and (where it is a reviewed value) a CAS registry number used to address NIST CCCBDB. InChIKeys and PubChem CIDs are deliberately absent: they are strong identifiers used for matching and for fetching conformers, so they are taken from PubChem at resolution time rather than transcribed here. This registry is a shortcut, not a capability gate -- a name absent from it is resolved through PubChem by name.",
+  "identities": [
+    {"formula": "H2O", "charge": 0, "curated_molecule_id": "h2o", "cas_rn": "7732-18-5", "names": ["water", "nước", "dihydrogen monoxide", "oxidane"]},
+    {"formula": "NH3", "charge": 0, "curated_molecule_id": "nh3", "cas_rn": "7664-41-7", "names": ["ammonia", "amoniac", "azane"]},
+    {"formula": "CH4", "charge": 0, "curated_molecule_id": "ch4", "cas_rn": "74-82-8", "names": ["methane", "metan", "mêtan"]},
+    {"formula": "CO2", "charge": 0, "curated_molecule_id": "co2", "cas_rn": "124-38-9", "names": ["carbon dioxide", "cacbon dioxit", "khí cacbonic"]},
+    {"formula": "SO2", "charge": 0, "curated_molecule_id": "so2", "cas_rn": "7446-09-5", "names": ["sulfur dioxide", "sulphur dioxide", "lưu huỳnh dioxit"]},
+    {"formula": "BF3", "charge": 0, "curated_molecule_id": "bf3", "cas_rn": "7637-07-2", "names": ["boron trifluoride", "bo triflorua"]},
+    {"formula": "NF3", "charge": 0, "curated_molecule_id": null, "cas_rn": "7783-54-2", "names": ["nitrogen trifluoride", "nitơ triflorua"]},
+    {"formula": "PCl5", "charge": 0, "curated_molecule_id": "pcl5", "cas_rn": "10026-13-8", "names": ["phosphorus pentachloride", "photpho pentaclorua"]},
+    {"formula": "SF4", "charge": 0, "curated_molecule_id": "sf4", "cas_rn": "7783-60-0", "names": ["sulfur tetrafluoride", "lưu huỳnh tetraflorua"]},
+    {"formula": "ClF3", "charge": 0, "curated_molecule_id": "clf3", "cas_rn": "7790-91-2", "names": ["chlorine trifluoride", "clo triflorua"]},
+    {"formula": "XeF2", "charge": 0, "curated_molecule_id": "xef2", "cas_rn": "13709-36-9", "names": ["xenon difluoride", "xenon diflorua"]},
+    {"formula": "XeF4", "charge": 0, "curated_molecule_id": "xef4", "cas_rn": "13709-61-0", "names": ["xenon tetrafluoride", "xenon tetraflorua"]},
+    {"formula": "SF6", "charge": 0, "curated_molecule_id": "sf6", "cas_rn": "2551-62-4", "names": ["sulfur hexafluoride", "lưu huỳnh hexaflorua"]},
+    {"formula": "BrF5", "charge": 0, "curated_molecule_id": "brf5", "cas_rn": "7789-30-2", "names": ["bromine pentafluoride", "brom pentaflorua"]},
+    {"formula": "O3", "charge": 0, "curated_molecule_id": null, "cas_rn": "10028-15-6", "names": ["ozone", "ozon"]},
+    {"formula": "NH4+", "charge": 1, "curated_molecule_id": "nh4-plus", "cas_rn": null, "names": ["ammonium", "amoni", "ammonium ion", "ion amoni"]},
+    {"formula": "NO3-", "charge": -1, "curated_molecule_id": "no3-minus", "cas_rn": null, "names": ["nitrate", "nitrat", "nitrate ion", "ion nitrat"]},
+    {"formula": "CO3^2-", "charge": -2, "curated_molecule_id": "co3-2minus", "cas_rn": null, "names": ["carbonate", "cacbonat", "carbonate ion", "ion cacbonat"]},
+    {"formula": "H3O+", "charge": 1, "curated_molecule_id": null, "cas_rn": null, "names": ["hydronium", "hydroni", "oxidanium", "hydronium ion"]}
+  ]
+}

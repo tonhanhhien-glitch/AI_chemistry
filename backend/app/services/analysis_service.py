@@ -9,6 +9,7 @@ from app.schemas.analysis_schema import AnalysisNotices, AnalysisRequest, Analys
 from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceStatus
 from app.services.ai_explanation_service import generate_explanation
 from app.services.bond_angle_service import build_bond_angles
+from app.services.chemical_query_resolver import resolve_chemical_query
 from app.services.formula_parser import parse_formula
 from app.services.lewis_service import build_lewis_structure
 from app.services.molecule_resolver import get_record, resolve_molecule
@@ -43,13 +44,25 @@ def analyze(request: AnalysisRequest) -> AnalysisResponse:
     timings: dict[str, float] = {}
     started = time.perf_counter()
 
+    resolution_statuses: list[ExternalServiceStatus] = []
     with _timed("resolve", timings.__setitem__):
-        if request.molecule_id:
-            selected = get_record(request.molecule_id)
+        molecule_id = request.molecule_id
+        pubchem_cid = request.pubchem_cid
+        candidate = None
+        if molecule_id:
+            selected = get_record(molecule_id)
             parsed = parse_formula(request.formula or selected["formula"])
+        elif request.formula:
+            parsed = parse_formula(request.formula)
         else:
-            parsed = parse_formula(request.formula or "")
-        molecule, record = resolve_molecule(parsed, request.molecule_id, request.pubchem_cid)
+            # A raw query may be a formula or a name; the backend decides which.
+            resolution = resolve_chemical_query(request.query or "", pubchem_cid=pubchem_cid)
+            parsed = resolution.parsed
+            molecule_id = resolution.molecule_id
+            pubchem_cid = resolution.pubchem_cid or pubchem_cid
+            candidate = resolution.candidate
+            resolution_statuses.extend(resolution.statuses)
+        molecule, record = resolve_molecule(parsed, molecule_id, pubchem_cid, candidate)
     with _timed("lewis", timings.__setitem__):
         lewis = build_lewis_structure(record)
     with _timed("vsepr", timings.__setitem__):
@@ -84,6 +97,7 @@ def analyze(request: AnalysisRequest) -> AnalysisResponse:
         warnings_en.append("The formula has a unique supported single-center form; the deterministic result is not expert-curated.")
 
     statuses = _deduplicate_statuses([
+        *resolution_statuses,
         *record.get("_external_service_statuses", []),
         *structure_result.statuses,
     ])

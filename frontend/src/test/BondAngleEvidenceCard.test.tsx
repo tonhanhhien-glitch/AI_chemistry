@@ -12,7 +12,8 @@ const base: BondAngleEvidence = {
   display_label: "102.37°", evidence_type: "experimental", source_name: "NIST CCCBDB",
   source_url: "https://cccbdb.nist.gov/", reference: "1998Kuc", phase: "gas",
   uncertainty_deg: null, is_experimental: true, is_computed: false,
-  is_approximate: false, equivalent_count: 3,
+  is_approximate: false, equivalent_count: 3, coordinate_value_deg: 102.37,
+  provenance_label_vi: "Phép đo thực nghiệm", provenance_label_en: "Experimental measurement",
 };
 const prediction: BondAngleEvidence = {
   ...base, id: "vsepr", value_deg: null, display_label: "<109.5°",
@@ -22,7 +23,7 @@ const prediction: BondAngleEvidence = {
 };
 function result(preferred: BondAngleEvidence): BondAnglesResult {
   return { preferred: [preferred], experimental: preferred.is_experimental ? [preferred] : [],
-    coordinate_derived: [], vsepr_prediction: [prediction], selection_reason: "test" };
+    coordinate_derived: [], curated_reference: [], vsepr_prediction: [prediction], selection_reason: "test" };
 }
 function renderCard(angles: BondAnglesResult, lang: "vi" | "en") {
   window.localStorage.setItem("vsepr-lang", lang);

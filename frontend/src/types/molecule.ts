@@ -24,13 +24,3 @@ export interface Molecule extends MoleculeSummary {
   cache_timestamp: string | null;
   connectivity: { atoms: Array<{ id: string; element: string }>; bonds: Array<{ atom1_id: string; atom2_id: string; order: number }>; central_atom_id: string } | null;
 }
-
-export interface PropertyItem {
-  key: string;
-  label_vi: string;
-  value: string | number;
-  unit: string | null;
-  provenance: "curated" | "computed" | "PubChem reference";
-  verified_teaching_fact: boolean;
-  note_vi: string | null;
-}

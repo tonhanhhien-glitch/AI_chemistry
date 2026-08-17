@@ -1,115 +1,101 @@
-"""Conservative Lewis/VSEPR inference for validated single-center main-group species."""
+"""Deterministic Lewis/VSEPR inference for single-centre main-group species.
+
+This module used to gate its own capability on ``_TERMINAL_SINGLE_BOND`` -- a
+whitelist of terminal elements -- and on a hand-written mini-SMILES regex. Both are
+gone. Composition and charge now go to :mod:`app.chemistry.lewis_solver`, which
+generates and ranks candidate structures under general chemical constraints, and
+connectivity comes from :mod:`app.services.connectivity_service`, which uses real
+parsers.
+
+Connectivity, when available, is used to *check* the single-centre star topology.
+It is never allowed to decide bond orders, formal charges, resonance or geometry:
+those stay with the deterministic layer.
+"""
 
 from __future__ import annotations
 
-import re
-from collections import Counter
 from typing import Any
 
 from app.chemistry.central_atom_rules import choose_central_atom
-from app.chemistry.formal_charge import calculate_formal_charge, validate_formal_charge_sum
-from app.chemistry.periodic_table import get_valence_electrons
-from app.chemistry.valence_rules import total_valence_electrons
+from app.chemistry.formal_charge import validate_formal_charge_sum
+from app.chemistry.lewis_solver import LewisSolution, resonance_note, solve_lewis
 from app.chemistry.vsepr_rules import get_vsepr_rule
 from app.core.exceptions import ChemistryValidationError
 from app.schemas.molecule_schema import PubChemCandidate
+from app.services.connectivity_service import MolecularGraph, resolve_connectivity
 from app.services.formula_parser import ParsedFormula
 
-_TOKEN = re.compile(r"Cl|Br|[A-Z][a-z]?|\(|\)|=|#|-")
-_TERMINAL_SINGLE_BOND = frozenset({"H", "F", "Cl", "Br", "I"})
+MIN_SUPPORTED_ATOMS = 3
+MAX_SUPPORTED_ATOMS = 7
 
 
-def _simple_smiles_graph(smiles: str) -> tuple[list[str], list[tuple[int, int, int]]]:
-    """Parse only acyclic, explicit single-center SMILES; reject everything else."""
+def ligand_symbols(atoms: dict[str, int], central: str) -> list[str]:
+    """Every atom except the one acting as the centre.
 
-    compact = smiles.strip()
-    matches = list(_TOKEN.finditer(compact))
-    if not matches or "".join(match.group(0) for match in matches) != compact:
-        raise ChemistryValidationError("The validated connectivity uses unsupported SMILES syntax.")
-    atoms: list[str] = []
-    bonds: list[tuple[int, int, int]] = []
-    branch_stack: list[int] = []
-    current: int | None = None
-    pending_order = 1
-    for match in matches:
-        token = match.group(0)
-        if token == "(":
-            if current is None:
-                raise ChemistryValidationError("Invalid branch in connectivity.")
-            branch_stack.append(current)
-        elif token == ")":
-            if not branch_stack:
-                raise ChemistryValidationError("Invalid branch in connectivity.")
-            current = branch_stack.pop()
-        elif token in {"-", "=", "#"}:
-            pending_order = {"-": 1, "=": 2, "#": 3}[token]
-        else:
-            new_index = len(atoms)
-            atoms.append(token)
-            if current is not None:
-                bonds.append((current, new_index, pending_order))
-            current = new_index
-            pending_order = 1
-    if branch_stack or len(bonds) != len(atoms) - 1:
-        raise ChemistryValidationError("Only an acyclic covalent unit is supported automatically.")
-    return atoms, bonds
+    Homonuclear centres are ordinary: ozone is a central O with two O ligands, and
+    triiodide is a central I with two I ligands. Removing exactly one atom of the
+    central element -- rather than requiring the central element to appear once --
+    is what lets those species through without a special case.
+    """
+
+    remaining = dict(atoms)
+    if remaining.get(central, 0) < 1:
+        raise ChemistryValidationError("The chosen central atom is not present in the formula.")
+    remaining[central] -= 1
+    return [symbol for symbol, count in remaining.items() for _ in range(count) if count > 0]
+
+
+def validate_star_connectivity(graph: MolecularGraph, parsed: ParsedFormula, central: str) -> None:
+    """Reject connectivity that is not the single-centre star this scope supports."""
+
+    if dict(graph.inventory()) != parsed.atoms:
+        raise ChemistryValidationError("Connectivity atom inventory does not match the formula.")
+    if graph.fragment_count != 1:
+        raise ChemistryValidationError("Only a single covalent unit is supported automatically.")
+    if graph.single_center_id(central) is None:
+        raise ChemistryValidationError("Connectivity is not a supported single-centre star graph.")
+
+
+def solve_structure(
+    parsed: ParsedFormula,
+    *,
+    graph: MolecularGraph | None = None,
+    central_override: str | None = None,
+) -> tuple[str, LewisSolution]:
+    """Choose a centre and solve its Lewis structure, honouring validated connectivity."""
+
+    atom_count = sum(parsed.atoms.values())
+    if not MIN_SUPPORTED_ATOMS <= atom_count <= MAX_SUPPORTED_ATOMS:
+        raise ChemistryValidationError(
+            f"Automatic inference supports {MIN_SUPPORTED_ATOMS} to {MAX_SUPPORTED_ATOMS} atoms in one covalent unit."
+        )
+    central = central_override or choose_central_atom(parsed.atoms)
+    if graph is not None:
+        center_id = graph.single_center_id(central)
+        if center_id is None:
+            raise ChemistryValidationError("Connectivity is not a supported single-centre star graph.")
+        central = next(atom.element for atom in graph.atoms if atom.id == center_id)
+        ligands = [atom.element for atom in graph.atoms if atom.id != center_id]
+    else:
+        ligands = ligand_symbols(parsed.atoms, central)
+    return central, solve_lewis(central, ligands, parsed.charge, atom_inventory=parsed.atoms)
 
 
 def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidate | None = None) -> dict[str, Any]:
-    """Return a record compatible with existing Lewis/VSEPR services or fail safely."""
-
-    if sum(parsed.atoms.values()) < 3 or sum(parsed.atoms.values()) > 7:
-        raise ChemistryValidationError("Automatic inference supports three to seven atoms in one covalent unit.")
-    central = choose_central_atom(parsed.atoms)
-    if parsed.atoms.get(central) != 1:
-        raise ChemistryValidationError("Automatic inference requires exactly one central atom.")
-    outer_symbols = [symbol for symbol, count in parsed.atoms.items() if symbol != central for _ in range(count)]
-    if not outer_symbols or any(symbol not in _TERMINAL_SINGLE_BOND for symbol in outer_symbols):
-        raise ChemistryValidationError("Automatic inference supports only unambiguous terminal H/halogen single bonds.")
+    """Return a record compatible with the Lewis/VSEPR services, or fail safely."""
 
     smiles = (candidate.canonical_smiles or candidate.isomeric_smiles) if candidate else None
-    if smiles:
-        graph_atoms, graph_bonds = _simple_smiles_graph(smiles)
-        if Counter(graph_atoms) != Counter(parsed.atoms):
-            raise ChemistryValidationError("Connectivity atom inventory does not match the formula.")
-        central_indexes = [index for index, symbol in enumerate(graph_atoms) if symbol == central]
-        if len(central_indexes) != 1:
-            raise ChemistryValidationError("Connectivity does not contain a unique central atom.")
-        center_index = central_indexes[0]
-        degrees = Counter()
-        for atom1, atom2, order in graph_bonds:
-            if order != 1 or center_index not in {atom1, atom2}:
-                raise ChemistryValidationError("Connectivity is not a supported single-center star graph.")
-            degrees[atom1] += 1
-            degrees[atom2] += 1
-        if degrees[center_index] != len(outer_symbols) or any(degrees[index] != 1 for index in range(len(graph_atoms)) if index != center_index):
-            raise ChemistryValidationError("Connectivity is not a supported single-center star graph.")
+    connectivity = resolve_connectivity(smiles=smiles)
+    graph = connectivity.graph
+    if graph is not None:
+        central_guess = choose_central_atom(parsed.atoms)
+        validate_star_connectivity(graph, parsed, central_guess)
 
-    total = total_valence_electrons(parsed.atoms, parsed.charge)
-    bond_orders = [1] * len(outer_symbols)
-    outer_lone_pairs = [0 if symbol == "H" else 3 for symbol in outer_symbols]
-    remaining = total - 2 * sum(bond_orders) - 2 * sum(outer_lone_pairs)
-    if remaining < 0 or remaining % 2:
-        raise ChemistryValidationError("The electron count does not yield a closed-shell Lewis structure.")
-    central_lone_pairs = remaining // 2
-    if central_lone_pairs > 3:
-        raise ChemistryValidationError("The central lone-pair count is outside the supported VSEPR scope.")
-    bonding_domains = len(outer_symbols)
-    rule = get_vsepr_rule(bonding_domains, central_lone_pairs)
+    central, solution = solve_structure(parsed, graph=graph)
+    structure = solution.representative
+    rule = get_vsepr_rule(structure.bonding_domains, structure.center_lone_pairs)
+    validate_formal_charge_sum(list(structure.formal_charges), parsed.charge)
 
-    atom_symbols = [central, *outer_symbols]
-    lone_pairs = [central_lone_pairs, *outer_lone_pairs]
-    formal_charges = [
-        calculate_formal_charge(symbol, 2 * lone_pair_count, 2 * bond_order_sum)
-        for symbol, lone_pair_count, bond_order_sum in zip(
-            atom_symbols,
-            lone_pairs,
-            [sum(bond_orders), *bond_orders],
-            strict=True,
-        )
-    ]
-    validate_formal_charge_sum(formal_charges, parsed.charge)
-    center_shell_electrons = 2 * sum(bond_orders) + 2 * central_lone_pairs
     if candidate:
         title = candidate.iupac_name or candidate.title or f"PubChem CID {candidate.cid}"
         record_id = candidate.id
@@ -130,6 +116,7 @@ def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidat
         pubchem_cid = None
         inchi = inchikey = canonical_identity = cache_timestamp = molecular_weight = None
         validation_status = "formula_unique_scope_lewis_vsepr_validated"
+
     return {
         "id": record_id,
         "formula": parsed.formula,
@@ -138,23 +125,23 @@ def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidat
         "aliases": [],
         "charge": parsed.charge,
         "atom_inventory": parsed.atoms,
-        "atom_symbols": atom_symbols,
+        "atom_symbols": list(structure.atom_symbols),
         "central_atom": central,
-        "total_valence_electrons": total,
-        "bond_orders": bond_orders,
-        "lone_pairs": lone_pairs,
-        "formal_charges": formal_charges,
-        "resonance_forms": 1,
-        "resonance_note_vi": None,
-        "resonance_note_en": None,
+        "total_valence_electrons": solution.total_valence_electrons,
+        "bond_orders": list(structure.bond_orders),
+        "lone_pairs": list(structure.lone_pairs),
+        "formal_charges": list(structure.formal_charges),
+        "resonance_forms": solution.resonance_forms,
+        "resonance_note_vi": resonance_note(solution, "vi"),
+        "resonance_note_en": resonance_note(solution, "en"),
         "exception_flags": {
-            "electron_deficient": center_shell_electrons < 8,
-            "expanded_octet": center_shell_electrons > 8,
+            "electron_deficient": structure.electron_deficient,
+            "expanded_octet": structure.expanded_octet,
             "odd_electron": False,
         },
-        "bonding_domains": bonding_domains,
-        "lone_pair_domains": central_lone_pairs,
-        "steric_number": bonding_domains + central_lone_pairs,
+        "bonding_domains": structure.bonding_domains,
+        "lone_pair_domains": structure.center_lone_pairs,
+        "steric_number": structure.steric_number,
         "ax_en": rule.ax_en,
         "electron_geometry": rule.electron_geometry,
         "electron_geometry_vi": rule.electron_geometry_vi,
@@ -166,7 +153,7 @@ def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidat
         "teaching_note_vi": rule.teaching_note_vi,
         "teaching_note_en": rule.teaching_note_en,
         "polarity_note_vi": "Không tự động suy luận độ phân cực cho bản ghi chưa được tuyển chọn.",
-        "polarity_note_en": "Polarity is not inferred automatically for an uncurated PubChem record.",
+        "polarity_note_en": "Polarity is not inferred automatically for an uncurated record.",
         "review_status": review_status,
         "source": source,
         "confidence": "medium",
@@ -178,4 +165,5 @@ def build_deterministic_record(parsed: ParsedFormula, candidate: PubChemCandidat
         "validation_status": validation_status,
         "cache_timestamp": cache_timestamp,
         "molecular_weight": molecular_weight,
+        "_connectivity_source": graph.source if graph else None,
     }

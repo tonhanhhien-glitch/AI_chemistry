@@ -1,60 +1,442 @@
 {
-  "schema_version": "1.0",
-  "retrieval_date": "2026-08-01",
+  "schema_version": "2.0",
+  "note": "Reviewed local snapshot of experimental gas-phase geometries, expressed as observation collections. Cartesian coordinates are optional: records that publish internal coordinates only are fitted by app.geometry.fitter and validated back against every observation. This file is a cache seed, not a capability gate -- app.geometry.providers.nist_cccbdb can add records at runtime without a source edit.",
   "records": [
     {
       "id": "nist-cccbdb-nf3-1998kuc",
-      "curated_molecule_id": null,
-      "formula": "NF3",
-      "charge": 0,
-      "atom_inventory": {"N": 1, "F": 3},
-      "formula_identity_unambiguous": true,
-      "cas_rn": "7783-54-2",
-      "pubchem_cid": 24553,
-      "inchi": "InChI=1S/F3N/c1-4(2)3",
-      "inchikey": "GVGCUCJTUSOZKP-UHFFFAOYSA-N",
-      "angle_pattern": {"atom1_element": "F", "center_element": "N", "atom2_element": "F"},
-      "experimental_angle_deg": 102.37,
-      "phase": "gas",
-      "point_group_conformation": "C3v",
-      "reference_label": "1998Kuc",
-      "source_name": "NIST CCCBDB",
-      "source_url": "https://cccbdb.nist.gov/exp2x.asp?casno=7783542",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "NF3",
+        "charge": 0,
+        "atom_inventory": {
+          "N": 1,
+          "F": 3
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7783-54-2",
+        "pubchem_cid": 24553,
+        "inchi": "InChI=1S/F3N/c1-4(2)3",
+        "inchikey": "GVGCUCJTUSOZKP-UHFFFAOYSA-N",
+        "curated_molecule_id": null
+      },
       "units": "angstrom",
-      "retrieval_date": "2026-08-01",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C3v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "N",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "nf3-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.365,
+          "equivalent_count": 3,
+          "label": "N–F"
+        },
+        {
+          "id": "nf3-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.365,
+          "equivalent_count": 3,
+          "label": "N–F"
+        },
+        {
+          "id": "nf3-r3",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.365,
+          "equivalent_count": 3,
+          "label": "N–F"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "nf3-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 102.37,
+          "equivalent_count": 3,
+          "label": "F–N–F"
+        },
+        {
+          "id": "nf3-a2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 102.37,
+          "equivalent_count": 3,
+          "label": "F–N–F"
+        },
+        {
+          "id": "nf3-a3",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 102.37,
+          "equivalent_count": 3,
+          "label": "F–N–F"
+        }
+      ],
+      "dihedrals": [],
       "coordinates": [
-        {"id": "a0", "element": "N", "x": 0.0000, "y": 0.0000, "z": 0.4731},
-        {"id": "a1", "element": "F", "x": 0.0000, "y": 1.2279, "z": -0.1226},
-        {"id": "a2", "element": "F", "x": 1.0634, "y": -0.6140, "z": -0.1226},
-        {"id": "a3", "element": "F", "x": -1.0634, "y": -0.6140, "z": -0.1226}
-      ]
+        {
+          "id": "a0",
+          "element": "N",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.4731
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "x": 0.0,
+          "y": 1.2279,
+          "z": -0.1226
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "x": 1.0634,
+          "y": -0.614,
+          "z": -0.1226
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "x": -1.0634,
+          "y": -0.614,
+          "z": -0.1226
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1998Kuc",
+        "url": "https://cccbdb.nist.gov/exp2x.asp?casno=7783542",
+        "comments": "Experimental gas-phase equilibrium geometry listed by the NIST Computational Chemistry Comparison and Benchmark Database.",
+        "retrieved_at": "2026-08-01T00:00:00Z"
+      }
     },
     {
       "id": "nist-cccbdb-nh3-1966herzberg",
-      "curated_molecule_id": "nh3",
-      "formula": "NH3",
-      "charge": 0,
-      "atom_inventory": {"N": 1, "H": 3},
-      "formula_identity_unambiguous": true,
-      "cas_rn": "7664-41-7",
-      "pubchem_cid": 222,
-      "inchi": "InChI=1S/H3N/h1H3",
-      "inchikey": "QGZKDVFQNNGYKY-UHFFFAOYSA-N",
-      "angle_pattern": {"atom1_element": "H", "center_element": "N", "atom2_element": "H"},
-      "experimental_angle_deg": 106.67,
-      "phase": "gas",
-      "point_group_conformation": "C3v",
-      "reference_label": "1966Herzberg",
-      "source_name": "NIST CCCBDB",
-      "source_url": "https://cccbdb.nist.gov/exp2x.asp?casno=7664417",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "NH3",
+        "charge": 0,
+        "atom_inventory": {
+          "N": 1,
+          "H": 3
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7664-41-7",
+        "pubchem_cid": 222,
+        "inchi": "InChI=1S/H3N/h1H3",
+        "inchikey": "QGZKDVFQNNGYKY-UHFFFAOYSA-N",
+        "curated_molecule_id": "nh3"
+      },
       "units": "angstrom",
-      "retrieval_date": "2026-08-01",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C3v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "N",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "H",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "nh3-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.0124,
+          "equivalent_count": 3,
+          "label": "N–H"
+        },
+        {
+          "id": "nh3-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.0124,
+          "equivalent_count": 3,
+          "label": "N–H"
+        },
+        {
+          "id": "nh3-r3",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.0124,
+          "equivalent_count": 3,
+          "label": "N–H"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "nh3-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 106.67,
+          "equivalent_count": 3,
+          "label": "H–N–H"
+        },
+        {
+          "id": "nh3-a2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 106.67,
+          "equivalent_count": 3,
+          "label": "H–N–H"
+        },
+        {
+          "id": "nh3-a3",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 106.67,
+          "equivalent_count": 3,
+          "label": "H–N–H"
+        }
+      ],
+      "dihedrals": [],
       "coordinates": [
-        {"id": "a0", "element": "N", "x": 0.0000, "y": 0.0000, "z": 0.0000},
-        {"id": "a1", "element": "H", "x": 0.0000, "y": -0.9377, "z": -0.3816},
-        {"id": "a2", "element": "H", "x": 0.8121, "y": 0.4689, "z": -0.3816},
-        {"id": "a3", "element": "H", "x": -0.8121, "y": 0.4689, "z": -0.3816}
-      ]
+        {
+          "id": "a0",
+          "element": "N",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "x": 0.0,
+          "y": -0.9377,
+          "z": -0.3816
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "x": 0.8121,
+          "y": 0.4689,
+          "z": -0.3816
+        },
+        {
+          "id": "a3",
+          "element": "H",
+          "x": -0.8121,
+          "y": 0.4689,
+          "z": -0.3816
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1966Herzberg",
+        "url": "https://cccbdb.nist.gov/exp2x.asp?casno=7664417",
+        "comments": "Experimental gas-phase equilibrium geometry listed by the NIST Computational Chemistry Comparison and Benchmark Database.",
+        "retrieved_at": "2026-08-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-clf3-1953smith",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "ClF3",
+        "charge": 0,
+        "atom_inventory": {
+          "Cl": 1,
+          "F": 3
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7790-91-2",
+        "pubchem_cid": null,
+        "inchi": null,
+        "inchikey": null,
+        "curated_molecule_id": "clf3"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "Cl",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "clf3-r-ax-1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.698,
+          "equivalent_count": 2,
+          "label": "Cl–F axial"
+        },
+        {
+          "id": "clf3-r-ax-2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.698,
+          "equivalent_count": 2,
+          "label": "Cl–F axial"
+        },
+        {
+          "id": "clf3-r-eq",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.598,
+          "equivalent_count": 1,
+          "label": "Cl–F equatorial"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "clf3-a-ax-eq-1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 87.45,
+          "equivalent_count": 2,
+          "label": "F(ax)–Cl–F(eq)"
+        },
+        {
+          "id": "clf3-a-ax-eq-2",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 87.45,
+          "equivalent_count": 2,
+          "label": "F(ax)–Cl–F(eq)"
+        },
+        {
+          "id": "clf3-a-ax-ax",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 174.9,
+          "equivalent_count": 1,
+          "label": "F(ax)–Cl–F(ax)"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": null,
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1953Smith",
+        "url": "https://cccbdb.nist.gov/exp2x.asp?casno=7790912",
+        "comments": "Experimental gas-phase T-shaped C2v structure listed by NIST CCCBDB from the microwave study of D. F. Smith, J. Chem. Phys. 21, 609 (1953). Published as internal coordinates only; Cartesian coordinates are fitted to all six constraints and validated back from the fit.",
+        "retrieved_at": "2026-08-01T00:00:00Z"
+      }
     }
   ]
 }

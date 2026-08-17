@@ -29,11 +29,22 @@ class Settings(BaseSettings):
     PUBCHEM_MAX_REQUESTS_PER_SECOND: float = 4.0
     PUBCHEM_MAX_CANDIDATES: int = 20
     PUBCHEM_RETRY_COUNT: int = 2
+    # /analyze stays responsive by spending at most this long on *all* geometry
+    # providers combined; slower physical/chemical property enrichment is lazy-loaded
+    # through /properties instead of being inlined into the analysis request.
+    GEOMETRY_EXTERNAL_BUDGET_SECONDS: float = 6.0
+    PROPERTY_EXTERNAL_BUDGET_SECONDS: float = 12.0
+    PROPERTY_CACHE_TTL_SECONDS: int = 86400
+    NIST_CCCBDB_BASE_URL: str = "https://cccbdb.nist.gov"
+    NIST_TIMEOUT_SECONDS: float = 6.0
+    NIST_CACHE_TTL_SECONDS: int = 2592000
     CACHE_DIR: Path = Path("app/cache")
     DATA_DIR: Path = Path("app/runtime_data")
     TEACHER_EXPORT_TOKEN: str = ""
     ENABLE_PUBCHEM: bool = False
     ENABLE_RDKIT: bool = False
+    ENABLE_NIST_CCCBDB: bool = False
+    ENABLE_PUBCHEM_PROPERTIES: bool = False
     ENABLE_OPENROUTER: bool = False
     ENABLE_OPENAI: bool = False
     MAX_INPUT_LENGTH: int = 80

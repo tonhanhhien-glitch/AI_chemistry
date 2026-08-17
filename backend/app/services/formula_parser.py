@@ -36,6 +36,41 @@ def _extract_charge(formula: str) -> tuple[str, int]:
     return formula, 0
 
 
+def format_charge_suffix(charge: int) -> str:
+    """Render a charge in this application's grammar: ``+``, ``-``, ``^2-``."""
+
+    if charge == 0:
+        return ""
+    sign = "+" if charge > 0 else "-"
+    return sign if abs(charge) == 1 else f"^{abs(charge)}{sign}"
+
+
+def canonical_formula(atoms: dict[str, int], charge: int = 0) -> str:
+    """Render an atom inventory in this application's conventional order.
+
+    External sources use Hill notation, so PubChem calls sulfate ``O4S`` while the
+    teaching convention -- and every curated record here -- writes ``SO4^2-``. Rendering
+    from the inventory rather than passing a source's string through keeps one canonical
+    spelling, so identities are compared on composition instead of on formatting.
+
+    The central atom leads, and the remaining elements follow alphabetically. When no
+    central atom can be chosen the elements are simply alphabetical.
+    """
+
+    from app.chemistry.central_atom_rules import choose_central_atom
+    from app.core.exceptions import ChemistryDomainError
+
+    try:
+        central: str | None = choose_central_atom(atoms)
+    except ChemistryDomainError:
+        central = None
+    ordered = sorted(atoms)
+    if central is not None and central in ordered:
+        ordered = [central, *(symbol for symbol in ordered if symbol != central)]
+    body = "".join(f"{symbol}{atoms[symbol] if atoms[symbol] > 1 else ''}" for symbol in ordered)
+    return f"{body}{format_charge_suffix(charge)}"
+
+
 def parse_formula(formula: str) -> ParsedFormula:
     """Parse a formula only when every character matches the supported grammar."""
 

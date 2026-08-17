@@ -6,6 +6,7 @@ import pytest
 
 from app.schemas.analysis_schema import AnalysisRequest
 from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceStatus
+from app.geometry.providers import computed
 from app.services import molecule_resolver, structure3d_service
 from app.services.analysis_service import analyze
 from app.services.pubchem_service import PubChemLookupResult
@@ -22,7 +23,7 @@ def offline(monkeypatch: pytest.MonkeyPatch) -> None:
         lambda _parsed: PubChemLookupResult(candidates=[], status=ExternalServiceStatus(service="PubChem", state=ExternalServiceState.DISABLED)),
     )
     monkeypatch.setattr(
-        structure3d_service, "generate_rdkit_result",
+        computed, "generate_rdkit_result",
         lambda _smiles: RDKitResult(None, ExternalServiceStatus(service="RDKit", state=ExternalServiceState.DISABLED)),
     )
 

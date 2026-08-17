@@ -1,16 +1,36 @@
-"""Resolve 3D structures and derive coordinate-faithful educational overlays."""
+"""Build the rendered 3D structure from resolved geometry evidence.
+
+The resolution priority itself lives in :mod:`app.geometry.resolver`. This module's
+job is to turn the winning evidence -- and the coordinates that were validated
+against it -- into the :class:`Structure3D` the API returns, with:
+
+* every angle annotation measured from the coordinates that will actually be drawn,
+* the source's published value shown when the coordinates reproduce it,
+* symmetry-equivalent angles grouped with an explicit equivalent count,
+* a provenance block that never calls a computed conformer experimental.
+"""
 
 from __future__ import annotations
 
 import math
 from collections import Counter
 from dataclasses import dataclass
-from functools import lru_cache
 from itertools import combinations
-from pathlib import Path
 from typing import Any
 
-from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceStatus
+from app.geometry.fitter import angle_degrees
+from app.geometry.providers.base import GeometryQuery
+from app.geometry.providers.ideal_vsepr import normalize as _normalize
+from app.geometry.providers.ideal_vsepr import reshape_ligands as _reshape_ligands
+from app.geometry.providers.ideal_vsepr import templates as _templates
+from app.geometry.resolver import ResolvedGeometry, resolve_geometry
+from app.schemas.geometry_evidence_schema import (
+    GeometryEvidenceSummary,
+    GeometryEvidenceType,
+    GeometryLengthSummary,
+    MolecularGeometryEvidence,
+)
+from app.schemas.molecule_schema import ExternalServiceStatus
 from app.schemas.structure3d_schema import (
     BondAngleAnnotation,
     ElectronDomain3D,
@@ -21,24 +41,50 @@ from app.schemas.structure3d_schema import (
     StructureSource,
     Vector3D,
 )
-from app.services.experimental_geometry_service import ExperimentalGeometryRecord, match_experimental_geometry
-from app.services.pubchem_service import fetch_pubchem_3d
-from app.services.rdkit_service import generate_rdkit_result
-from app.services.reference_angle_service import resolve_reference_angle
-from app.utils.file_loader import load_json
+from app.services.reference_angle_service import molecule_specific_shape_target, resolve_reference_angle
 
-_DATA_FILE = Path(__file__).resolve().parents[1] / "data" / "geometry_templates_3d.json"
+__all__ = [
+    "Structure3DResult",
+    "calculate_angle",
+    "get_structure3d",
+    "resolve_structure3d",
+    "_angle_annotations",
+    "_reshape_ligands",
+    "_templates",
+]
+
+#: Angles this close together are the same symmetry-equivalent angle.
+ANGLE_GROUPING_TOLERANCE_DEG = 0.01
+
+_SOURCE_BY_PROVIDER = {
+    "nist_cccbdb": StructureSource.EXPERIMENTAL_GEOMETRY,
+    "pubchem_3d": StructureSource.PUBCHEM_3D,
+    "rdkit_etkdg": StructureSource.RDKIT_ETKDG,
+    "ideal_vsepr": StructureSource.IDEALIZED_VSEPR,
+}
+
+_CATEGORY_BY_EVIDENCE = {
+    GeometryEvidenceType.EXPERIMENTAL: "measured",
+    GeometryEvidenceType.SOURCE_ANNOTATION: "curated_reference",
+    GeometryEvidenceType.COMPUTED_CONFORMER: "conformer",
+    GeometryEvidenceType.DETERMINISTIC_CALCULATION: "conformer",
+    GeometryEvidenceType.IDEAL_VSEPR: "ideal_vsepr",
+}
+
+_PROVENANCE_LABELS = {
+    GeometryEvidenceType.EXPERIMENTAL: ("Phép đo thực nghiệm", "Experimental measurement"),
+    GeometryEvidenceType.SOURCE_ANNOTATION: ("Chú giải từ nguồn dữ liệu", "Source-derived annotation"),
+    GeometryEvidenceType.COMPUTED_CONFORMER: ("Cấu dạng tính toán", "Computed conformer"),
+    GeometryEvidenceType.DETERMINISTIC_CALCULATION: ("Tính toán tất định", "Deterministic calculation"),
+    GeometryEvidenceType.IDEAL_VSEPR: ("Minh họa VSEPR lý tưởng hóa", "Idealized VSEPR illustration"),
+}
 
 
 @dataclass(frozen=True, slots=True)
 class Structure3DResult:
     structure: Structure3D
     statuses: tuple[ExternalServiceStatus, ...] = ()
-
-
-@lru_cache(maxsize=1)
-def _templates() -> dict[str, Any]:
-    return load_json(_DATA_FILE)["geometries"]
+    geometry: ResolvedGeometry | None = None
 
 
 def _xyz(atom: Structure3DAtom) -> tuple[float, float, float]:
@@ -52,100 +98,14 @@ def calculate_angle(
 ) -> float:
     """Calculate A-center-B in degrees without display-time rounding."""
 
-    vector1 = tuple(a - c for a, c in zip(_xyz(atom_a), _xyz(central_atom), strict=True))
-    vector2 = tuple(b - c for b, c in zip(_xyz(atom_b), _xyz(central_atom), strict=True))
-    norm1 = math.sqrt(sum(value * value for value in vector1))
-    norm2 = math.sqrt(sum(value * value for value in vector2))
-    if norm1 <= 1e-12 or norm2 <= 1e-12:
-        raise ValueError("Bond-angle vectors must have non-zero length.")
-    cosine = sum(left * right for left, right in zip(vector1, vector2, strict=True)) / (norm1 * norm2)
-    return math.degrees(math.acos(max(-1.0, min(1.0, cosine))))
+    return angle_degrees(_xyz(atom_a), _xyz(central_atom), _xyz(atom_b))
 
 
-def _normalize(vector: tuple[float, float, float]) -> tuple[float, float, float]:
-    norm = math.sqrt(sum(value * value for value in vector))
-    if norm <= 1e-12:
-        raise ValueError("Cannot normalize a zero-length vector.")
-    return tuple(value / norm for value in vector)
+def _format_angle(value: float, evidence_type: GeometryEvidenceType) -> str:
+    """Measurements keep the precision they were published at; models do not pretend to."""
 
-
-def _reshape_ligands(
-    ligands: list[tuple[float, float, float]],
-    target_deg: float,
-) -> list[tuple[float, float, float]] | None:
-    """Open or close symmetry-equivalent ligand directions until every pair subtends ``target_deg``.
-
-    The equivalent ligands of a template sit at one polar angle around a shared symmetry axis,
-    so tilting them all by the same amount changes every inter-ligand angle together and keeps
-    the geometry's symmetry. Returns ``None`` when the template has no such arrangement -- the
-    ligands are centrosymmetric (tetrahedral, octahedral) or inequivalent (trigonal
-    bipyramidal, seesaw) -- and when no tilt can reach the target.
-    """
-
-    if len(ligands) < 2:
-        return None
-    unit = [_normalize(vector) for vector in ligands]
-    total = tuple(sum(vector[axis] for vector in unit) for axis in range(3))
-    if math.sqrt(sum(value * value for value in total)) <= 1e-8:
-        return None
-    axis = _normalize(total)
-    polar_cosines = [sum(value * reference for value, reference in zip(vector, axis, strict=True)) for vector in unit]
-    if max(polar_cosines) - min(polar_cosines) > 1e-6:
-        return None
-    equatorial: list[tuple[float, float, float]] = []
-    for vector, polar_cosine in zip(unit, polar_cosines, strict=True):
-        residual = tuple(value - polar_cosine * reference for value, reference in zip(vector, axis, strict=True))
-        if math.sqrt(sum(value * value for value in residual)) <= 1e-8:
-            return None
-        equatorial.append(_normalize(residual))
-    pair_dots = [sum(left * right for left, right in zip(first, second, strict=True)) for first, second in combinations(equatorial, 2)]
-    if max(pair_dots) - min(pair_dots) > 1e-6 or abs(1.0 - pair_dots[0]) <= 1e-9:
-        return None
-    # cos(pair) = cos²(polar) + pair_dot · sin²(polar); solve that for the polar angle.
-    polar_cosine_squared = (math.cos(math.radians(target_deg)) - pair_dots[0]) / (1.0 - pair_dots[0])
-    if not 0.0 <= polar_cosine_squared <= 1.0:
-        return None
-    polar_cosine = math.sqrt(polar_cosine_squared)
-    polar_sine = math.sqrt(1.0 - polar_cosine_squared)
-    return [
-        tuple(polar_cosine * reference + polar_sine * value for reference, value in zip(axis, direction, strict=True))
-        for direction in equatorial
-    ]
-
-
-def _parse_v2000(data: str, record: dict[str, Any]) -> tuple[list[Structure3DAtom], list[Structure3DBond], str] | None:
-    lines = data.splitlines()
-    counts_index = next((index for index, line in enumerate(lines) if "V2000" in line), None)
-    if counts_index is None:
-        return None
-    try:
-        counts = lines[counts_index].split()
-        atom_count, bond_count = int(counts[0]), int(counts[1])
-        atom_lines = lines[counts_index + 1 : counts_index + 1 + atom_count]
-        bond_lines = lines[counts_index + 1 + atom_count : counts_index + 1 + atom_count + bond_count]
-        atoms = []
-        for index, line in enumerate(atom_lines):
-            parts = line.split()
-            atoms.append(Structure3DAtom(id=f"a{index}", x=float(parts[0]), y=float(parts[1]), z=float(parts[2]), element=parts[3]))
-        bonds = []
-        for line in bond_lines:
-            parts = line.split()
-            bonds.append(Structure3DBond(atom1_id=f"a{int(parts[0]) - 1}", atom2_id=f"a{int(parts[1]) - 1}", order=int(parts[2])))
-    except (IndexError, TypeError, ValueError):
-        return None
-    if Counter(atom.element for atom in atoms) != Counter(record["atom_inventory"]):
-        return None
-    degrees = Counter()
-    for bond in bonds:
-        degrees[bond.atom1_id] += 1
-        degrees[bond.atom2_id] += 1
-    possible = [atom for atom in atoms if atom.element == record["central_atom"]]
-    if not possible:
-        return None
-    center = max(possible, key=lambda atom: degrees[atom.id])
-    if degrees[center.id] != record["bonding_domains"]:
-        return None
-    return atoms, bonds, center.id
+    decimals = 2 if evidence_type is GeometryEvidenceType.EXPERIMENTAL else 1
+    return f"{value:.{decimals}f}°"
 
 
 def _angle_annotations(
@@ -156,7 +116,12 @@ def _angle_annotations(
     source: str,
     *,
     is_approximate: bool | None = None,
+    evidence: MolecularGeometryEvidence | None = None,
+    evidence_type: GeometryEvidenceType | None = None,
 ) -> list[BondAngleAnnotation]:
+    """Group the angles of the drawn coordinates, attaching any matching source value."""
+
+    resolved_type = evidence_type or (evidence.evidence_type if evidence else GeometryEvidenceType.IDEAL_VSEPR)
     by_id = {atom.id: atom for atom in atoms}
     neighbors = []
     for bond in bonds:
@@ -164,35 +129,62 @@ def _angle_annotations(
             neighbors.append(bond.atom2_id)
         elif bond.atom2_id == center_id:
             neighbors.append(bond.atom1_id)
+
     measured: list[tuple[float, str, str]] = []
     for atom1_id, atom2_id in combinations(neighbors, 2):
         value = calculate_angle(by_id[atom1_id], by_id[center_id], by_id[atom2_id])
         measured.append((value, atom1_id, atom2_id))
+
     representatives: list[tuple[float, str, str, int]] = []
     for value, atom1_id, atom2_id in sorted(measured):
-        match_index = next((index for index, existing in enumerate(representatives) if abs(value - existing[0]) < 0.01), None)
+        match_index = next(
+            (index for index, existing in enumerate(representatives) if abs(value - existing[0]) < ANGLE_GROUPING_TOLERANCE_DEG),
+            None,
+        )
         if match_index is None:
             representatives.append((value, atom1_id, atom2_id, 1))
         else:
             existing = representatives[match_index]
             representatives[match_index] = (*existing[:3], existing[3] + 1)
-    return [
-        BondAngleAnnotation(
+
+    # Only an independent source has a value worth showing over the coordinate
+    # measurement. A computed or idealized geometry's "observations" were derived from
+    # these very coordinates, so quoting them back would add provenance that is not real.
+    observations = {}
+    if evidence is not None and resolved_type in {GeometryEvidenceType.EXPERIMENTAL, GeometryEvidenceType.SOURCE_ANNOTATION}:
+        for observation in evidence.bond_angles:
+            key = (frozenset({observation.atom1_id, observation.atom2_id}), observation.center_atom_id)
+            observations[key] = observation
+
+    annotations: list[BondAngleAnnotation] = []
+    for index, (value, atom1_id, atom2_id, equivalent_count) in enumerate(representatives):
+        observation = observations.get((frozenset({atom1_id, atom2_id}), center_id))
+        source_value = observation.value_deg if observation is not None else None
+        deviation = abs(source_value - value) if source_value is not None else None
+        display_value = source_value if source_value is not None else value
+        annotations.append(BondAngleAnnotation(
             id=f"angle-{index}",
             atom1_id=atom1_id,
             center_atom_id=center_id,
             atom2_id=atom2_id,
-            value_deg=value,
-            display_label=f"{value:.1f}°",
+            value_deg=display_value,
+            coordinate_value_deg=value,
+            source_value_deg=source_value,
+            deviation_deg=deviation,
+            uncertainty_deg=observation.uncertainty_deg if observation is not None else None,
+            display_label=_format_angle(display_value, resolved_type),
             category=category,
+            evidence_type=resolved_type,
             source=source,
+            source_reference=evidence.source.reference if evidence else None,
+            source_url=evidence.source.url if evidence else None,
+            phase=evidence.phase if evidence else None,
             is_approximate=category == "ideal_vsepr" if is_approximate is None else is_approximate,
             equivalent_count=equivalent_count,
             note_vi="Góc được tính trực tiếp từ tọa độ đang hiển thị.",
             note_en="Angle calculated directly from the rendered coordinates.",
-        )
-        for index, (value, atom1_id, atom2_id, equivalent_count) in enumerate(representatives)
-    ]
+        ))
+    return annotations
 
 
 def _electron_domains(
@@ -225,7 +217,7 @@ def _electron_domains(
     summed = tuple(sum(vector[axis] for vector in bond_directions) for axis in range(3))
     if lone_pair_count == 1 and math.sqrt(sum(value * value for value in summed)) > 1e-8:
         directions = [_normalize(tuple(-value for value in summed))]
-    else:
+    elif lone_pair_count:
         raw = template_lone_pairs if template_lone_pairs is not None else _templates()[record["ax_en"]]["lone_pairs"]
         directions = [_normalize(tuple(float(value) for value in vector)) for vector in raw[:lone_pair_count]]
     for index, direction in enumerate(directions):
@@ -241,95 +233,172 @@ def _electron_domains(
     return domains
 
 
-def _from_block(record: dict[str, Any], data: str, *, reference: ReferenceBondAngle | None, source: StructureSource, source_label: str, data_format: str, pubchem_cid: int | None = None) -> Structure3D | None:
-    parsed = _parse_v2000(data, record)
-    if parsed is None:
-        return None
-    atoms, bonds, center_id = parsed
-    category = "conformer"
-    warning_vi = "Tọa độ cấu dạng là dữ liệu tính toán; các miền cặp electron tự do chỉ là lớp minh họa VSEPR."
-    warning_en = "Conformer coordinates are computed; lone-pair domains are only an illustrative VSEPR overlay."
-    return Structure3D(
-        format=data_format, atoms=atoms, bonds=bonds, data=data,
-        source=source, source_label=source_label, is_illustrative=False,
-        is_computed=True, is_experimental=False, pubchem_cid=pubchem_cid,
-        central_atom_id=center_id, reference_bond_angle=reference,
-        angle_annotations=_angle_annotations(atoms, bonds, center_id, category, source_label),
-        electron_domains=_electron_domains(atoms, bonds, center_id, record, source_label),
-        warning_vi=warning_vi, warning_en=warning_en,
-    )
+def _align_bond_orders(ligand_elements: list[str], record: dict[str, Any]) -> list[int]:
+    """Map the record's bond orders onto the geometry's ligand order, by element.
 
-
-def _experimental(record: dict[str, Any], experimental: ExperimentalGeometryRecord, reference: ReferenceBondAngle | None) -> Structure3D:
-    atoms = [Structure3DAtom(**atom.model_dump()) for atom in experimental.coordinates]
-    center_id = next(atom.id for atom in atoms if atom.element == record["central_atom"])
-    ligand_ids = [atom.id for atom in atoms if atom.id != center_id]
-    bonds = [Structure3DBond(atom1_id=center_id, atom2_id=atom_id, order=order) for atom_id, order in zip(ligand_ids, record["bond_orders"], strict=True)]
-    label = "NIST CCCBDB experimental gas-phase geometry"
-    annotations = _angle_annotations(atoms, bonds, center_id, "measured", label)
-    return Structure3D(
-        atoms=atoms, bonds=bonds, source=StructureSource.CURATED_COORDINATES, source_label=label,
-        is_illustrative=False, is_computed=False, is_experimental=True, pubchem_cid=experimental.pubchem_cid,
-        central_atom_id=center_id, reference_bond_angle=reference, angle_annotations=annotations,
-        electron_domains=_electron_domains(atoms, bonds, center_id, record, label),
-        warning_vi="Tọa độ nguyên tử là hình học pha khí thực nghiệm từ NIST CCCBDB; các miền cặp electron tự do vẫn chỉ là minh họa VSEPR.",
-        warning_en="Atomic coordinates are an experimental gas-phase geometry from NIST CCCBDB; lone-pair domains remain illustrative VSEPR overlays.",
-    )
-
-
-def _idealized(record: dict[str, Any], reference: ReferenceBondAngle | None) -> Structure3D:
-    """Build the fallback model, shaped to the molecule-specific reference angle where one exists.
-
-    The generic AXnEm template only knows the electron-domain ideal, so water would come out at
-    the tetrahedral 109.5°. Bending the ligands onto the reference angle first keeps the drawn
-    geometry, the arc measured from it, and the summary's preferred angle in agreement.
+    The geometry source decides the atom order; the deterministic layer decides the
+    bond orders. Matching them per element keeps both authorities intact.
     """
 
-    template = _templates()[record["ax_en"]]
-    ligands = [tuple(float(value) for value in vector) for vector in template["ligands"]]
-    shaped = _reshape_ligands(ligands, reference.value_deg) if reference is not None else None
-    is_molecule_specific = shaped is not None and reference is not None and reference.category != "ideal_vsepr"
-    coordinates = [(0.0, 0.0, 0.0), *(shaped or ligands)]
-    scale = 1.55
-    atoms = [
-        Structure3DAtom(id=f"a{index}", element=symbol, x=coordinates[index][0] * scale, y=coordinates[index][1] * scale, z=coordinates[index][2] * scale)
-        for index, symbol in enumerate(record["atom_symbols"])
-    ]
-    bonds = [Structure3DBond(atom1_id="a0", atom2_id=f"a{index + 1}", order=order) for index, order in enumerate(record["bond_orders"])]
-    label = f"Idealized VSEPR model at the {reference.display_label} reference angle" if is_molecule_specific and reference else "Idealized VSEPR model"
-    category = reference.category if is_molecule_specific and reference else "ideal_vsepr"
-    return Structure3D(
-        atoms=atoms, bonds=bonds, source=StructureSource.IDEALIZED_VSEPR,
-        source_label=label, is_illustrative=True, is_computed=False,
-        is_experimental=False, central_atom_id="a0", reference_bond_angle=reference,
-        angle_annotations=_angle_annotations(atoms, bonds, "a0", category, label, is_approximate=True),
-        electron_domains=_electron_domains(atoms, bonds, "a0", record, label, template["lone_pairs"]),
-        warning_vi="Mô hình 3D VSEPR lý tưởng chỉ dùng để minh họa; góc hiển thị được đo từ chính tọa độ này.",
-        warning_en="This idealized VSEPR model is illustrative; displayed angles are measured from these coordinates.",
+    symbols = list(record.get("atom_symbols") or [])[1:]
+    orders = list(record.get("bond_orders") or [])
+    if len(symbols) != len(orders) or Counter(symbols) != Counter(ligand_elements):
+        return [1] * len(ligand_elements)
+    pools: dict[str, list[int]] = {}
+    for symbol, order in zip(symbols, orders, strict=True):
+        pools.setdefault(symbol, []).append(int(order))
+    for values in pools.values():
+        values.sort(reverse=True)
+    return [pools[element].pop(0) for element in ligand_elements]
+
+
+def _summary(geometry: ResolvedGeometry) -> GeometryEvidenceSummary:
+    evidence = geometry.evidence
+    grouped: list[GeometryLengthSummary] = []
+    for observation in evidence.bond_lengths:
+        label = observation.label or "bond"
+        match = next(
+            (item for item in grouped if item.label == label and abs(item.value_angstrom - observation.value_angstrom) < 5e-4),
+            None,
+        )
+        if match is None:
+            grouped.append(GeometryLengthSummary(
+                label=label, value_angstrom=round(observation.value_angstrom, 4),
+                uncertainty_angstrom=observation.uncertainty_angstrom, equivalent_count=1,
+            ))
+        else:
+            grouped[grouped.index(match)] = match.model_copy(update={"equivalent_count": match.equivalent_count + 1})
+    label_vi, label_en = _PROVENANCE_LABELS[evidence.evidence_type]
+    return GeometryEvidenceSummary(
+        id=evidence.id,
+        evidence_type=evidence.evidence_type,
+        provider=geometry.provider_name,
+        source_name=evidence.source.name,
+        source_reference=evidence.source.reference,
+        source_url=evidence.source.url,
+        source_comments=evidence.source.comments,
+        retrieved_at=evidence.source.retrieved_at,
+        phase=evidence.phase,
+        electronic_state=evidence.electronic_state,
+        conformation=evidence.conformation,
+        point_group=evidence.point_group,
+        bond_lengths=grouped,
+        bond_length_count=len(evidence.bond_lengths),
+        bond_angle_count=len(evidence.bond_angles),
+        dihedral_count=len(evidence.dihedrals),
+        coordinates_are_fitted=evidence.coordinates is None,
+        max_length_deviation_angstrom=geometry.fit.max_length_deviation,
+        max_angle_deviation_deg=geometry.fit.max_angle_deviation,
+        is_experimental=geometry.is_experimental,
+        is_computed=geometry.is_computed,
+        is_ideal=geometry.is_ideal,
+        provenance_label_vi=label_vi,
+        provenance_label_en=label_en,
     )
+
+
+def _warnings(geometry: ResolvedGeometry) -> tuple[str, str]:
+    evidence = geometry.evidence
+    if geometry.is_experimental:
+        return (
+            f"Tọa độ nguyên tử là hình học {evidence.phase or 'thực nghiệm'} đo được từ {evidence.source.name}; "
+            "các miền cặp electron tự do vẫn chỉ là lớp minh họa VSEPR.",
+            f"Atomic coordinates are an experimental {evidence.phase or ''} geometry from {evidence.source.name}; "
+            "lone-pair domains remain illustrative VSEPR overlays.",
+        )
+    if geometry.is_computed:
+        return (
+            f"Tọa độ là cấu dạng TÍNH TOÁN từ {evidence.source.name}, không phải phép đo thực nghiệm; "
+            "các miền cặp electron tự do chỉ là lớp minh họa VSEPR.",
+            f"Coordinates are a COMPUTED conformer from {evidence.source.name}, not an experimental measurement; "
+            "lone-pair domains are only an illustrative VSEPR overlay.",
+        )
+    return (
+        "Mô hình 3D VSEPR lý tưởng hóa chỉ dùng để minh họa, không phải số liệu đo; "
+        "góc hiển thị được đo từ chính tọa độ này.",
+        "This idealized VSEPR model is an educational illustration, not measured data; "
+        "displayed angles are measured from these coordinates.",
+    )
+
+
+def _build_structure(
+    record: dict[str, Any],
+    geometry: ResolvedGeometry,
+    reference: ReferenceBondAngle | None,
+    shape_target: tuple[float | None, str | None] = (None, None),
+) -> Structure3D:
+    evidence = geometry.evidence
+    atoms = [
+        Structure3DAtom(id=item.id, element=item.element, x=item.x, y=item.y, z=item.z)
+        for item in geometry.coordinates
+    ]
+    center_id = evidence.center_atom_id or atoms[0].id
+    ligand_ids = [atom.id for atom in atoms if atom.id != center_id]
+    ligand_elements = [atom.element for atom in atoms if atom.id != center_id]
+    orders = _align_bond_orders(ligand_elements, record)
+    bonds = [
+        Structure3DBond(atom1_id=center_id, atom2_id=atom_id, order=order)
+        for atom_id, order in zip(ligand_ids, orders, strict=True)
+    ]
+    label = _structure_label(geometry, shape_target)
+    category = _CATEGORY_BY_EVIDENCE[evidence.evidence_type]
+    template_lone_pairs = (
+        _templates()[record["ax_en"]]["lone_pairs"]
+        if geometry.is_ideal and record.get("ax_en") in _templates() else None
+    )
+    warning_vi, warning_en = _warnings(geometry)
+    return Structure3D(
+        atoms=atoms,
+        bonds=bonds,
+        source=_SOURCE_BY_PROVIDER.get(geometry.provider_name, StructureSource.IDEALIZED_VSEPR),
+        source_label=label,
+        evidence_type=evidence.evidence_type,
+        geometry_evidence=_summary(geometry),
+        is_illustrative=geometry.is_ideal,
+        is_computed=geometry.is_computed,
+        is_experimental=geometry.is_experimental,
+        pubchem_cid=evidence.identity.pubchem_cid,
+        central_atom_id=center_id,
+        reference_bond_angle=reference,
+        angle_annotations=_angle_annotations(
+            atoms, bonds, center_id, category, label,
+            is_approximate=geometry.is_ideal,
+            evidence=evidence,
+        ),
+        electron_domains=_electron_domains(atoms, bonds, center_id, record, label, template_lone_pairs),
+        warning_vi=warning_vi,
+        warning_en=warning_en,
+    )
+
+
+def _structure_label(geometry: ResolvedGeometry, shape_target: tuple[float | None, str | None] = (None, None)) -> str:
+    evidence = geometry.evidence
+    if geometry.is_experimental:
+        phase = f" {evidence.phase}-phase" if evidence.phase else ""
+        return f"{evidence.source.name} experimental{phase} geometry"
+    if geometry.provider_name == "pubchem_3d":
+        return "PubChem 3D conformer"
+    if geometry.provider_name == "rdkit_etkdg":
+        force_field = (evidence.source.reference or "").split(",")[-1].strip() or "RDKit"
+        return f"RDKit-generated conformer ({force_field})"
+    target, _source = shape_target
+    if target is not None:
+        return f"Idealized VSEPR model at the {target}° reference angle"
+    return "Idealized VSEPR model"
 
 
 def resolve_structure3d(record: dict[str, Any]) -> Structure3DResult:
-    statuses: list[ExternalServiceStatus] = []
-    reference = resolve_reference_angle(record)
-    experimental = match_experimental_geometry(record)
-    if experimental is not None:
-        return Structure3DResult(_experimental(record, experimental, reference), tuple(statuses))
-    cid = record.get("pubchem_cid")
-    if cid:
-        pubchem = fetch_pubchem_3d(int(cid))
-        statuses.append(pubchem.status)
-        if pubchem.data:
-            structure = _from_block(record, pubchem.data, reference=reference, source=StructureSource.PUBCHEM_3D, source_label="PubChem 3D conformer", data_format="sdf", pubchem_cid=int(cid))
-            if structure is not None:
-                return Structure3DResult(structure, tuple(statuses))
-    rdkit = generate_rdkit_result(record.get("smiles"))
-    statuses.append(rdkit.status)
-    if rdkit.structure:
-        structure = _from_block(record, rdkit.structure.molblock, reference=reference, source=StructureSource.RDKIT_ETKDG, source_label=f"RDKit-generated conformer ({rdkit.structure.force_field})", data_format="molblock")
-        if structure is not None:
-            return Structure3DResult(structure, tuple(statuses))
-    return Structure3DResult(_idealized(record, reference), tuple(statuses))
+    """Resolve the geometry to render, experimental evidence first."""
+
+    shape_target = molecule_specific_shape_target(record)
+    geometry = resolve_geometry(
+        GeometryQuery.from_record(record),
+        ideal_shape_target_deg=shape_target[0],
+        ideal_shape_source=shape_target[1],
+    )
+    reference = resolve_reference_angle(record, geometry)
+    structure = _build_structure(record, geometry, reference, shape_target)
+    return Structure3DResult(structure, geometry.statuses, geometry)
 
 
 def get_structure3d(record: dict[str, Any]) -> Structure3D:

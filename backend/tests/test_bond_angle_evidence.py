@@ -11,9 +11,12 @@ from app.main import app
 from app.schemas.analysis_schema import AnalysisRequest
 from app.schemas.molecule_schema import ExternalServiceState, ExternalServiceStatus, PubChemCandidate
 from app.schemas.structure3d_schema import Structure3DAtom, Structure3DBond
+from app.geometry import resolver as geometry_resolver
+from app.geometry.providers import computed
 from app.services import experimental_geometry_service, molecule_resolver, structure3d_service
 from app.services.analysis_service import analyze
-from app.services.experimental_geometry_service import ExperimentalGeometryRecord, experimental_records, match_experimental_geometry
+from app.schemas.geometry_evidence_schema import MolecularGeometryEvidence
+from app.services.experimental_geometry_service import experimental_records, match_experimental_geometry
 from app.services.molecule_resolver import get_record
 from app.services.pubchem_service import PubChemLookupResult, PubChemStructureResult
 from app.services.rdkit_service import RDKitResult
@@ -103,24 +106,27 @@ def test_generic_lone_pair_vsepr_rules_are_inequalities(molecule_id: str, notati
     assert result.bond_angles.vsepr_prediction[0].display_label == "<109.5°"
 
 
-def test_experimental_snapshot_validation_rejects_inconsistent_angle() -> None:
+def test_experimental_snapshot_records_are_complete_and_validated() -> None:
     records = experimental_records()
-    assert {record.formula for record in records} == {"NF3", "NH3"}
+    assert {record.identity.formula for record in records} == {"NF3", "NH3", "ClF3"}
     for record in records:
-        assert record.reference_label and record.retrieval_date and record.units == "angstrom"
-        assert record.cas_rn and record.inchikey and record.atom_inventory
-    malformed = deepcopy(records[0].model_dump())
-    malformed["experimental_angle_deg"] = 111.0
-    with pytest.raises(ValidationError, match="does not match"):
-        ExperimentalGeometryRecord.model_validate(malformed)
+        assert record.source.reference and record.source.retrieved_at and record.units == "angstrom"
+        # CAS is the identifier CCCBDB is addressed by and the one every record carries.
+        assert record.identity.cas_rn and record.identity.atom_inventory
+        assert record.evidence_type == "experimental"
+        assert record.bond_lengths and record.bond_angles
+    malformed = deepcopy(records[0].model_dump(mode="json"))
+    malformed["bond_angles"][0]["atom1_id"] = "not-an-atom"
+    with pytest.raises(ValidationError, match="unknown atom ids"):
+        MolecularGeometryEvidence.model_validate(malformed)
 
 
 def test_identity_matching_checks_charge_and_rejects_ambiguous_formula(monkeypatch: pytest.MonkeyPatch) -> None:
-    nf3 = next(record for record in experimental_records() if record.formula == "NF3")
+    nf3 = next(record for record in experimental_records() if record.identity.formula == "NF3")
     identity = {"formula": "NF3", "charge": 0, "atom_inventory": {"N": 1, "F": 3}}
     assert match_experimental_geometry(identity) == nf3
     assert match_experimental_geometry(identity | {"charge": 1}) is None
-    duplicate = nf3.model_copy(update={"id": "nf3-duplicate", "inchikey": "DIFFERENT-KEY"})
+    duplicate = nf3.model_copy(update={"id": "nf3-duplicate"})
     monkeypatch.setattr(experimental_geometry_service, "experimental_records", lambda: (nf3, duplicate))
     assert experimental_geometry_service.match_experimental_geometry(identity) is None
 
@@ -139,11 +145,11 @@ def test_pubchem_only_structure_is_computed_not_experimental(monkeypatch: pytest
         lambda _parsed: PubChemLookupResult(candidates=[candidate], status=integration_status("PubChem", ExternalServiceState.SUCCESS)),
     )
     monkeypatch.setattr(
-        structure3d_service, "fetch_pubchem_3d",
+        computed, "fetch_pubchem_3d",
         lambda _cid: PubChemStructureResult(data=NCL3_SDF, status=integration_status("PubChem", ExternalServiceState.SUCCESS)),
     )
     monkeypatch.setattr(
-        structure3d_service, "generate_rdkit_result",
+        computed, "generate_rdkit_result",
         lambda _smiles: RDKitResult(None, integration_status("RDKit", ExternalServiceState.DISABLED)),
     )
     result = analyze(AnalysisRequest(formula="NCl3"))
@@ -155,9 +161,9 @@ def test_pubchem_only_structure_is_computed_not_experimental(monkeypatch: pytest
 
 def test_no_external_result_falls_back_to_general_vsepr(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(molecule_resolver, "lookup_pubchem_formula", disabled_lookup)
-    monkeypatch.setattr(structure3d_service, "match_experimental_geometry", lambda _record: None)
+    monkeypatch.setattr(geometry_resolver, "experimental_providers", lambda: [])
     monkeypatch.setattr(
-        structure3d_service, "generate_rdkit_result",
+        computed, "generate_rdkit_result",
         lambda _smiles: RDKitResult(None, integration_status("RDKit", ExternalServiceState.DISABLED)),
     )
     result = analyze(AnalysisRequest(formula="NCl3"))

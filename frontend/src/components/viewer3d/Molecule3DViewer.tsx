@@ -1,7 +1,9 @@
 import { createViewer, type GLViewer } from "3dmol";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useI18n } from "../../i18n";
 import type { BondAngleAnnotation, Structure3D, Vector3D } from "../../types/structure3d";
+import { angleViewSpec } from "./angleCamera";
+import GeometryProvenanceBadge from "./GeometryProvenanceBadge";
 import ViewerFallback from "./ViewerFallback";
 import ViewerToolbar from "./ViewerToolbar";
 import type { ViewerStyle } from "./StyleSelector";
@@ -111,6 +113,15 @@ function lonePairInputs(structure: Structure3D, style: ViewerStyle): LonePairDom
   });
 }
 
+/** Describes an angle option in the selector: value, atom triple and how many are equivalent. */
+function angleOptionLabel(annotation: BondAngleAnnotation, structure: Structure3D): string {
+  const elements = new Map(structure.atoms.map((atom) => [atom.id, atom.element]));
+  const triple = [annotation.atom1_id, annotation.center_atom_id, annotation.atom2_id]
+    .map((id) => elements.get(id) ?? id).join("–");
+  const multiplicity = annotation.equivalent_count > 1 ? ` ×${annotation.equivalent_count}` : "";
+  return `${annotation.display_label} · ${triple}${multiplicity}`;
+}
+
 export default function Molecule3DViewer({ structure }: { structure: Structure3D }) {
   const { t, lang } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null); const viewerRef = useRef<GLViewer | null>(null);
@@ -123,7 +134,11 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
   useEffect(() => {
     if (!containerRef.current || typeof window.WebGLRenderingContext === "undefined") { setFailed(true); return; }
     try {
-      const viewer = createViewer(containerRef.current, { backgroundColor: "#f8fbfa" }); viewerRef.current = viewer;
+      // Orthographic, not perspective: a bond angle measured off a perspective
+      // projection is foreshortened by however far the atoms sit from the camera,
+      // which would put a number on screen that disagrees with the label beside it.
+      const viewer = createViewer(containerRef.current, { backgroundColor: "#f8fbfa", orthographic: true }); viewerRef.current = viewer;
+      viewer.setProjection?.("orthographic");
       const model = modelData(structure); viewer.addModel(model.data, model.format); viewer.zoomTo(); viewer.render();
       return () => { viewer.clear(); viewerRef.current = null; };
     } catch { setFailed(true); }
@@ -159,13 +174,31 @@ export default function Molecule3DViewer({ structure }: { structure: Structure3D
     viewer.render();
   }, [lonePairs, structure, style]);
 
+  /** Face the selected angle's plane so its on-screen projection is the real angle. */
+  const viewSelectedAngle = useCallback(() => {
+    const viewer = viewerRef.current;
+    if (!viewer || !selectedAngle) return;
+    const spec = angleViewSpec(structure, selectedAngle, viewer.getView?.() ?? []);
+    if (!spec) return;
+    viewer.setView(spec);
+    viewer.render();
+  }, [selectedAngle, structure]);
+
+  const resetView = useCallback(() => {
+    const viewer = viewerRef.current;
+    if (!viewer) return;
+    viewer.zoomTo();
+    viewer.render();
+  }, []);
+
   if (failed) return <ViewerFallback />;
   const lonePairCount = structure.electron_domains.filter((domain) => domain.kind === "lone_pair").length;
   return <div className="viewer-wrap">
-    <ViewerToolbar style={style} labels={labels} angles={angles} lonePairs={lonePairs} hasAngles={structure.angle_annotations.length > 0} hasLonePairs={lonePairCount > 0} onStyle={setStyle} onLabels={setLabels} onAngles={setAngles} onLonePairs={setLonePairs} />
-    {structure.angle_annotations.length > 1 && <label className="angle-selector">{t("viewer3d.angleSelect")}<select value={selectedAngle?.id} onChange={(event) => setSelectedAngleId(event.target.value)}>{structure.angle_annotations.map((annotation) => <option key={annotation.id} value={annotation.id}>{annotation.display_label} · {annotation.atom1_id}–{annotation.center_atom_id}–{annotation.atom2_id}</option>)}</select></label>}
+    <GeometryProvenanceBadge structure={structure} />
+    <ViewerToolbar style={style} labels={labels} angles={angles} lonePairs={lonePairs} hasAngles={structure.angle_annotations.length > 0} hasLonePairs={lonePairCount > 0} onStyle={setStyle} onLabels={setLabels} onAngles={setAngles} onLonePairs={setLonePairs} onViewAngle={viewSelectedAngle} onReset={resetView} />
+    {structure.angle_annotations.length > 1 && <label className="angle-selector">{t("viewer3d.angleSelect")}<select value={selectedAngle?.id} onChange={(event) => setSelectedAngleId(event.target.value)}>{structure.angle_annotations.map((annotation) => <option key={annotation.id} value={annotation.id}>{angleOptionLabel(annotation, structure)}</option>)}</select></label>}
     <div className="mol-viewer" ref={containerRef} aria-label={t("viewer3d.viewerAria")} />
     <div className="viewer-legend" aria-label={t("viewer3d.legend")}><span>● {t("viewer3d.legendAtom")}</span><span>━ {t("viewer3d.legendBond")}</span><span className="legend-lone-pair"><i className="legend-domain-bubble" aria-hidden="true" />●● {t("viewer3d.legendLonePair")}</span></div>
-    <p className="viewer-help">{t("viewer3d.help")} {lonePairCount > 0 && (lang === "en" ? "Lone-pair lobes are illustrative regions, not calculated electron-density surfaces." : "Các thùy cặp electron tự do là vùng minh họa, không phải bề mặt mật độ electron được tính toán.")}</p>
+    <p className="viewer-help">{t("viewer3d.help")} {t("viewer3d.orthographicNote")} {lonePairCount > 0 && (lang === "en" ? "Lone-pair lobes are illustrative regions, not calculated electron-density surfaces." : "Các thùy cặp electron tự do là vùng minh họa, không phải bề mặt mật độ electron được tính toán.")}</p>
   </div>;
 }

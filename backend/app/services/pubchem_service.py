@@ -22,7 +22,7 @@ from app.schemas.molecule_schema import (
     ExternalServiceStatus,
     PubChemCandidate,
 )
-from app.services.formula_parser import ParsedFormula, parse_formula
+from app.services.formula_parser import ParsedFormula, canonical_formula, parse_formula
 from app.utils.json_utils import read_json_cache, write_json_cache
 
 logger = logging.getLogger(__name__)
@@ -102,14 +102,21 @@ def _status(state: ExternalServiceState, *, cache_hit: bool = False, message: st
     return ExternalServiceStatus(service="PubChem", state=state, cache_hit=cache_hit, message=message)
 
 
-def _candidate_from_row(row: dict[str, Any], parsed: ParsedFormula, timestamp: datetime) -> PubChemCandidate | None:
+def _candidate_from_row(row: dict[str, Any], parsed: ParsedFormula | None, timestamp: datetime) -> PubChemCandidate | None:
+    """Validate one PubChem row into a typed candidate, or reject it.
+
+    ``parsed`` is the formula the caller asked for. A name lookup has no expected
+    formula, so it passes ``None`` and the row's own formula is validated against the
+    supported grammar and element scope instead.
+    """
+
     try:
         candidate_formula = str(row["MolecularFormula"])
         candidate_parsed = parse_formula(candidate_formula)
         charge = int(row.get("Charge", 0))
         covalent_units = int(row["CovalentUnitCount"]) if row.get("CovalentUnitCount") is not None else None
         smiles = row.get("ConnectivitySMILES") or row.get("CanonicalSMILES")
-        if candidate_parsed.atoms != parsed.atoms or charge != parsed.charge:
+        if parsed is not None and (candidate_parsed.atoms != parsed.atoms or charge != parsed.charge):
             return None
         if covalent_units is not None and covalent_units != 1:
             return None
@@ -117,10 +124,13 @@ def _candidate_from_row(row: dict[str, Any], parsed: ParsedFormula, timestamp: d
             return None
         cid = int(row["CID"])
         title = str(row.get("Title") or row.get("IUPACName") or f"PubChem CID {cid}")
+        # PubChem answers in Hill notation; render the inventory in this app's
+        # conventional order so one substance has one spelling everywhere.
+        resolved_formula = parsed.formula if parsed is not None else canonical_formula(candidate_parsed.atoms, charge)
         return PubChemCandidate(
             id=f"pubchem:{cid}",
             cid=cid,
-            formula=parsed.formula,
+            formula=resolved_formula,
             charge=charge,
             name_vi=title,
             name_en=title,
@@ -193,6 +203,73 @@ def lookup_pubchem_formula(parsed: ParsedFormula) -> PubChemLookupResult:
     }
     write_json_cache(cache_path, cache)
     return PubChemLookupResult(candidates=candidates, status=_status(state), rejected_count=max(rejected, 0))
+
+
+def lookup_pubchem_name(name: str) -> PubChemLookupResult:
+    """Resolve a chemical name or alias to validated PubChem candidates.
+
+    Rows are accepted only when their own formula parses under the supported grammar
+    and element scope and they describe a single covalent unit, so a name that maps to
+    a salt, a hydrate or an out-of-scope element yields no candidate rather than a
+    plausible-looking wrong one. Chemically distinct survivors are all returned; the
+    caller decides, and must not silently take the first.
+    """
+
+    if not settings.ENABLE_PUBCHEM:
+        return PubChemLookupResult(status=_status(ExternalServiceState.DISABLED))
+    normalized = name.strip()
+    if not normalized:
+        return PubChemLookupResult(status=_status(ExternalServiceState.NOT_FOUND))
+    key = hashlib.sha256(f"name:{normalized}".casefold().encode("utf-8")).hexdigest()
+    cache_path = settings.CACHE_DIR / "pubchem_identity_cache.json"
+    cache = read_json_cache(cache_path)
+    cached = cache.get(key)
+    now = time.time()
+    if isinstance(cached, dict) and now - float(cached.get("cached_at", 0)) <= settings.PUBCHEM_CACHE_TTL_SECONDS:
+        try:
+            candidates = [PubChemCandidate.model_validate(item) for item in cached.get("candidates", [])]
+            return PubChemLookupResult(candidates=candidates, status=_status(ExternalServiceState.CACHE_HIT, cache_hit=True))
+        except (TypeError, ValueError):
+            cache.pop(key, None)
+
+    url = (
+        f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{quote(normalized, safe='')}"
+        f"/property/{_PROPERTY_FIELDS}/JSON"
+    )
+    raw, state = _request_bytes(url)
+    if raw is None:
+        logger.info("PubChem name lookup ended with state=%s", state.value)
+        return PubChemLookupResult(status=_status(state))
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+        rows = payload.get("PropertyTable", {}).get("Properties", [])
+        if not isinstance(rows, list):
+            raise ValueError("Properties is not a list")
+    except (UnicodeDecodeError, json.JSONDecodeError, ValueError, AttributeError):
+        logger.warning("PubChem returned an invalid name response")
+        return PubChemLookupResult(status=_status(ExternalServiceState.INVALID_RESPONSE))
+
+    timestamp = _cache_timestamp()
+    candidates: list[PubChemCandidate] = []
+    for row in rows[: settings.PUBCHEM_MAX_CANDIDATES]:
+        if isinstance(row, dict):
+            candidate = _candidate_from_row(row, None, timestamp)
+            if candidate is not None:
+                candidates.append(candidate)
+    # Two CIDs describing the same substance are one answer, not an ambiguity.
+    distinct: dict[tuple[str, int, str | None], PubChemCandidate] = {}
+    for candidate in candidates:
+        distinct.setdefault((candidate.formula, candidate.charge, candidate.inchikey), candidate)
+    candidates = list(distinct.values())
+    if not candidates:
+        state = ExternalServiceState.FORMULA_MISMATCH if rows else ExternalServiceState.NOT_FOUND
+    elif len(candidates) > 1:
+        state = ExternalServiceState.AMBIGUOUS
+    else:
+        state = ExternalServiceState.SUCCESS
+    cache[key] = {"cached_at": now, "candidates": [candidate.model_dump(mode="json") for candidate in candidates]}
+    write_json_cache(cache_path, cache)
+    return PubChemLookupResult(candidates=candidates, status=_status(state))
 
 
 def lookup_pubchem(query: str) -> list[PubChemCandidate]:

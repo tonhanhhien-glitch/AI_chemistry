@@ -1,113 +1,51 @@
-"""Validated local snapshot of explicitly sourced experimental geometries."""
+"""Thin compatibility layer over the general geometry-evidence model.
 
-from collections import Counter
-from functools import lru_cache
-import math
-from pathlib import Path
+The single-angle ``ExperimentalGeometryRecord`` this module used to define -- one
+``angle_pattern``, one ``experimental_angle_deg``, mandatory Cartesian coordinates --
+could not describe a species with several inequivalent angles, which is most of the
+VSEPR table. The real model now lives in
+:mod:`app.schemas.geometry_evidence_schema` and the lookup in
+:mod:`app.geometry.providers.nist_cccbdb`.
+
+What remains here is identity matching against the local experimental snapshot, for
+callers that only need to ask "is there an experimental record for this species?".
+"""
+
+from __future__ import annotations
+
 from typing import Any
 
-from pydantic import BaseModel, Field, model_validator
+from app.geometry.providers.base import GeometryQuery
+from app.geometry.providers.nist_cccbdb import snapshot_records
+from app.geometry.providers.nist_cccbdb import _identity_matches as _matches
+from app.schemas.geometry_evidence_schema import MolecularGeometryEvidence
 
-from app.services.formula_parser import parse_formula
-from app.utils.file_loader import load_json
-
-_DATA_FILE = Path(__file__).resolve().parents[1] / "data" / "experimental_geometries.json"
-
-
-class ExperimentalCoordinate(BaseModel):
-    id: str
-    element: str
-    x: float
-    y: float
-    z: float
+__all__ = ["experimental_records", "match_experimental_geometry", "MolecularGeometryEvidence"]
 
 
-class AnglePattern(BaseModel):
-    atom1_element: str
-    center_element: str
-    atom2_element: str
+def experimental_records() -> tuple[MolecularGeometryEvidence, ...]:
+    """The reviewed local snapshot of experimental geometries."""
+
+    return snapshot_records()
 
 
-class ExperimentalGeometryRecord(BaseModel):
-    id: str
-    curated_molecule_id: str | None = None
-    formula: str
-    charge: int
-    atom_inventory: dict[str, int]
-    formula_identity_unambiguous: bool = False
-    cas_rn: str
-    pubchem_cid: int
-    inchi: str
-    inchikey: str
-    angle_pattern: AnglePattern
-    experimental_angle_deg: float
-    phase: str
-    point_group_conformation: str
-    reference_label: str
-    source_name: str
-    source_url: str
-    units: str
-    retrieval_date: str
-    coordinates: list[ExperimentalCoordinate] = Field(min_length=3)
+def match_experimental_geometry(identity: dict[str, Any]) -> MolecularGeometryEvidence | None:
+    """One unambiguous experimental record for this identity, or ``None``.
 
-    @model_validator(mode="after")
-    def validate_identity_and_coordinates(self) -> "ExperimentalGeometryRecord":
-        parsed = parse_formula(self.formula)
-        if parsed.charge != self.charge or parsed.atoms != self.atom_inventory:
-            raise ValueError("Experimental formula, charge, and inventory are inconsistent.")
-        if Counter(atom.element for atom in self.coordinates) != Counter(self.atom_inventory):
-            raise ValueError("Experimental coordinates do not match the atom inventory.")
-        ids = [atom.id for atom in self.coordinates]
-        if len(ids) != len(set(ids)) or self.units != "angstrom":
-            raise ValueError("Experimental coordinate IDs must be unique and units must be angstrom.")
-        centers = [atom for atom in self.coordinates if atom.element == self.angle_pattern.center_element]
-        outer1 = [atom for atom in self.coordinates if atom.element == self.angle_pattern.atom1_element]
-        outer2 = [atom for atom in self.coordinates if atom.element == self.angle_pattern.atom2_element]
-        if len(centers) != 1 or not outer1 or not outer2:
-            raise ValueError("Experimental angle pattern is inconsistent with the coordinates.")
-        center = centers[0]
-        if self.angle_pattern.atom1_element == self.angle_pattern.atom2_element:
-            if len(outer1) < 2:
-                raise ValueError("Experimental angle pattern requires two matching outer atoms.")
-            atom1, atom2 = outer1[:2]
-        else:
-            atom1, atom2 = outer1[0], outer2[0]
-        vector1 = (atom1.x - center.x, atom1.y - center.y, atom1.z - center.z)
-        vector2 = (atom2.x - center.x, atom2.y - center.y, atom2.z - center.z)
-        norm = math.sqrt(sum(value * value for value in vector1) * sum(value * value for value in vector2))
-        if norm == 0:
-            raise ValueError("Experimental angle contains a zero-length bond vector.")
-        cosine = max(-1.0, min(1.0, sum(a * b for a, b in zip(vector1, vector2)) / norm))
-        coordinate_angle = math.degrees(math.acos(cosine))
-        if abs(coordinate_angle - self.experimental_angle_deg) > 0.05:
-            raise ValueError("Experimental angle does not match the stored coordinates.")
-        return self
+    Matching prefers strong identifiers (InChIKey, CAS, canonical identity, curated
+    id) and falls back to formula plus charge only for records explicitly flagged as
+    having an unambiguous formula. Two matches mean the identity is not pinned, so
+    nothing is returned rather than guessing.
+    """
 
-
-@lru_cache(maxsize=1)
-def experimental_records() -> tuple[ExperimentalGeometryRecord, ...]:
-    payload = load_json(_DATA_FILE)
-    records = tuple(ExperimentalGeometryRecord.model_validate(item) for item in payload.get("records", []))
-    if not records:
-        raise ValueError("experimental_geometries.json contains no records")
-    return records
-
-
-def match_experimental_geometry(identity: dict[str, Any]) -> ExperimentalGeometryRecord | None:
-    charge = int(identity["charge"])
-    inchikey = identity.get("inchikey")
-    if inchikey:
-        matches = [item for item in experimental_records() if item.inchikey == inchikey and item.charge == charge]
-        if len(matches) == 1:
-            return matches[0]
-        if len(matches) > 1:
-            return None
-    molecule_id = identity.get("id")
-    if molecule_id:
-        matches = [item for item in experimental_records() if item.curated_molecule_id == molecule_id and item.charge == charge]
-        if len(matches) == 1:
-            return matches[0]
-        if len(matches) > 1:
-            return None
-    matches = [item for item in experimental_records() if item.formula == identity.get("formula") and item.charge == charge and item.atom_inventory == identity.get("atom_inventory") and item.formula_identity_unambiguous]
+    query = GeometryQuery(
+        formula=str(identity.get("formula", "")),
+        charge=int(identity.get("charge", 0)),
+        atom_inventory=dict(identity.get("atom_inventory") or {}),
+        inchikey=identity.get("inchikey"),
+        cas_rn=identity.get("cas_rn"),
+        canonical_identity=identity.get("canonical_identity"),
+        curated_molecule_id=identity.get("id"),
+    )
+    matches = [record for record in experimental_records() if _matches(record.identity, query)]
     return matches[0] if len(matches) == 1 else None

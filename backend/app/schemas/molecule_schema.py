@@ -67,8 +67,21 @@ class ExternalServiceState(StrEnum):
     CONFORMER_UNAVAILABLE = "conformer_unavailable"
 
 
+#: Every external or local evidence service that can report a typed status. The
+#: literal is shared with the frontend contract, so add a member here and in
+#: ``frontend/src/types/analysis.ts`` together.
+ExternalServiceName = Literal[
+    "PubChem",
+    "PubChem View",
+    "RDKit",
+    "NIST CCCBDB",
+    "Local geometry snapshot",
+    "Deterministic chemistry",
+]
+
+
 class ExternalServiceStatus(BaseModel):
-    service: Literal["PubChem", "RDKit"]
+    service: ExternalServiceName
     state: ExternalServiceState
     cache_hit: bool = False
     message: str | None = None

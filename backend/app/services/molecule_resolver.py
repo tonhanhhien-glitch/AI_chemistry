@@ -16,6 +16,7 @@ from app.schemas.molecule_schema import (
     PubChemCandidate,
     ResolvedMolecule,
 )
+from app.services.chemical_query_resolver import cas_for_identity, local_identities
 from app.services.deterministic_chemistry_service import build_deterministic_record
 from app.services.formula_parser import ParsedFormula, parse_formula
 from app.services.pubchem_service import lookup_pubchem_formula
@@ -49,6 +50,18 @@ def get_record(molecule_id: str) -> dict[str, Any]:
         if record["id"].casefold() == normalized:
             return record
     raise UnsupportedMoleculeError(molecule_id)
+
+
+def _with_registry_identifiers(record: dict[str, Any]) -> dict[str, Any]:
+    """Attach the local CAS registry number so geometry providers can address the species.
+
+    CCCBDB is keyed on CAS, so without this a live experimental lookup has no address.
+    An unknown formula simply gets ``None`` and the live provider reports a typed miss.
+    """
+
+    if record.get("cas_rn") is None:
+        record["cas_rn"] = cas_for_identity(record["formula"], int(record["charge"]))
+    return record
 
 
 def _resolved(record: dict[str, Any]) -> ResolvedMolecule:
@@ -87,11 +100,16 @@ def resolve_molecule(
     parsed: ParsedFormula,
     molecule_id: str | None = None,
     pubchem_cid: int | None = None,
+    candidate: PubChemCandidate | None = None,
 ) -> tuple[ResolvedMolecule, dict[str, Any]]:
-    """Resolve in curated -> PubChem -> conservative deterministic priority order."""
+    """Resolve in curated -> PubChem -> conservative deterministic priority order.
+
+    ``candidate`` is an identity the query resolver has already validated. Passing it
+    here skips a second PubChem round-trip for a lookup that has just been made.
+    """
 
     if molecule_id:
-        record = get_record(molecule_id)
+        record = _with_registry_identifiers(get_record(molecule_id))
         if record["atom_inventory"] != parsed.atoms or record["charge"] != parsed.charge:
             raise UnsupportedMoleculeError(parsed.formula)
         return _resolved(record), record
@@ -100,9 +118,13 @@ def resolve_molecule(
     if len(curated) > 1:
         raise AmbiguousMoleculeError([_summary(record).model_dump() for record in curated])
     if len(curated) == 1:
-        record = curated[0]
+        record = _with_registry_identifiers(curated[0])
         if record["atom_inventory"] != parsed.atoms or record["charge"] != parsed.charge:
             raise UnsupportedMoleculeError(parsed.formula)
+        return _resolved(record), record
+
+    if candidate is not None:
+        record = _with_registry_identifiers(build_deterministic_record(parsed, candidate))
         return _resolved(record), record
 
     lookup = lookup_pubchem_formula(parsed)
@@ -117,6 +139,7 @@ def resolve_molecule(
                 raise UnsupportedMoleculeError(parsed.formula) from None
             raise ExternalResolutionError(parsed.formula, lookup.status.state.value) from None
         record["_external_service_statuses"] = [lookup.status]
+        _with_registry_identifiers(record)
         return _resolved(record), record
 
     candidates = lookup.candidates
@@ -138,6 +161,7 @@ def resolve_molecule(
 
     candidate, record = valid[0]
     record["_external_service_statuses"] = [lookup.status]
+    _with_registry_identifiers(record)
     return _resolved(record), record
 
 
@@ -157,12 +181,37 @@ def list_examples() -> list[MoleculeSummary]:
 
 
 def search_molecules(query: str) -> list[MoleculeSummary]:
+    """Search curated records first, then the wider local identity registry.
+
+    Search is no longer limited to ``curated_records()``: a name that only exists in
+    the identity registry still appears, marked as pending deterministic analysis so
+    the UI never implies a reviewed VSEPR classification it does not have.
+    """
+
     needle = query.strip().casefold()
     if not needle:
         return []
     matches = []
+    seen_formulas: set[tuple[str, int]] = set()
     for record in curated_records():
         haystack = [record["id"], record["formula"], record["name_vi"], record["name_en"], *record.get("aliases", [])]
         if any(needle in value.casefold() for value in haystack):
             matches.append(_summary(record))
+            seen_formulas.add((record["formula"], int(record["charge"])))
+    for identity in local_identities():
+        key = (identity.formula, identity.charge)
+        if key in seen_formulas:
+            continue
+        if identity.formula.casefold() == needle or any(needle in name.casefold() for name in identity.names):
+            seen_formulas.add(key)
+            matches.append(MoleculeSummary(
+                id=identity.curated_molecule_id or f"formula:{identity.formula}",
+                formula=identity.formula,
+                name_vi=identity.names[0] if identity.names else identity.formula,
+                name_en=identity.names[0] if identity.names else identity.formula,
+                ax_en="pending",
+                molecular_geometry="pending deterministic analysis",
+                molecular_geometry_vi="đang chờ phân tích tất định",
+                review_status="identity_registry_pending_analysis",
+            ))
     return matches[:20]

@@ -17,6 +17,7 @@ function viewerMock() {
     addLabel: vi.fn(() => ({ kind: "label" })), removeLabel: vi.fn(),
     addLine: vi.fn(() => ({ kind: "line" })), addCurve: vi.fn((spec: { points: Point3D[] }) => ({ kind: "curve", spec })),
     addSphere: vi.fn((spec: ShapeSpecMock) => ({ kind: "sphere", spec })), addCustom: vi.fn((spec: ShapeSpecMock) => ({ kind: "custom", spec })), removeShape: vi.fn(),
+    setProjection: vi.fn(), getView: vi.fn(() => [0, 0, 0, -50, 0, 0, 0, 1]), setView: vi.fn(),
   };
 }
 
@@ -50,8 +51,9 @@ describe("Molecule3DViewer", () => {
     const lines = (viewer.addModel.mock.calls[0][0] as string).split("\n");
     expect(lines[3]).toBe("  3  2  0  0  0  0  0  0  0  0999 V2000");
     // V2000 is column-positional: element at 31-34, bond serials at 0-3 and 3-6.
-    expect(lines.slice(4, 7).map((line) => line.substring(31, 34).trim())).toEqual(["O", "H", "H"]);
-    expect(lines.slice(4, 7).map((line) => parseFloat(line.substring(0, 10)))).toEqual([0, 0.8666, -0.8666]);
+    const atoms = structure("coordinates").atoms;
+    expect(lines.slice(4, 7).map((line) => line.substring(31, 34).trim())).toEqual(atoms.map((atom) => atom.element));
+    expect(lines.slice(4, 7).map((line) => parseFloat(line.substring(0, 10)))).toEqual(atoms.map((atom) => Number(atom.x.toFixed(4))));
     expect(lines.slice(7, 9).map((line) => [line.substring(0, 3), line.substring(3, 6), line.substring(6, 9)].map(Number))).toEqual([[1, 2, 1], [1, 3, 1]]);
     expect(lines).toContain("M  END");
   });
@@ -106,7 +108,7 @@ describe("Molecule3DViewer", () => {
       const arc = Math.hypot(point.x - oxygen.x, point.y - oxygen.y, point.z - oxygen.z);
       const bond = Math.hypot(atom.x - oxygen.x, atom.y - oxygen.y, atom.z - oxygen.z);
       const dot = (point.x - oxygen.x) * (atom.x - oxygen.x) + (point.y - oxygen.y) * (atom.y - oxygen.y) + (point.z - oxygen.z) * (atom.z - oxygen.z);
-      return (Math.acos(dot / (arc * bond)) * 180) / Math.PI;
+      return (Math.acos(Math.max(-1, Math.min(1, dot / (arc * bond)))) * 180) / Math.PI;
     };
     expect(bearing(points[0], first)).toBeCloseTo(0, 3);
     expect(bearing(points[points.length - 1], second)).toBeCloseTo(0, 3);
@@ -117,7 +119,7 @@ describe("Molecule3DViewer", () => {
     const viewer = viewerMock(); mocks.createViewer.mockReturnValue(viewer);
     render(<Molecule3DViewer structure={structure("coordinates")} />);
     await userEvent.click(screen.getByRole("checkbox", { name: "Miền cặp e tự do" }));
-    await waitFor(() => expect(viewer.addSphere).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(viewer.addSphere).toHaveBeenCalledTimes(4));
     expect(screen.getByText(/Các thùy cặp electron tự do là vùng minh họa/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole("checkbox", { name: "Miền cặp e tự do" }));
     expect(viewer.removeShape).toHaveBeenCalled();
@@ -126,11 +128,12 @@ describe("Molecule3DViewer", () => {
   it("draws one translucent domain lobe holding two opaque red electrons per lone pair", async () => {
     const viewer = viewerMock(); mocks.createViewer.mockReturnValue(viewer);
     render(<Molecule3DViewer structure={structure("coordinates")} />);
-    await waitFor(() => expect(viewer.addCustom).toHaveBeenCalledTimes(1));
+    // H2O has two lone pairs: one translucent lobe each, two opaque electrons per lobe.
+    await waitFor(() => expect(viewer.addCustom).toHaveBeenCalledTimes(2));
     const lobe = viewer.addCustom.mock.calls[0]![0];
     expect(lobe.color).toBe("#8edff2"); expect(lobe.opacity).toBeLessThan(0.4); expect(lobe.opacity).toBeGreaterThan(0.15);
     expect(lobe.faceArr!.length % 3).toBe(0); expect(lobe.normalArr).toHaveLength(lobe.vertexArr!.length);
-    expect(viewer.addSphere).toHaveBeenCalledTimes(2);
+    expect(viewer.addSphere).toHaveBeenCalledTimes(4);
     viewer.addSphere.mock.calls.forEach(([sphere]) => { expect(sphere.color).toBe("#ff1a1a"); expect(sphere.opacity).toBe(1); });
   });
 

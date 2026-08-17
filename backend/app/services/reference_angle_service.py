@@ -1,29 +1,34 @@
-"""Pick the one molecule-specific bond angle that the summary and the 3D overlay share.
+"""Legacy single-angle summary and the curated shape target for idealized models.
 
-Priority, highest first:
+Two distinct jobs live here, and neither is authoritative for geometry any more:
 
-1. a local experimental gas-phase geometry (the NIST CCCBDB snapshot),
-2. a trusted molecule-specific conformer -- PubChem or RDKit coordinates, measured directly
-   by :mod:`app.services.structure3d_service`, so it needs no entry here,
-3. a curated molecule-specific teaching reference: the ``ideal_angle`` of a curated record,
-   used only where it actually departs from the generic AXnEm label,
-4. the generic AXnEm ideal angle, as a fallback only.
+* :func:`molecule_specific_shape_target` supplies the one curated, molecule-specific
+  angle an *idealized* model may be opened onto, so the arc measured from the drawn
+  coordinates agrees with the number printed beside it. It applies only to the
+  educational fallback; it never touches experimental or computed coordinates.
+* :func:`resolve_reference_angle` fills the deprecated
+  :class:`~app.schemas.structure3d_schema.ReferenceBondAngle` field. A geometry with
+  several inequivalent angles resolves to ``None`` there, because one number cannot
+  describe it -- that limitation is why geometry is now a collection of observations.
 
-Nothing here keys off a formula: every molecule-specific value comes from the curated and
-experimental datasets the rest of the pipeline already reads, so adding a molecule to those
-datasets is enough to give it a specific angle.
+Nothing here keys off a formula: molecule-specific values come from the curated and
+experimental datasets the rest of the pipeline already reads.
 """
 
 from __future__ import annotations
 
 import re
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from app.chemistry.vsepr_rules import get_vsepr_rule
 from app.schemas.structure3d_schema import ReferenceBondAngle
-from app.services.experimental_geometry_service import match_experimental_geometry
+
+if TYPE_CHECKING:  # pragma: no cover - import cycle guard
+    from app.geometry.resolver import ResolvedGeometry
 
 _NUMBER = re.compile(r"\d+(?:\.\d+)?")
+
+CURATED_REFERENCE_SOURCE = "Curated molecule-specific teaching reference"
 
 
 def first_number(label: str | None) -> float | None:
@@ -50,30 +55,50 @@ def curated_reference_label(record: dict[str, Any]) -> str | None:
     return label if label and label != rule.ideal_angle else None
 
 
-def resolve_reference_angle(record: dict[str, Any]) -> ReferenceBondAngle | None:
-    """Resolve the reference angle for a record, or ``None`` when no single angle applies.
+def molecule_specific_shape_target(record: dict[str, Any]) -> tuple[float | None, str | None]:
+    """The curated angle an idealized model may be shaped to, with its source label."""
 
-    Geometries with several inequivalent angles (trigonal bipyramidal, octahedral, ...) have
-    no single reference value, so they resolve to ``None`` rather than to the first number of
-    a label like ``90°, 120°, 180°``.
-    """
+    label = curated_reference_label(record)
+    value = _single_angle(label)
+    if value is None:
+        return None, None
+    return value, CURATED_REFERENCE_SOURCE
 
-    experimental = match_experimental_geometry(record)
+
+def _experimental_reference(geometry: "ResolvedGeometry | None") -> ReferenceBondAngle | None:
+    """Only when the experimental record has exactly one distinct angle."""
+
+    if geometry is None or not geometry.is_experimental:
+        return None
+    values = {round(observation.value_deg, 4) for observation in geometry.evidence.bond_angles}
+    if len(values) != 1:
+        return None
+    value = next(iter(values))
+    return ReferenceBondAngle(
+        value_deg=value,
+        display_label=f"{value:.2f}°",
+        category="measured",
+        source=f"{geometry.evidence.source.name} experimental {geometry.evidence.phase or ''} geometry".strip(),
+        is_approximate=False,
+    )
+
+
+def resolve_reference_angle(
+    record: dict[str, Any],
+    geometry: "ResolvedGeometry | None" = None,
+) -> ReferenceBondAngle | None:
+    """Resolve the deprecated single reference angle, or ``None`` when none applies."""
+
+    experimental = _experimental_reference(geometry)
     if experimental is not None:
-        return ReferenceBondAngle(
-            value_deg=experimental.experimental_angle_deg,
-            display_label=f"{experimental.experimental_angle_deg:.2f}°",
-            category="measured",
-            source=f"{experimental.source_name} experimental gas-phase geometry",
-            is_approximate=False,
-        )
+        return experimental
 
     curated_label = curated_reference_label(record)
     curated_value = _single_angle(curated_label)
     if curated_value is not None and curated_label is not None:
         return ReferenceBondAngle(
             value_deg=curated_value, display_label=curated_label, category="curated_reference",
-            source="Curated molecule-specific teaching reference", is_approximate=True,
+            source=CURATED_REFERENCE_SOURCE, is_approximate=True,
         )
 
     rule = get_vsepr_rule(int(record["bonding_domains"]), int(record["lone_pair_domains"]))
