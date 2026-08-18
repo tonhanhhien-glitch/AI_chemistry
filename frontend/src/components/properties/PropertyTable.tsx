@@ -1,7 +1,7 @@
 import { useI18n } from "../../i18n";
 import type { NormalizedProperty, PropertyCategory, PropertyProviderStatus } from "../../types/properties";
 
-const CATEGORY_ORDER: PropertyCategory[] = ["identity", "structural", "physical", "chemical"];
+const CATEGORY_ORDER: PropertyCategory[] = ["physical", "chemical", "structural", "identity"];
 
 const CATEGORY_LABEL_KEYS: Record<PropertyCategory, string> = {
   identity: "property.category.identity",
@@ -68,12 +68,21 @@ export default function PropertyTable({
               const conditions = formatConditions(item);
               const notes = en ? item.notes_en : item.notes_vi;
               const obsCount = item.observations?.length ?? 0;
+              const displayValue = (en ? item.value_en : item.value_vi) ?? item.value;
+              const sourceName = (en ? item.source_name_en : item.source_name_vi)
+                ?? (item.source_name === "Standard atomic weights (IUPAC)"
+                    ? (en ? "Standard atomic weights (IUPAC)" : "Khối lượng nguyên tử chuẩn (IUPAC)")
+                    : item.source_name);
+              const hideProvenance =
+                item.source_name === "Curated teaching record" ||
+                item.source_name === "Deterministic chemistry engine";
+
               return <tr key={item.key} data-applicability={item.applicability}>
                 <th scope="row">{en ? item.label_en : item.label_vi}</th>
                 <td>
                   {item.applicability === "applicable" ? (
                     <span className="property-value">
-                      {item.value}{item.unit ? ` ${item.unit}` : ""}
+                      {displayValue}{item.unit ? ` ${item.unit}` : ""}
                       {item.uncertainty ? ` ± ${item.uncertainty}` : ""}
                     </span>
                   ) : (
@@ -81,16 +90,18 @@ export default function PropertyTable({
                       {item.applicability === "not_applicable" ? t("property.notApplicable") : t("property.unavailable")}
                     </span>
                   )}
-                  <small className="property-provenance">
-                    {t(EVIDENCE_LABEL_KEYS[item.evidence_type] ?? "property.evidence.computed")}
-                    {" · "}
-                    {item.source_url
-                      ? <a href={item.source_url} target="_blank" rel="noreferrer">{item.source_name}</a>
-                      : item.source_name}
-                    {item.source_reference ? ` · ${item.source_reference}` : ""}
-                    {conditions ? ` · ${conditions}` : ""}
-                    {obsCount > 1 ? ` · (${obsCount} ${en ? "observations" : "quan sát"})` : ""}
-                  </small>
+                  {!hideProvenance && (
+                    <small className="property-provenance">
+                      {t(EVIDENCE_LABEL_KEYS[item.evidence_type] ?? "property.evidence.computed")}
+                      {" · "}
+                      {item.source_url
+                        ? <a href={item.source_url} target="_blank" rel="noreferrer">{sourceName}</a>
+                        : sourceName}
+                      {item.source_reference ? ` · ${item.source_reference}` : ""}
+                      {conditions ? ` · ${conditions}` : ""}
+                      {obsCount > 1 ? ` · (${obsCount} ${en ? "observations" : "quan sát"})` : ""}
+                    </small>
+                  )}
                   {notes && <small className="property-note">{notes}</small>}
                 </td>
               </tr>;

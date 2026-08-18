@@ -45,7 +45,7 @@ def sif4_html() -> str:
 def test_parser_normalizes_a_full_cccbdb_geometry_page() -> None:
     evidence = adapter.parse_cccbdb_geometry_html(
         clf3_html(), identity=clf3_identity(), source_url="https://example.invalid/clf3",
-        reference="1953Smith",
+        reference="2001Muller",
     )
     assert evidence is not None
     assert evidence.evidence_type is GeometryEvidenceType.EXPERIMENTAL
@@ -53,7 +53,7 @@ def test_parser_normalizes_a_full_cccbdb_geometry_page() -> None:
     assert evidence.electronic_state == "X 1A1"
     assert evidence.phase == "gas"
     assert evidence.source.name == "NIST CCCBDB"
-    assert evidence.source.reference == "1953Smith"
+    assert evidence.source.reference == "2001Muller"
     assert evidence.source.retrieved_at is not None
 
     # The centre is derived from the angle rows, not from any per-molecule knowledge.
@@ -84,6 +84,42 @@ def test_parsed_page_fits_coordinates_that_reproduce_its_own_numbers() -> None:
     )
     assert angles == [87.45, 87.45, 174.9]
     assert sorted(round(distance(points[center], points[ligand]), 3) for ligand in ligands) == [1.598, 1.698, 1.698]
+
+
+def test_parser_maps_real_cccbdb_numeric_indices_to_cartesian_labels() -> None:
+    """Real CCCBDB pages have internal coordinates (1 2, 2 1 3) and Cartesian rows (Cl1, F2, F3, F4)."""
+    real_table_html = """
+    <html><body>
+    <h1>Experimental data for ClF3</h1>
+    <p>Point group C2v</p>
+    <h2>Internal coordinates</h2>
+    <table>
+      <tr><th>Descriptor</th><th>Value</th><th>Definition</th></tr>
+      <tr><td>rFCl</td><td>1.597</td><td>1 2</td></tr>
+      <tr><td>rFCl</td><td>1.697</td><td>1 3</td></tr>
+      <tr><td>aFClF</td><td>87.45</td><td>2 1 3</td></tr>
+      <tr><td>aFClF</td><td>174.9</td><td>3 1 4</td></tr>
+    </table>
+    <h2>Cartesian coordinates</h2>
+    <table>
+      <tr><th>Atom</th><th>X</th><th>Y</th><th>Z</th></tr>
+      <tr><td>Cl1</td><td>0.0000</td><td>0.0000</td><td>0.0000</td></tr>
+      <tr><td>F2</td><td>1.5970</td><td>0.0000</td><td>0.0000</td></tr>
+      <tr><td>F3</td><td>0.0755</td><td>1.6953</td><td>0.0000</td></tr>
+      <tr><td>F4</td><td>0.0755</td><td>-1.6953</td><td>0.0000</td></tr>
+    </table>
+    </body></html>
+    """
+    evidence = adapter.parse_cccbdb_geometry_html(
+        real_table_html, identity=clf3_identity(), source_url="https://example.invalid/clf3",
+    )
+    assert evidence is not None
+    assert evidence.coordinates is not None
+    assert len(evidence.coordinates) == 4
+    # Directly validated against reported constraints without fitting
+    fit = fit_cartesian_coordinates(evidence)
+    assert fit.accepted and fit.coordinates is not None
+    assert not fit.coordinates_are_fitted
 
 
 def test_parser_reads_dihedral_tables() -> None:
@@ -123,7 +159,24 @@ def test_parser_survives_malformed_html() -> None:
 
 
 def test_cccbdb_url_uses_the_digits_of_the_cas_number() -> None:
-    assert adapter.cccbdb_url("7790-91-2").endswith("exp2x.asp?casno=7790912")
+    assert adapter.cccbdb_url("7790-91-2").endswith("expgeom2x.asp?casno=7790912&charge=0")
+    assert adapter.cccbdb_url("7790-91-2", charge=1).endswith("expgeom2x.asp?casno=7790912&charge=1")
+
+
+def test_dynamic_cas_resolution_from_pubchem_synonyms(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """An arbitrary new molecule with a PubChem CID resolves CAS from synonyms and queries NIST."""
+    from app.services import pubchem_service
+    monkeypatch.setattr(settings, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(settings, "ENABLE_NIST_CCCBDB", True)
+    monkeypatch.setattr(settings, "ENABLE_PUBCHEM", True)
+
+    monkeypatch.setattr(pubchem_service, "fetch_pubchem_cas_rn", lambda cid, **kwargs: "7783-61-1" if cid == 24556 else None)
+    monkeypatch.setattr(nist_cccbdb, "fetch_cccbdb_geometry_html", lambda cas, **kwargs: (sif4_html(), ExternalServiceState.SUCCESS))
+
+    query = GeometryQuery(formula="SiF4", charge=0, atom_inventory={"Si": 1, "F": 4}, pubchem_cid=24556)
+    result = NistCccbdbProvider().fetch(query)
+    assert result.evidence is not None
+    assert result.status.state is ExternalServiceState.SUCCESS
 
 
 # --------------------------------------------------------------------------- #
@@ -157,7 +210,7 @@ def test_live_fetch_normalizes_and_caches_so_no_source_edit_is_needed(monkeypatc
     monkeypatch.setattr(settings, "ENABLE_NIST_CCCBDB", True)
     calls: list[str] = []
 
-    def fetch(cas: str):
+    def fetch(cas: str, **kwargs):
         calls.append(cas)
         return sif4_html(), ExternalServiceState.SUCCESS
 
@@ -193,7 +246,7 @@ def test_live_fetch_normalizes_and_caches_so_no_source_edit_is_needed(monkeypatc
 def test_transport_failures_are_typed_and_never_raise(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, state: ExternalServiceState) -> None:
     monkeypatch.setattr(settings, "CACHE_DIR", tmp_path)
     monkeypatch.setattr(settings, "ENABLE_NIST_CCCBDB", True)
-    monkeypatch.setattr(nist_cccbdb, "fetch_cccbdb_geometry_html", lambda _cas: (None, state))
+    monkeypatch.setattr(nist_cccbdb, "fetch_cccbdb_geometry_html", lambda _cas, **kwargs: (None, state))
     result = NistCccbdbProvider().fetch(GeometryQuery(
         formula="SiF4", charge=0, atom_inventory={"Si": 1, "F": 4}, cas_rn="7783-61-1",
     ))
@@ -204,7 +257,7 @@ def test_transport_failures_are_typed_and_never_raise(monkeypatch: pytest.Monkey
 def test_unparseable_live_page_is_reported_not_stored(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setattr(settings, "CACHE_DIR", tmp_path)
     monkeypatch.setattr(settings, "ENABLE_NIST_CCCBDB", True)
-    monkeypatch.setattr(nist_cccbdb, "fetch_cccbdb_geometry_html", lambda _cas: ("<html>nothing</html>", ExternalServiceState.SUCCESS))
+    monkeypatch.setattr(nist_cccbdb, "fetch_cccbdb_geometry_html", lambda _cas, **kwargs: ("<html>nothing</html>", ExternalServiceState.SUCCESS))
     result = NistCccbdbProvider().fetch(GeometryQuery(
         formula="SiF4", charge=0, atom_inventory={"Si": 1, "F": 4}, cas_rn="7783-61-1",
     ))
@@ -225,7 +278,7 @@ def test_expired_cache_entries_are_ignored(monkeypatch: pytest.MonkeyPatch, tmp_
     monkeypatch.setattr(settings, "CACHE_DIR", tmp_path)
     monkeypatch.setattr(settings, "ENABLE_NIST_CCCBDB", True)
     monkeypatch.setattr(settings, "NIST_CACHE_TTL_SECONDS", 0)
-    monkeypatch.setattr(nist_cccbdb, "fetch_cccbdb_geometry_html", lambda _cas: (sif4_html(), ExternalServiceState.SUCCESS))
+    monkeypatch.setattr(nist_cccbdb, "fetch_cccbdb_geometry_html", lambda _cas, **kwargs: (sif4_html(), ExternalServiceState.SUCCESS))
     query = GeometryQuery(
         formula="SiF4", charge=0, atom_inventory={"Si": 1, "F": 4}, cas_rn="7783-61-1",
     )

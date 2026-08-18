@@ -42,6 +42,7 @@ class LewisStructure(BaseModel):
     total_valence_electrons: int = Field(ge=0)
     resonance_forms: int = Field(default=1, ge=1)
     resonance_note_vi: str | None = None
+    resonance_note_en: str | None = None
     resonance_structures: list[ResonanceForm] = Field(default_factory=list)
     exception_flags: OctetExceptionFlags
     source: Literal["curated", "validated_connectivity"]

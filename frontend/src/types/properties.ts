@@ -32,12 +32,16 @@ export interface NormalizedProperty {
   label_vi: string;
   label_en: string;
   value: string | number | null;
+  value_vi?: string | null;
+  value_en?: string | null;
   unit: string | null;
   uncertainty: string | number | null;
   conditions: PropertyConditions | null;
   phase: string | null;
   evidence_type: PropertyEvidenceType;
   source_name: string;
+  source_name_vi?: string | null;
+  source_name_en?: string | null;
   source_reference: string | null;
   source_url: string | null;
   applicability: PropertyApplicability;

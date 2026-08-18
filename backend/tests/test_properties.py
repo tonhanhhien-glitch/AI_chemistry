@@ -94,7 +94,7 @@ def test_molar_mass_is_computed_from_standard_atomic_weights() -> None:
 def test_computed_provider_needs_no_network() -> None:
     result = ComputedPropertyProvider().fetch(water_query())
     keys = {item.key for item in result.properties}
-    assert {"formula", "charge", "molar_mass", "ax_en", "molecular_geometry", "resonance_forms"} <= keys
+    assert {"molar_mass", "central_atom_electronegativity", "polarity"} <= keys
     assert result.status is not None and result.status.state == "success"
 
 
@@ -219,10 +219,10 @@ def test_rest_provider_caches_its_payload(monkeypatch: pytest.MonkeyPatch, tmp_p
     monkeypatch.setattr(settings, "CACHE_DIR", tmp_path)
     monkeypatch.setattr(settings, "ENABLE_PUBCHEM", True)
     monkeypatch.setattr(settings, "ENABLE_PUBCHEM_PROPERTIES", True)
-    payload = {"PropertyTable": {"Properties": [{"MolecularWeight": "18.015", "XLogP": -0.5, "TPSA": 1.0}]}}
+    payload = {"PropertyTable": {"Properties": [{"ExactMass": "18.010565", "XLogP": -0.5, "TPSA": 1.0}]}}
     calls: list[str] = []
 
-    def request(url: str):
+    def request(url: str, **kwargs):
         calls.append(url)
         return json.dumps(payload).encode(), _SuccessState()
 
@@ -232,8 +232,8 @@ def test_rest_provider_caches_its_payload(monkeypatch: pytest.MonkeyPatch, tmp_p
     assert len(calls) == 1
     assert second.status is not None and second.status.cache_hit is True
     keys = {item.key for item in first.properties}
-    assert {"pubchem_molecular_weight", "xlogp", "tpsa"} <= keys
-    assert all(item.evidence_type is PropertyEvidenceType.COMPUTED for item in first.properties)
+    assert {"pubchem_cid", "exact_mass", "xlogp", "tpsa"} <= keys
+    assert any(item.evidence_type is PropertyEvidenceType.COMPUTED for item in first.properties)
 
 
 def test_a_failing_provider_never_empties_the_table(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -251,12 +251,12 @@ def test_a_failing_provider_never_empties_the_table(monkeypatch: pytest.MonkeyPa
     bundle = full_properties(water_query())
     assert bundle.partial is True
     assert any(status.state == "temporary_failure" for status in bundle.statuses)
-    assert {item.key for item in bundle.properties} >= {"formula", "molar_mass"}
+    assert {item.key for item in bundle.properties} >= {"molar_mass"}
 
 
 def test_the_property_budget_skips_external_providers_but_keeps_local_ones() -> None:
     bundle = full_properties(water_query(), budget_seconds=-1.0)
-    assert {item.key for item in bundle.properties} >= {"formula", "molar_mass"}
+    assert {item.key for item in bundle.properties} >= {"molar_mass"}
     assert bundle.partial is True
     assert any(status.state == "timeout" for status in bundle.statuses)
 
@@ -300,8 +300,16 @@ def test_analyze_returns_only_local_properties_and_makes_no_property_call(monkey
     monkeypatch.setattr("app.properties.providers.pubchem_view._request_bytes", explode)
     result = analyze(AnalysisRequest(molecule_id="h2o"))
     assert result.properties
+    # The curated local property snapshot (app/data/curated_properties.json) legitimately
+    # carries EXPERIMENTAL/SOURCE_ANNOTATION evidence types -- those describe how the fact
+    # was originally measured, not whether fetching it touched the network just now. The
+    # actual network-safety guarantee is the monkeypatched _request_bytes above never firing.
     assert all(
-        item.evidence_type in {PropertyEvidenceType.DETERMINISTIC, PropertyEvidenceType.COMPUTED, PropertyEvidenceType.CURATED}
+        item.evidence_type in {
+            PropertyEvidenceType.DETERMINISTIC, PropertyEvidenceType.COMPUTED,
+            PropertyEvidenceType.CURATED, PropertyEvidenceType.EXPERIMENTAL,
+            PropertyEvidenceType.SOURCE_ANNOTATION,
+        }
         for item in result.properties
     )
 

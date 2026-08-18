@@ -3,12 +3,14 @@
 from fastapi import APIRouter
 
 from app.api.v1 import (
+    routes_admin_auth,
     routes_analysis,
     routes_chat,
     routes_explanation,
     routes_feedback,
     routes_formula,
     routes_health,
+    routes_molecule_admin,
     routes_molecules,
     routes_properties,
     routes_rules,
@@ -26,3 +28,5 @@ api_router.include_router(routes_chat.router, tags=["chat"])
 api_router.include_router(routes_rules.router, tags=["rules"])
 api_router.include_router(routes_feedback.router, tags=["feedback"])
 api_router.include_router(routes_survey.router, tags=["survey"])
+api_router.include_router(routes_admin_auth.router, tags=["admin-auth"])
+api_router.include_router(routes_molecule_admin.router, tags=["admin-molecules"])

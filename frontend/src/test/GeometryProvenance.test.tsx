@@ -50,7 +50,7 @@ describe("3D viewer provenance and angle view", () => {
     renderBadge(chlorineTrifluorideAnalysis.structure3d);
     expect(screen.getByText("Experimental measurement")).toBeInTheDocument();
     expect(screen.getByText("NIST CCCBDB experimental gas-phase geometry")).toBeInTheDocument();
-    expect(screen.getByText("1953Smith")).toBeInTheDocument();
+    expect(screen.getByText("2001Muller")).toBeInTheDocument();
     expect(screen.getByText("gas")).toBeInTheDocument();
     expect(screen.getByText(/Point group: C2v/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "NIST CCCBDB" })).toHaveAttribute("href", expect.stringContaining("cccbdb"));

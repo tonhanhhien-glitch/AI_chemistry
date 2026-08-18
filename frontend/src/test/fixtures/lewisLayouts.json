@@ -1107,6 +1107,181 @@
         }
       ],
       "central_atom_id": "a0"
+    },
+    "nf3": {
+      "formula": "NF3",
+      "ax_en": "AX3E",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "N",
+          "x": 160.0,
+          "y": 87.5,
+          "lone_pairs": 1,
+          "formal_charge": 0
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "x": 73.989,
+          "y": 147.7255,
+          "lone_pairs": 3,
+          "formal_charge": 0
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "x": 160.0,
+          "y": 192.5,
+          "lone_pairs": 3,
+          "formal_charge": 0
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "x": 246.011,
+          "y": 147.7255,
+          "lone_pairs": 3,
+          "formal_charge": 0
+        }
+      ],
+      "bonds": [
+        {
+          "id": "b0",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "id": "b1",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "id": "b2",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "central_atom_id": "a0"
+    },
+    "o3": {
+      "formula": "O3",
+      "ax_en": "AX2E",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "bent",
+      "bonding_domains": 2,
+      "lone_pair_domains": 1,
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "O",
+          "x": 160.0,
+          "y": 112.4907,
+          "lone_pairs": 1,
+          "formal_charge": 1
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "x": 70.5687,
+          "y": 167.5093,
+          "lone_pairs": 2,
+          "formal_charge": 0
+        },
+        {
+          "id": "a2",
+          "element": "O",
+          "x": 249.4313,
+          "y": 167.5093,
+          "lone_pairs": 3,
+          "formal_charge": -1
+        }
+      ],
+      "bonds": [
+        {
+          "id": "b0",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 2
+        },
+        {
+          "id": "b1",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "central_atom_id": "a0"
+    },
+    "h3o-plus": {
+      "formula": "H3O+",
+      "ax_en": "AX3E",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "O",
+          "x": 160.0,
+          "y": 93.5,
+          "lone_pairs": 1,
+          "formal_charge": 1
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "x": 73.989,
+          "y": 153.7255,
+          "lone_pairs": 0,
+          "formal_charge": 0
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "x": 160.0,
+          "y": 198.5,
+          "lone_pairs": 0,
+          "formal_charge": 0
+        },
+        {
+          "id": "a3",
+          "element": "H",
+          "x": 246.011,
+          "y": 153.7255,
+          "lone_pairs": 0,
+          "formal_charge": 0
+        }
+      ],
+      "bonds": [
+        {
+          "id": "b0",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "id": "b1",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "id": "b2",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "central_atom_id": "a0"
     }
   }
 }

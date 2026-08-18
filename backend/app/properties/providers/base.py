@@ -42,10 +42,24 @@ class PropertyQuery:
     cas_rn: str | None = None
     name: str | None = None
     record: dict[str, Any] | None = None
+    timeout: float | None = None
 
     @property
     def is_ion(self) -> bool:
         return self.charge != 0
+
+    def with_timeout(self, timeout: float) -> "PropertyQuery":
+        return PropertyQuery(
+            formula=self.formula,
+            charge=self.charge,
+            atom_inventory=self.atom_inventory,
+            pubchem_cid=self.pubchem_cid,
+            inchikey=self.inchikey,
+            cas_rn=self.cas_rn,
+            name=self.name,
+            record=self.record,
+            timeout=timeout,
+        )
 
     @classmethod
     def from_record(cls, record: dict[str, Any]) -> "PropertyQuery":

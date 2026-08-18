@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import CollapsibleSection from "../components/analysis/CollapsibleSection";
 import WorkspacePane from "../components/analysis/WorkspacePane";
 import ChatPane from "../components/chat/ChatPane";
-import ExplanationPanel from "../components/explanation/ExplanationPanel";
 import FormulaInput from "../components/input/FormulaInput";
 import InputValidationMessage from "../components/input/InputValidationMessage";
 import PageContainer from "../components/layout/PageContainer";
@@ -39,7 +38,21 @@ export default function AnalysisPage() {
     goTo({ q: value }, { query: value, include_explanation: false, language: lang });
   }
   return (
-    <PageContainer className="analysis-shell" headerSearch={<FormulaInput value={query} onChange={setQuery} onSubmit={submit} loading={isLoading} />}>
+    <PageContainer
+      className="analysis-shell"
+      headerSearch={
+        <FormulaInput
+          value={query}
+          onChange={setQuery}
+          onSubmit={submit}
+          onSelectMolecule={(item) => {
+            setQuery(item.formula);
+            goTo({ molecule: item.id }, { molecule_id: item.id, include_explanation: false, language: lang });
+          }}
+          loading={isLoading}
+        />
+      }
+    >
       <h1 className="visually-hidden">{t("analysis.title")}</h1>
       {(localError || error) && (
         <div className="analysis-alerts">
@@ -47,9 +60,12 @@ export default function AnalysisPage() {
           {error?.candidates && (
             <div className="candidate-list">
               <p>{t("analysis.chooseStructure")}</p>
-              {error.candidates.map((item) => (
-                <button key={item.id} onClick={() => void run(item.cid ? { query: query.trim(), pubchem_cid: item.cid, include_explanation: false, language: lang } : { molecule_id: item.id, include_explanation: false, language: lang })}><strong>{item.name_en}</strong><span><ChemFormula text={item.formula} /> · {t("analysis.candidateCharge")}: {item.charge ?? 0} · CID {item.cid ?? "—"}</span>{item.canonical_smiles && <code>{item.canonical_smiles}</code>}<small>{item.source ?? "Curated"}</small></button>
-              ))}
+              {error.candidates.map((item) => {
+                const name = lang === "vi" ? item.name_vi || item.name_en : item.name_en || item.name_vi;
+                return (
+                  <button key={item.id} onClick={() => void run(item.cid ? { query: query.trim(), pubchem_cid: item.cid, include_explanation: false, language: lang } : { molecule_id: item.id, include_explanation: false, language: lang })}><strong>{name}</strong><span><ChemFormula text={item.formula} /> · {t("analysis.candidateCharge")}: {item.charge ?? 0} · CID {item.cid ?? "—"}</span>{item.canonical_smiles && <code>{item.canonical_smiles}</code>}<small>{item.source ?? "Curated"}</small></button>
+                );
+              })}
             </div>
           )}
           {error && <button className="secondary-button" onClick={() => submit()}>{t("analysis.retry")}</button>}
@@ -66,7 +82,6 @@ export default function AnalysisPage() {
               <CollapsibleSection number={5} title={t("analysis.step.properties")} defaultOpen={false}>
                 <PropertySection key={result.molecule.id} molecule={result.molecule} inlineProperties={result.properties} />
               </CollapsibleSection>
-              <CollapsibleSection number={6} title={t("analysis.step.explanation")} defaultOpen={false}><ExplanationPanel key={result.molecule.id} moleculeId={result.molecule.id} formula={result.molecule.formula} pubchemCid={result.molecule.pubchem_cid} initial={result.explanation} /></CollapsibleSection>
             </WorkspacePane>
             <section className="workspace-main" aria-label={t("analysis.step.model3d")}>
               <header className="workspace-main-head"><h2>{t("analysis.step.model3d")}</h2></header>

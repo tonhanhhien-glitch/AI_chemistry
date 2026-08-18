@@ -54,6 +54,19 @@ def test_complete_vsepr_contract() -> None:
     expected = {"AX2", "AX3", "AX2E", "AX4", "AX3E", "AX2E2", "AX5", "AX4E", "AX3E2", "AX2E3", "AX6", "AX5E", "AX4E2"}
     assert set(VSEPR_RULES) == expected
     assert get_vsepr_rule(3, 2).molecular_geometry == "T-shaped"
+    assert get_vsepr_rule(3, 2).molecular_geometry_vi == "chữ T"
+
+
+def test_every_vsepr_rule_has_a_genuine_vietnamese_translation() -> None:
+    """Regression guard: every _vi geometry field must actually be Vietnamese text,
+
+    not the English string duplicated into that slot (this happened for every row
+    until it was caught by the catalog-integrity tests).
+    """
+
+    for rule in VSEPR_RULES.values():
+        assert rule.electron_geometry_vi != rule.electron_geometry, rule.ax_en
+        assert rule.molecular_geometry_vi != rule.molecular_geometry, rule.ax_en
     label, warning_vi, warning_en = pedagogical_hybridization(6)
     assert label == "sp³d²"
     assert "gần đúng" in warning_vi

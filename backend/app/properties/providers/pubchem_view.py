@@ -32,7 +32,7 @@ from app.properties.schema import (
     PropertyObservation,
     PropertyProviderStatus,
 )
-from app.services.pubchem_service import _request_bytes
+from app.services.pubchem_service import _call_request_bytes, _request_bytes
 from app.utils.json_utils import read_json_cache, write_json_cache
 
 logger = logging.getLogger(__name__)
@@ -191,10 +191,13 @@ class PubChemViewPropertyProvider:
             cache_hit = payload is not None
         if payload is None:
             url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{query.pubchem_cid}/JSON"
-            raw, state = _request_bytes(url)
+            try:
+                raw, state = _request_bytes(url, timeout=query.timeout)
+            except TypeError:
+                raw, state = _request_bytes(url)
             if raw is None:
                 return PropertyProviderResult((), PropertyProviderStatus(
-                    provider=self.name, service=self.service, state=state.value,
+                    provider=self.name, service=self.service, state=state.value if hasattr(state, "value") else str(state),
                 ))
             try:
                 payload = json.loads(raw.decode("utf-8"))

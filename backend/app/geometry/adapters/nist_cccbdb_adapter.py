@@ -110,22 +110,24 @@ class _TableCollector(HTMLParser):
 
 
 def _split_label_chain(value: str) -> list[str] | None:
-    """``"F2-Cl1-F3"`` -> ``["F2", "Cl1", "F3"]``; ``None`` when it is not an atom chain."""
+    """``"F2-Cl1-F3"`` or ``"2 1 3"`` -> ``["F2", "Cl1", "F3"]`` or ``["2", "1", "3"]``."""
 
-    parts = [part.strip() for part in re.split(r"[-–—/]", value) if part.strip()]
+    parts = [part.strip() for part in re.split(r"[-–—/\s]+", value) if part.strip()]
     if len(parts) < 2:
         return None
-    return parts if all(_ATOM_LABEL.match(part) for part in parts) else None
+    return parts if all(_ATOM_LABEL.match(part) or (part.isdigit() and 1 <= int(part) <= 50) for part in parts) else None
 
 
 def _is_cartesian_table(table: _Table) -> bool:
     """Check if table represents Cartesian coordinates (e.g. X, Y, Z coordinates)."""
     lowered = table.heading.casefold()
-    if "cartesian" in lowered or "coordinates" in lowered or "xyz" in lowered:
+    if "internal" in lowered:
+        return False
+    if "cartesian" in lowered or "xyz" in lowered:
         return True
     if len(table.rows) > 1:
         header = [c.casefold() for c in table.rows[0]]
-        if any(h in header for h in ("x", "y", "z")) or any("angstrom" in h for h in header):
+        if sum(1 for h in ("x", "y", "z") if h in header) >= 2:
             return True
     return False
 
@@ -462,9 +464,41 @@ def parse_cccbdb_geometry_html(
     if cartesian_map and len(cartesian_map) == len(ordered):
         try:
             parsed_coordinates = []
+            cart_keys = list(cartesian_map.keys())
             for label in ordered:
+                coord_match: tuple[str, float, float, float] | None = None
                 if label in cartesian_map:
-                    elem, x, y, z = cartesian_map[label]
+                    coord_match = cartesian_map[label]
+                elif label.isdigit():
+                    idx = int(label)
+                    for k, val in cartesian_map.items():
+                        m = re.search(r"(\d+)$", k)
+                        if m and int(m.group(1)) == idx:
+                            coord_match = val
+                            break
+                    if coord_match is None and 1 <= idx <= len(cart_keys):
+                        coord_match = cartesian_map[cart_keys[idx - 1]]
+                else:
+                    match = _ATOM_LABEL.match(label)
+                    if match and match.group(2):
+                        target_num = int(match.group(2))
+                        for k, val in cartesian_map.items():
+                            m = re.search(r"(\d+)$", k)
+                            if m and int(m.group(1)) == target_num:
+                                coord_match = val
+                                break
+                    if coord_match is None:
+                        elem = atom_element_map.get(label)
+                        if elem:
+                            matching_keys = [k for k in cart_keys if cartesian_map[k][0] == elem]
+                            same_elem_ordered = [a for a in ordered if atom_element_map.get(a) == elem]
+                            if label in same_elem_ordered:
+                                pos = same_elem_ordered.index(label)
+                                if pos < len(matching_keys):
+                                    coord_match = cartesian_map[matching_keys[pos]]
+
+                if coord_match is not None:
+                    elem, x, y, z = coord_match
                     parsed_coordinates.append(GeometryCoordinate(
                         id=identifier[label],
                         element=elem,
@@ -503,16 +537,22 @@ def parse_cccbdb_geometry_html(
     return evidence
 
 
-def cccbdb_url(cas_rn: str) -> str:
-    """CCCBDB keys its experimental-geometry pages on the digits of a CAS number."""
+def cccbdb_url(cas_rn: str, charge: int = 0) -> str:
+    """CCCBDB keys its experimental-geometry pages on the digits of a CAS number and charge."""
 
-    return f"{settings.NIST_CCCBDB_BASE_URL.rstrip('/')}/exp2x.asp?casno={re.sub(r'[^0-9]', '', cas_rn)}"
+    clean_cas = re.sub(r"[^0-9]", "", cas_rn)
+    return f"{settings.NIST_CCCBDB_BASE_URL.rstrip('/')}/expgeom2x.asp?casno={clean_cas}&charge={charge}"
 
 
-def fetch_cccbdb_geometry_html(cas_rn: str, *, timeout: float | None = None) -> tuple[str | None, ExternalServiceState]:
+def fetch_cccbdb_geometry_html(
+    cas_rn: str,
+    *,
+    charge: int = 0,
+    timeout: float | None = None,
+) -> tuple[str | None, ExternalServiceState]:
     """Fetch one CCCBDB page under a bounded timeout; never raises."""
 
-    url = cccbdb_url(cas_rn)
+    url = cccbdb_url(cas_rn, charge)
     effective_timeout = settings.NIST_TIMEOUT_SECONDS if timeout is None else min(settings.NIST_TIMEOUT_SECONDS, timeout)
     if effective_timeout <= 0:
         return None, ExternalServiceState.TIMEOUT

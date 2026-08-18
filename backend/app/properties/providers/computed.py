@@ -63,10 +63,7 @@ class ComputedPropertyProvider:
 
     def fetch(self, query: PropertyQuery) -> PropertyProviderResult:
         record = query.record or {}
-        properties: list[NormalizedProperty] = [
-            _identity("formula", "Công thức", "Formula", query.formula),
-            _identity("charge", "Điện tích", "Charge", query.charge),
-        ]
+        properties: list[NormalizedProperty] = []
 
         mass = molar_mass(query.atom_inventory)
         if mass is None:
@@ -84,35 +81,35 @@ class ComputedPropertyProvider:
                 label_vi="Khối lượng mol", label_en="Molar mass",
                 value=mass, unit="g/mol", evidence_type=PropertyEvidenceType.COMPUTED,
                 source_name="Standard atomic weights (IUPAC)",
-                notes_vi="Tính từ thành phần nguyên tố; không lấy từ mô hình ngôn ngữ.",
-                notes_en="Computed from the elemental composition, not taken from a language model.",
+                source_name_en="Standard atomic weights (IUPAC)",
+                source_name_vi="Khối lượng nguyên tử chuẩn (IUPAC)",
             ))
 
         if record:
-            properties.extend([
-                _structural("total_valence_electrons", "Tổng electron hoá trị", "Total valence electrons", record["total_valence_electrons"]),
-                _structural("ax_en", "Ký hiệu AXnEm", "AXnEm notation", record["ax_en"]),
-                _structural("bonding_domains", "Miền liên kết", "Bonding domains", record["bonding_domains"]),
-                _structural("lone_pair_domains", "Miền cặp electron tự do", "Lone-pair domains", record["lone_pair_domains"]),
-                _structural("steric_number", "Số steric", "Steric number", record["steric_number"]),
-                _structural("electron_geometry", "Hình học miền electron", "Electron-domain geometry", record["electron_geometry"]),
-                _structural("molecular_geometry", "Hình học phân tử", "Molecular geometry", record["molecular_geometry"]),
-                _structural("resonance_forms", "Số công thức cộng hưởng", "Resonance forms", record.get("resonance_forms", 1)),
-                _structural(
-                    "central_atom_electronegativity", "Độ âm điện nguyên tử trung tâm",
-                    "Central-atom electronegativity",
-                    get_element(record["central_atom"]).electronegativity or 0.0,
-                    unit="Pauling",
-                ) if get_element(record["central_atom"]).electronegativity else _unavailable_electronegativity(),
-            ])
+            central = record.get("central_atom")
+            if central:
+                elem_info = get_element(central)
+                if elem_info.electronegativity:
+                    properties.append(_structural(
+                        "central_atom_electronegativity", "Độ âm điện nguyên tử trung tâm",
+                        "Central-atom electronegativity",
+                        elem_info.electronegativity,
+                        unit="Pauling",
+                    ))
+                else:
+                    properties.append(_unavailable_electronegativity())
 
-            polarity = record.get("polarity_note_en") or record.get("polarity_note_vi")
+            polarity_en = record.get("polarity_note_en")
+            polarity_vi = record.get("polarity_note_vi")
             curated = record.get("source") == "curated"
-            if curated and polarity:
+            if curated and (polarity_en or polarity_vi):
                 properties.append(NormalizedProperty(
                     key="polarity", category=PropertyCategory.CHEMICAL,
                     label_vi="Nhận xét về độ phân cực", label_en="Polarity note",
-                    value=polarity, evidence_type=PropertyEvidenceType.CURATED,
+                    value=polarity_en or polarity_vi,
+                    value_en=polarity_en,
+                    value_vi=polarity_vi,
+                    evidence_type=PropertyEvidenceType.CURATED,
                     source_name="Curated teaching record",
                 ))
             else:
@@ -124,12 +121,6 @@ class ComputedPropertyProvider:
                     notes_vi="Không suy luận độ phân cực cho bản ghi chưa được tuyển chọn.",
                     notes_en="Polarity is not inferred for an uncurated record.",
                 ))
-
-            properties.append(_identity(
-                "review_status", "Trạng thái rà soát dữ liệu", "Data review status", record["review_status"],
-                notes_vi="Chỉ được coi là đã kiểm chứng bên ngoài khi có chữ ký chuyên gia.",
-                notes_en="Not labelled externally verified until an expert sign-off exists.",
-            ))
 
         return PropertyProviderResult(
             tuple(properties),

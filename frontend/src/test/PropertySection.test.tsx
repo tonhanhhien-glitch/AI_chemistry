@@ -53,16 +53,62 @@ describe("PropertyTable", () => {
       property(),
       property({ key: "polarity", category: "chemical", label_en: "Polarity note", value: "Polar" }),
     ]);
-    expect(screen.getByRole("heading", { name: "Identity" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Structural" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Physical" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Chemical" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Source Identity" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Additional Molecular Descriptors" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Physical Properties" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Chemical Properties" })).toBeInTheDocument();
     expect(screen.getByText("18.015 g/mol")).toBeInTheDocument();
   });
 
-  it("switches labels with the language", () => {
-    renderTable([property()], {}, "vi");
+  it("switches labels and values with the language", () => {
+    renderTable([
+      property({
+        key: "polarity",
+        category: "chemical",
+        label_vi: "Nhận xét về độ phân cực",
+        label_en: "Polarity note",
+        value: "The molecule is polar because of its T-shape.",
+        value_en: "The molecule is polar because of its T-shape.",
+        value_vi: "Phân tử phân cực do hình chữ T.",
+        unit: null,
+        evidence_type: "curated",
+        source_name: "Curated teaching record",
+      }),
+      property({
+        key: "molar_mass",
+        category: "physical",
+        label_vi: "Khối lượng mol",
+        label_en: "Molar mass",
+        value: 18.015,
+        unit: "g/mol",
+        evidence_type: "computed",
+        source_name: "Standard atomic weights (IUPAC)",
+        source_name_vi: "Khối lượng nguyên tử chuẩn (IUPAC)",
+      }),
+    ], {}, "vi");
+    expect(screen.getByText("Nhận xét về độ phân cực")).toBeInTheDocument();
+    expect(screen.getByText("Phân tử phân cực do hình chữ T.")).toBeInTheDocument();
     expect(screen.getByText("Khối lượng mol")).toBeInTheDocument();
+    expect(screen.getByText(/Tính toán · Khối lượng nguyên tử chuẩn \(IUPAC\)/)).toBeInTheDocument();
+  });
+
+  it("hides internal provenance for curated teaching record and deterministic engine", () => {
+    renderTable([
+      property({
+        key: "polarity",
+        value: "The molecule is polar because of its T-shape.",
+        evidence_type: "curated",
+        source_name: "Curated teaching record",
+      }),
+      property({
+        key: "ax_en",
+        value: "AX3E2",
+        evidence_type: "deterministic",
+        source_name: "Deterministic chemistry engine",
+      }),
+    ]);
+    expect(screen.queryByText(/Curated · Curated teaching record/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Deterministic calculation · Deterministic chemistry engine/)).not.toBeInTheDocument();
   });
 
   it("shows the evidence type and source for every value", () => {
@@ -136,7 +182,7 @@ describe("PropertySection lazy loading", () => {
     renderSection();
 
     // The locally computed properties from /analyze are on screen before the fetch settles.
-    expect(screen.getByRole("heading", { name: "Identity" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Physical Properties" })).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent("Loading properties from external sources…");
 
     resolve(bundle([property({ key: "melting_point", label_en: "Melting point", value: "0 °C", unit: null, evidence_type: "experimental", source_name: "PubChem" })]));
@@ -160,7 +206,7 @@ describe("PropertySection lazy loading", () => {
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent("Could not load properties from external sources.");
     // The locally computed table is still rendered beside the error.
-    expect(screen.getByRole("heading", { name: "Identity" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Physical Properties" })).toBeInTheDocument();
 
     vi.mocked(fetchProperties).mockResolvedValueOnce(bundle([property({ key: "xlogp", label_en: "XLogP", value: -0.5, unit: null })]));
     await userEvent.click(screen.getByRole("button", { name: "Retry" }));

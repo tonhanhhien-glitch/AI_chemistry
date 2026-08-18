@@ -67,7 +67,9 @@ def test_molecule_specific_angle_is_drawn_not_the_electron_domain_ideal(
 
 
 @pytest.mark.parametrize(("molecule_id", "category"), [
-    ("h2o", "curated_reference"), ("nh3", "measured"), ("ch4", "ideal_vsepr"),
+    # H2O and CH4 now have local NIST CCCBDB experimental-geometry snapshots too, so
+    # they resolve to "measured" the same way NH3 already did.
+    ("h2o", "measured"), ("nh3", "measured"), ("ch4", "measured"),
 ])
 def test_reference_angle_records_where_the_value_came_from(molecule_id: str, category: str) -> None:
     reference = analyze(AnalysisRequest(molecule_id=molecule_id)).structure3d.reference_bond_angle
@@ -112,7 +114,11 @@ def test_generic_vsepr_angle_is_used_when_no_molecule_specific_value_exists() ->
 
 
 @pytest.mark.parametrize(("molecule_id", "bonds", "angles"), [
-    ("co2", 2, [180.0]), ("bf3", 3, [120.0]), ("so2", 2, [120.0]),
+    # CO2, BF3, PCl5 and SF6 now resolve via experimental evidence too, but their
+    # D_inf_h/D3h/Oh symmetry keeps the measured angles numerically identical to the
+    # idealized template. NO3- has neither an experimental record nor a curated
+    # molecule-specific override, so it still renders from the plain ideal template.
+    ("co2", 2, [180.0]), ("bf3", 3, [120.0]), ("no3-minus", 3, [120.0]),
     ("pcl5", 5, [90.0, 120.0, 180.0]), ("sf6", 6, [90.0, 180.0]),
 ])
 def test_geometries_without_one_reference_angle_keep_their_template(

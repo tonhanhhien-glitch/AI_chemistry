@@ -242,9 +242,18 @@ def test_analyze_requires_at_least_one_identity_field() -> None:
     assert client.post("/api/v1/analyze", json={}).status_code == 422
 
 
-def test_search_looks_beyond_the_curated_records() -> None:
-    """NF3 and ozone have identity entries but no curated molecule record."""
+def test_search_looks_beyond_the_curated_records(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A species with an identity entry but no curated record still surfaces in search.
 
+    Every species that ships in ``chemical_identities.json`` today also has a full
+    curated record, so this simulates the "identity-only" state directly rather than
+    depending on a catalog gap that is not supposed to exist any more.
+    """
+
+    original_curated_records = molecule_resolver.curated_records
+    monkeypatch.setattr(molecule_resolver, "curated_records", lambda: tuple(
+        record for record in original_curated_records() if record["id"] != "o3"
+    ))
     curated_ids = {record["id"] for record in molecule_resolver.curated_records()}
     results = molecule_resolver.search_molecules("ozone")
     assert results

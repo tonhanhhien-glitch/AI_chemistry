@@ -14,7 +14,10 @@ def test_analyze_success_offline() -> None:
     assert body["schema_version"] == "1.1"
     assert body["vsepr"]["ax_en"] == "AX2E2"
     assert body["lewis"]["total_valence_electrons"] == 8
-    assert body["structure3d"]["is_illustrative"] is True
+    # H2O now has a local NIST CCCBDB experimental-geometry snapshot, so the offline
+    # analysis renders the real measured structure rather than an idealized template.
+    assert body["structure3d"]["is_experimental"] is True
+    assert body["structure3d"]["is_illustrative"] is False
     assert body["explanation"]["source"] == "deterministic_fallback"
 
 

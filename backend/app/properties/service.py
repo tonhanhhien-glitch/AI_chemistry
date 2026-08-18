@@ -15,6 +15,7 @@ import time
 from app.core.config import settings
 from app.properties.providers.base import PropertyProvider, PropertyQuery
 from app.properties.providers.computed import ComputedPropertyProvider
+from app.properties.providers.curated import CuratedPropertyProvider
 from app.properties.providers.pubchem_rest import PubChemRestPropertyProvider
 from app.properties.providers.pubchem_view import PubChemViewPropertyProvider
 from app.properties.schema import NormalizedProperty, PropertyBundle, PropertyProviderStatus
@@ -22,8 +23,11 @@ from app.properties.schema import NormalizedProperty, PropertyBundle, PropertyPr
 logger = logging.getLogger(__name__)
 
 #: Later providers never overwrite an earlier provider's value for the same key.
+#: Curated sits right after computed: both are local/offline, and a curated,
+#: source-verified value must win over anything PubChem returns for the same key.
 _PROVIDER_ORDER: tuple[type[PropertyProvider], ...] = (
     ComputedPropertyProvider,
+    CuratedPropertyProvider,
     PubChemRestPropertyProvider,
     PubChemViewPropertyProvider,
 )
@@ -38,15 +42,21 @@ def _merge(existing: list[NormalizedProperty], incoming: tuple[NormalizedPropert
 
 
 def fast_properties(query: PropertyQuery) -> PropertyBundle:
-    """Local, network-free properties for the inline analysis response."""
+    """Local, network-free properties for the inline analysis response.
 
-    provider = ComputedPropertyProvider()
-    result = provider.fetch(query)
-    return PropertyBundle(
-        formula=query.formula, charge=query.charge,
-        properties=list(result.properties),
-        statuses=[result.status] if result.status else [],
-    )
+    Both providers here are local and synchronous -- no PubChem call is ever made --
+    so curated, source-verified properties are available inline, not just behind the
+    lazy ``/properties`` endpoint.
+    """
+
+    properties: list[NormalizedProperty] = []
+    statuses: list[PropertyProviderStatus] = []
+    for provider_class in (ComputedPropertyProvider, CuratedPropertyProvider):
+        result = provider_class().fetch(query)
+        _merge(properties, result.properties)
+        if result.status is not None:
+            statuses.append(result.status)
+    return PropertyBundle(formula=query.formula, charge=query.charge, properties=properties, statuses=statuses)
 
 
 def full_properties(query: PropertyQuery, *, budget_seconds: float | None = None) -> PropertyBundle:
@@ -75,7 +85,8 @@ def full_properties(query: PropertyQuery, *, budget_seconds: float | None = None
             partial = True
             continue
         try:
-            result = provider.fetch(query)
+            effective_query = query.with_timeout(remaining) if provider.name != "computed" else query
+            result = provider.fetch(effective_query)
         except Exception:  # noqa: BLE001 - one bad provider must not empty the table
             logger.exception("Property provider %s failed; continuing", provider.name)
             statuses.append(PropertyProviderStatus(

@@ -19,6 +19,7 @@ from app.schemas.molecule_schema import (
 from app.services.chemical_query_resolver import cas_for_identity, local_identities
 from app.services.deterministic_chemistry_service import build_deterministic_record
 from app.services.formula_parser import ParsedFormula, parse_formula
+from app.services.molecule_overrides import load_overrides, merge_by_id
 from app.services.pubchem_service import lookup_pubchem_formula
 from app.utils.file_loader import load_json
 
@@ -31,6 +32,10 @@ def curated_records() -> tuple[dict[str, Any], ...]:
     records = data.get("molecules")
     if not isinstance(records, list):
         raise ValueError("curated_molecules.json must contain a molecules list")
+    # Admin overrides (see app/services/molecule_admin_service.py) layer on top of the
+    # packaged baseline here, so every reader of curated_records() sees admin edits
+    # without needing its own merge logic.
+    records = merge_by_id(records, load_overrides().get("molecules", []))
     return tuple(records)
 
 
@@ -168,6 +173,13 @@ def resolve_molecule(
 def resolve_request_record(molecule_id: str | None, formula: str | None, pubchem_cid: int | None = None) -> dict[str, Any]:
     if molecule_id and not molecule_id.startswith(("deterministic:", "pubchem:")):
         return get_record(molecule_id)
+    if pubchem_cid:
+        from app.services.pubchem_service import lookup_pubchem_cid
+        candidate = lookup_pubchem_cid(pubchem_cid)
+        if candidate is not None:
+            parsed = parse_formula(candidate.formula)
+            record = _with_registry_identifiers(build_deterministic_record(parsed, candidate))
+            return record
     if formula:
         _molecule, record = resolve_molecule(parse_formula(formula), None, pubchem_cid)
         return record

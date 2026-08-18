@@ -61,6 +61,7 @@ def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
         total_valence_electrons=computed_total,
         resonance_forms=record.get("resonance_forms", 1),
         resonance_note_vi=record.get("resonance_note_vi"),
+        resonance_note_en=record.get("resonance_note_en"),
         resonance_structures=resonance_structures,
         exception_flags=OctetExceptionFlags(**flags, note_vi=" ".join(notes) or None),
         source="curated" if record["source"] == "curated" else "validated_connectivity",

@@ -33,6 +33,7 @@ from app.geometry.adapters.nist_cccbdb_adapter import (
 from app.geometry.providers.base import GeometryProviderResult, GeometryQuery, provider_status
 from app.schemas.geometry_evidence_schema import GeometryIdentity, MolecularGeometryEvidence
 from app.schemas.molecule_schema import ExternalServiceState
+from app.services.molecule_overrides import load_overrides, merge_geometry_records
 from app.utils.file_loader import load_json
 from app.utils.json_utils import read_json_cache, write_json_cache
 
@@ -47,9 +48,8 @@ def snapshot_records() -> tuple[MolecularGeometryEvidence, ...]:
     """The reviewed local experimental geometries, validated at load time."""
 
     payload = load_json(_SNAPSHOT_FILE)
-    records = tuple(
-        MolecularGeometryEvidence.model_validate(item) for item in payload.get("records", [])
-    )
+    raw_records = merge_geometry_records(list(payload.get("records", [])), load_overrides().get("experimental_geometries", []))
+    records = tuple(MolecularGeometryEvidence.model_validate(item) for item in raw_records)
     if not records:
         raise ValueError("experimental_geometries.json contains no records")
     return records
@@ -152,26 +152,29 @@ class NistCccbdbProvider:
 
         if not settings.ENABLE_NIST_CCCBDB:
             return GeometryProviderResult(None, provider_status(self.service, ExternalServiceState.DISABLED))
-        if not query.cas_rn:
+
+        cas_rn = query.cas_rn
+        if not cas_rn:
+            from app.services.chemical_query_resolver import cas_for_identity
+            cas_rn = cas_for_identity(query.formula, query.charge)
+        if not cas_rn and query.pubchem_cid and settings.ENABLE_PUBCHEM:
+            from app.services.pubchem_service import fetch_pubchem_cas_rn
+            cas_rn = fetch_pubchem_cas_rn(int(query.pubchem_cid), timeout=query.timeout)
+
+        if not cas_rn:
             return GeometryProviderResult(None, provider_status(
                 self.service, ExternalServiceState.NOT_FOUND,
                 message="CCCBDB is addressed by CAS number; none was resolved for this identity.",
             ))
 
-        if query.timeout is not None:
-            try:
-                html, state = fetch_cccbdb_geometry_html(query.cas_rn, timeout=query.timeout)
-            except TypeError:
-                html, state = fetch_cccbdb_geometry_html(query.cas_rn)
-        else:
-            html, state = fetch_cccbdb_geometry_html(query.cas_rn)
+        html, state = fetch_cccbdb_geometry_html(cas_rn, charge=query.charge, timeout=query.timeout)
         if html is None:
             logger.info("CCCBDB geometry fetch ended with state=%s", state.value)
             return GeometryProviderResult(None, provider_status(self.service, state))
         evidence = parse_cccbdb_geometry_html(
             html,
             identity=_query_identity(query),
-            source_url=cccbdb_url(query.cas_rn),
+            source_url=cccbdb_url(cas_rn, query.charge),
             retrieved_at=datetime.now(UTC),
         )
         if evidence is None:

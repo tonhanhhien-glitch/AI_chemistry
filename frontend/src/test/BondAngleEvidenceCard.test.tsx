@@ -33,15 +33,11 @@ function renderCard(angles: BondAnglesResult, lang: "vi" | "en") {
 describe("BondAngleEvidenceCard", () => {
   beforeEach(() => window.localStorage.clear());
 
-  it("shows experimental gas-phase provenance and the separate generic prediction in Vietnamese", () => {
+  it("shows experimental gas-phase provenance in Vietnamese", () => {
     renderCard(result(base), "vi");
     expect(screen.getByText("F–N–F: 102.37°")).toBeInTheDocument();
     expect(screen.getByText(/Thực nghiệm · pha khí/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "NIST CCCBDB" })).toHaveAttribute("href", "https://cccbdb.nist.gov/");
-    // "AX3E" renders its "3" as a subscript element, so the label is split across
-    // nodes; match on the full element text content instead of a single text node.
-    expect(screen.getByText((_, element) => element?.tagName === "STRONG" && element.textContent === "AX3E: <109.5°")).toBeInTheDocument();
-    expect(screen.getByText("Dự đoán VSEPR tổng quát")).toBeInTheDocument();
   });
 
   it("labels computed evidence as non-experimental in English", () => {
@@ -53,12 +49,11 @@ describe("BondAngleEvidenceCard", () => {
     expect(screen.getByText("Computed value, not an experimental measurement.")).toBeInTheDocument();
   });
 
-  it("labels an ideal-only fallback as illustrative", () => {
-    renderCard(result({ ...prediction, atom1_element: "H", atom2_element: "H" }), "en");
-    expect(screen.getByText(/Illustrative VSEPR · Idealized teaching model/)).toBeInTheDocument();
-    expect(screen.getByText("VSEPR estimate")).toBeInTheDocument();
-    expect(screen.getByText("H–N–H: <109.5°")).toBeInTheDocument();
+  it("returns null when only ideal VSEPR prediction exists", () => {
+    const { container } = renderCard(result({ ...prediction, atom1_element: "H", atom2_element: "H" }), "en");
+    expect(container).toBeEmptyDOMElement();
   });
+
   it("shows the NH3 experimental value", () => {
     renderCard(result({ ...base, atom1_element: "H", atom2_element: "H",
       value_deg: 106.67, display_label: "106.67°", reference: "1966Herzberg" }), "en");
@@ -72,7 +67,7 @@ describe("BondAngleEvidenceCard", () => {
       molecule: { ...waterAnalysis.molecule, formula: "NF3", name_en: "Nitrogen trifluoride" },
       bond_angles: result(base) };
     render(<I18nProvider><PipelineSummary result={analysis} /></I18nProvider>);
-    expect(screen.getByText("F–N–F: 102.37°")).toBeInTheDocument();
+    expect(screen.getByText("102.37°")).toBeInTheDocument();
   });
 
 });

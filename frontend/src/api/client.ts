@@ -16,6 +16,12 @@ export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1",
   timeout: 15_000,
   headers: { Accept: "application/json", "Content-Type": "application/json" },
+  // The Molecule Data admin page authenticates with an HttpOnly session cookie
+  // (see backend/app/core/admin_auth.py). In production the frontend and API
+  // share one origin (nginx proxies /api/), so this is a no-op there; in dev
+  // they are on different ports (5173 vs 8000) and the cookie needs this flag
+  // to be sent at all. No other endpoint uses cookies, so this is harmless.
+  withCredentials: true,
 });
 
 /**

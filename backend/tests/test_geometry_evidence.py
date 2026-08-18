@@ -57,7 +57,7 @@ def test_snapshot_holds_multiple_inequivalent_angles_per_record() -> None:
     clf3 = next(record for record in snapshot_records() if record.identity.formula == "ClF3")
     assert len(clf3.bond_angles) == 3
     assert sorted({observation.value_deg for observation in clf3.bond_angles}) == [87.45, 174.9]
-    assert sorted({observation.value_angstrom for observation in clf3.bond_lengths}) == [1.598, 1.698]
+    assert sorted({observation.value_angstrom for observation in clf3.bond_lengths}) == [1.597, 1.697]
     assert clf3.point_group == "C2v"
     assert clf3.phase == "gas"
     assert clf3.source.name == "NIST CCCBDB"
@@ -127,7 +127,7 @@ def test_clf3_bond_lengths_are_grouped_with_equivalent_counts() -> None:
     summary = analyze(AnalysisRequest(molecule_id="clf3")).structure3d.geometry_evidence
     assert summary is not None
     grouped = {item.label: (item.value_angstrom, item.equivalent_count) for item in summary.bond_lengths}
-    assert grouped == {"Cl–F axial": (1.698, 2), "Cl–F equatorial": (1.598, 1)}
+    assert grouped == {"Cl–F axial": (1.697, 2), "Cl–F equatorial": (1.597, 1)}
 
 
 # --------------------------------------------------------------------------- #

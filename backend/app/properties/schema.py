@@ -78,12 +78,16 @@ class NormalizedProperty(BaseModel):
     label_vi: str
     label_en: str
     value: str | float | int | None = None
+    value_vi: str | None = None
+    value_en: str | None = None
     unit: str | None = None
     uncertainty: str | float | None = None
     conditions: PropertyConditions | None = None
     phase: str | None = None
     evidence_type: PropertyEvidenceType
     source_name: str
+    source_name_vi: str | None = None
+    source_name_en: str | None = None
     source_reference: str | None = None
     source_url: str | None = None
     applicability: PropertyApplicability = PropertyApplicability.APPLICABLE

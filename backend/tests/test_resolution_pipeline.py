@@ -69,7 +69,17 @@ def patch_no_external_3d(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(computed, "generate_rdkit_result", lambda _smiles: RDKitResult(None, status("RDKit", ExternalServiceState.DISABLED)))
 
 
+def patch_uncurated_nf3(monkeypatch: pytest.MonkeyPatch) -> None:
+    """NF3 is now a fully curated species; these tests exercise the PubChem/RDKit/
+    deterministic fallback pipeline via NF3's mocked identity, so the curated shortcut
+    that would otherwise resolve it in one step is patched out."""
+    monkeypatch.setattr(molecule_resolver, "curated_records", lambda: tuple(
+        record for record in curated_records.__wrapped__() if record["id"] != "nf3"
+    ))
+
+
 def test_supported_unique_formula_falls_back_deterministically_when_pubchem_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_uncurated_nf3(monkeypatch)
     monkeypatch.setattr(molecule_resolver, "lookup_pubchem_formula", lambda _parsed: lookup(state=ExternalServiceState.DISABLED))
     patch_no_external_3d(monkeypatch)
     result = analyze(AnalysisRequest(formula="NF3"))
@@ -82,6 +92,7 @@ def test_supported_unique_formula_falls_back_deterministically_when_pubchem_disa
 
 
 def test_nf3_resolves_from_mocked_pubchem_with_3d(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_uncurated_nf3(monkeypatch)
     patch_identity(monkeypatch, candidate(inchikey=NF3_INCHIKEY))
     monkeypatch.setattr(computed, "fetch_pubchem_3d", lambda _cid: PubChemStructureResult(data=NF3_SDF, status=status("PubChem", ExternalServiceState.SUCCESS)))
     result = analyze(AnalysisRequest(formula="NF3"))
@@ -112,6 +123,7 @@ def test_pubchem_formula_or_charge_mismatch_is_rejected(monkeypatch: pytest.Monk
 
 
 def test_multiple_valid_pubchem_candidates_return_409(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_uncurated_nf3(monkeypatch)
     patch_identity(monkeypatch, candidate(1), candidate(2))
     response = client.post("/api/v1/analyze", json={"formula": "NF3"})
     assert response.status_code == 409
@@ -121,6 +133,7 @@ def test_multiple_valid_pubchem_candidates_return_409(monkeypatch: pytest.Monkey
 
 
 def test_selected_pubchem_cid_resubmits_without_formula_edit(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_uncurated_nf3(monkeypatch)
     patch_identity(monkeypatch, candidate(1), candidate(2))
     patch_no_external_3d(monkeypatch)
     response = client.post("/api/v1/analyze", json={"formula": "NF3", "pubchem_cid": 2})
@@ -129,6 +142,7 @@ def test_selected_pubchem_cid_resubmits_without_formula_edit(monkeypatch: pytest
 
 
 def test_pubchem_timeout_is_typed(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_uncurated_nf3(monkeypatch)
     monkeypatch.setattr(molecule_resolver, "lookup_pubchem_formula", lambda _parsed: lookup(state=ExternalServiceState.TIMEOUT))
     response = client.post("/api/v1/analyze", json={"formula": "NF3"})
     assert response.status_code == 422
@@ -137,6 +151,7 @@ def test_pubchem_timeout_is_typed(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_rdkit_is_second_structure_priority(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_uncurated_nf3(monkeypatch)
     monkeypatch.setattr(geometry_resolver, "experimental_providers", lambda: [])
     patch_identity(monkeypatch, candidate())
     monkeypatch.setattr(computed, "fetch_pubchem_3d", lambda _cid: PubChemStructureResult(status=status("PubChem", ExternalServiceState.CONFORMER_UNAVAILABLE)))
@@ -151,6 +166,7 @@ def test_rdkit_is_second_structure_priority(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_vsepr_is_final_structure_fallback_and_angles_match(monkeypatch: pytest.MonkeyPatch) -> None:
+    patch_uncurated_nf3(monkeypatch)
     monkeypatch.setattr(geometry_resolver, "experimental_providers", lambda: [])
     patch_identity(monkeypatch, candidate())
     patch_no_external_3d(monkeypatch)

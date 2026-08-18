@@ -90,6 +90,12 @@ def test_offline_analysis_prefers_nist_experimental_geometry(
 
 
 def test_nf3_remains_general_deterministic_ax3e(monkeypatch: pytest.MonkeyPatch) -> None:
+    # NF3 is now a fully curated species; patch the curated shortcut out so this test
+    # keeps exercising the deterministic (uncurated) engine it was written to cover.
+    original_curated_records = molecule_resolver.curated_records
+    monkeypatch.setattr(molecule_resolver, "curated_records", lambda: tuple(
+        record for record in original_curated_records() if record["id"] != "nf3"
+    ))
     monkeypatch.setattr(molecule_resolver, "lookup_pubchem_formula", disabled_lookup)
     result = analyze(AnalysisRequest(formula="NF3"))
     assert result.molecule.source == "deterministic"
@@ -109,7 +115,10 @@ def test_generic_lone_pair_vsepr_rules_are_inequalities(molecule_id: str, notati
 
 def test_experimental_snapshot_records_are_complete_and_validated() -> None:
     records = experimental_records()
-    assert {record.identity.formula for record in records} == {"NF3", "NH3", "ClF3"}
+    assert {record.identity.formula for record in records} == {
+        "NF3", "NH3", "ClF3", "H2O", "CH4", "CO2", "SO2", "BF3", "PCl5", "SF4",
+        "XeF2", "XeF4", "SF6", "BrF5", "O3",
+    }
     for record in records:
         assert record.source.reference and record.source.retrieved_at and record.units == "angstrom"
         # CAS is the identifier CCCBDB is addressed by and the one every record carries.

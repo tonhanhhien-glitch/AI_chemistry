@@ -58,7 +58,12 @@ export default function HomePage() {
       <div className="hero-inner">
         <div className="hero-content">
           <h1>{t("home.hero.titlePrefix")}<em>{t("home.hero.titleEm")}</em></h1>
-          <FormulaInput value={query} onChange={setQuery} onSubmit={() => query.trim() && navigate(`/analysis?formula=${encodeURIComponent(query.trim())}`)} />
+          <FormulaInput
+            value={query}
+            onChange={setQuery}
+            onSubmit={() => query.trim() && navigate(`/analysis?formula=${encodeURIComponent(query.trim())}`)}
+            onSelectMolecule={(item) => navigate(`/analysis?molecule=${encodeURIComponent(item.id)}`)}
+          />
         </div>
         <div className="hero-examples">
           <div className="section-heading">

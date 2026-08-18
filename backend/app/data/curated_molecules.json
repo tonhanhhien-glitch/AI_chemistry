@@ -193,7 +193,7 @@
       ],
       "resonance_forms": 2,
       "resonance_note_vi": "Các cách biểu diễn cộng hưởng cho thấy mật độ liên kết S–O được delocal hoá; một công thức Lewis đơn lẻ không mô tả đầy đủ.",
-      "resonance_note_en": "The resonance representations show that the S-O bond density is delocalized; a single Lewis structure does not describe it fully.",
+      "resonance_note_en": "The resonance representations show that the S-O bond density is delocalized; a single Lewis structure does not fully describe it. The two S-O bonds are experimentally equal in length, unlike the double/single distinction any single drawn structure implies.",
       "exception_flags": {
         "electron_deficient": false,
         "expanded_octet": true,
@@ -1107,7 +1107,7 @@
       ],
       "resonance_forms": 3,
       "resonance_note_vi": "Có ba công thức cộng hưởng tương đương; liên kết đôi có thể ở bất kỳ O nào.",
-      "resonance_note_en": "There are three equivalent resonance structures; the double bond can be on any O.",
+      "resonance_note_en": "There are three equivalent resonance structures; the double bond can be drawn on any of the three O atoms, and the real N-O bonds are all equal in length and bond order 1.33.",
       "exception_flags": {
         "electron_deficient": false,
         "expanded_octet": false,
@@ -1181,7 +1181,7 @@
       ],
       "resonance_forms": 3,
       "resonance_note_vi": "Có ba công thức cộng hưởng tương đương; điện tích và liên kết π được delocal hoá trên ba O.",
-      "resonance_note_en": "There are three equivalent resonance structures; the charge and the pi bond are delocalized over the three O atoms.",
+      "resonance_note_en": "There are three equivalent resonance structures; the charge and the pi bond are delocalized over the three O atoms, and the real C-O bonds are all equal in length and bond order 1.33.",
       "exception_flags": {
         "electron_deficient": false,
         "expanded_octet": false,
@@ -1203,6 +1203,229 @@
       "smiles": "[O-]C(=O)[O-]",
       "teaching_note_vi": "Tổng điện tích hình thức của biểu diễn Lewis phải bằng −2.",
       "teaching_note_en": "The total formal charge of the Lewis representation must equal -2."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "nf3",
+      "name_vi": "Nitrogen trifluoride",
+      "name_en": "Nitrogen trifluoride",
+      "aliases": [
+        "nitrogen trifluoride",
+        "nitơ triflorua"
+      ],
+      "formula": "NF3",
+      "charge": 0,
+      "atom_inventory": {
+        "N": 1,
+        "F": 3
+      },
+      "atom_symbols": [
+        "N",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 26,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "steric_number": 4,
+      "ax_en": "AX3E",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "chóp tam giác",
+      "ideal_angle": "~102°",
+      "distortion_note_vi": "F có độ âm điện lớn hơn H nên kéo mật độ electron liên kết ra xa N, làm giảm lực đẩy giữa các cặp electron liên kết N–F; kết quả là cặp electron tự do trên N nén góc F–N–F xuống nhỏ hơn cả góc H–N–H trong NH3.",
+      "distortion_note_en": "Because F is far more electronegative than H, it pulls bonding electron density away from N, weakening bonding-pair/bonding-pair repulsion; the lone pair on N then compresses the F-N-F angle even more than the lone pair does in NH3.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực do hình chóp tam giác, dù moment liên kết N–F ngược hướng một phần với cặp electron tự do so với NH3.",
+      "polarity_note_en": "The molecule is polar because of its trigonal pyramidal shape, though the N-F bond moments partially oppose the lone-pair contribution compared with NH3.",
+      "smiles": "N(F)(F)F",
+      "teaching_note_vi": "So sánh với NH3: cùng dạng AX3E và cùng hình chóp tam giác, nhưng NF3 có góc liên kết nhỏ hơn (~102° so với ~107°) vì F hút electron liên kết mạnh hơn H. Đây là ví dụ kinh điển cho thấy độ âm điện của phối tử ảnh hưởng đến góc liên kết ngay cả khi lớp vỏ electron trung tâm giống hệt nhau.",
+      "teaching_note_en": "Compare with NH3: both are AX3E, trigonal pyramidal, yet NF3 has the smaller bond angle (~102 vs ~107 degrees) because F withdraws bonding electron density more strongly than H. This is a classic illustration that ligand electronegativity shapes the bond angle even when the central atom's electron-domain count is identical."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "o3",
+      "name_vi": "Ozone",
+      "name_en": "Ozone",
+      "aliases": [
+        "ozone",
+        "ozon",
+        "trioxygen"
+      ],
+      "formula": "O3",
+      "charge": 0,
+      "atom_inventory": {
+        "O": 3
+      },
+      "atom_symbols": [
+        "O",
+        "O",
+        "O"
+      ],
+      "central_atom": "O",
+      "total_valence_electrons": 18,
+      "bond_orders": [
+        2,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        2,
+        3
+      ],
+      "formal_charges": [
+        1,
+        0,
+        -1
+      ],
+      "resonance_forms": 2,
+      "resonance_note_vi": "Hai công thức cộng hưởng tương đương hoán đổi vị trí liên kết đôi và liên kết đơn giữa hai nguyên tử O đầu mạch; điện tích hình thức +1/0/−1 chỉ là hệ quả của việc vẽ một công thức Lewis đơn lẻ, không phải điện tích thực trên từng nguyên tử. Hai liên kết O–O thực tế dài bằng nhau.",
+      "resonance_note_en": "Two equivalent resonance structures swap which terminal O carries the double bond; the +1/0/-1 formal charges are an artifact of drawing one single Lewis structure, not the real charge on each atom. The two O-O bonds are experimentally equal in length.",
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 1,
+      "steric_number": 3,
+      "ax_en": "AX2E",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~116.8°",
+      "distortion_note_vi": "Cặp electron tự do trên O trung tâm nén góc O–O–O xuống dưới 120°; giá trị thực nghiệm đo được là 116,8°, gần 120° hơn NH3/H2O vì hai liên kết O–O có đặc tính liên kết đôi một phần do cộng hưởng.",
+      "distortion_note_en": "The lone pair on the central O compresses the O-O-O angle below 120 degrees; the measured value is 116.8 degrees, closer to 120 than NH3/H2O because both O-O bonds carry partial double-bond character from resonance.",
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử phân cực dù chỉ gồm một nguyên tố: hình gấp khúc và sự phân bố điện tích hình thức không đối xứng khiến các moment liên kết không triệt tiêu.",
+      "polarity_note_en": "The molecule is polar despite being made of a single element: the bent shape and the asymmetric formal-charge distribution keep the bond moments from cancelling.",
+      "smiles": "[O-][O+]=O",
+      "teaching_note_vi": "Không giống SO2, oxy ở chu kỳ 2 không có phân lớp d để mở rộng octet, nên O3 buộc phải dùng công thức Lewis có điện tích hình thức (+1/0/−1) thay vì công thức đối xứng hai liên kết đôi. Đây là điểm khác biệt quan trọng khi so sánh O3 với SO2, dù cả hai đều là AX2E và có hình gấp khúc.",
+      "teaching_note_en": "Unlike SO2, oxygen is a period-2 element with no d subshell to expand its octet, so O3 must be drawn with formal charges (+1/0/-1) rather than the symmetric double-double-bond depiction some texts use for SO2. This is an important contrast when comparing O3 with SO2, even though both are AX2E and bent."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "h3o-plus",
+      "name_vi": "Hydronium ion",
+      "name_en": "Hydronium ion",
+      "aliases": [
+        "hydronium",
+        "hydronium ion",
+        "oxidanium",
+        "ion hydroni"
+      ],
+      "formula": "H3O+",
+      "charge": 1,
+      "atom_inventory": {
+        "H": 3,
+        "O": 1
+      },
+      "atom_symbols": [
+        "O",
+        "H",
+        "H",
+        "H"
+      ],
+      "central_atom": "O",
+      "total_valence_electrons": 8,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "formal_charges": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "steric_number": 4,
+      "ax_en": "AX3E",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "chóp tam giác",
+      "ideal_angle": "<109.5°",
+      "distortion_note_vi": "Cặp electron tự do duy nhất trên O nén góc H–O–H; do điện tích dương kéo electron liên kết lại gần O hơn so với NH3, góc thực nghiệm của H3O+ thường được ghi nhận lớn hơn góc của NH3.",
+      "distortion_note_en": "The single lone pair on O compresses the H-O-H angle; because the positive charge pulls the bonding electrons closer to O than in NH3, the experimentally reported angle of H3O+ tends to be larger than that of NH3.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Đây là ion đa nguyên tử mang điện tích +1; tính phân cực của phân tử trung hoà không áp dụng trực tiếp.",
+      "polarity_note_en": "This is a polyatomic ion with a +1 charge; the polarity of a neutral molecule does not apply directly.",
+      "smiles": "[OH3+]",
+      "teaching_note_vi": "H3O+ đẳng electron và đẳng cấu trúc với NH3 (cùng AX3E, cùng chóp tam giác) vì thêm một proton vào H2O đóng vai trò tương tự việc N có thêm một electron so với O. Đừng nhầm góc liên kết của H3O+ với góc 104,5° của H2O trung hoà.",
+      "teaching_note_en": "H3O+ is isoelectronic and isostructural with NH3 (both AX3E, both trigonal pyramidal), because adding a proton to H2O plays a role analogous to N having one more electron than O. Do not confuse the H3O+ bond angle with the 104.5-degree angle of neutral H2O."
     }
   ]
 }

@@ -5,8 +5,8 @@ export async function getExamples(): Promise<MoleculeSummary[]> {
   return (await apiClient.get<MoleculeSummary[]>("/molecules/examples")).data;
 }
 
-export async function searchMolecules(q: string): Promise<MoleculeSummary[]> {
-  const response = await apiClient.get<{ query: string; results: MoleculeSummary[] }>("/molecules/search", { params: { q } });
+export async function searchMolecules(q: string, signal?: AbortSignal): Promise<MoleculeSummary[]> {
+  const response = await apiClient.get<{ query: string; results: MoleculeSummary[] }>("/molecules/search", { params: { q }, signal });
   return response.data.results;
 }
 

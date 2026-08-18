@@ -28,6 +28,7 @@ export interface LewisStructure {
   total_valence_electrons: number;
   resonance_forms: number;
   resonance_note_vi: string | null;
+  resonance_note_en: string | null;
   resonance_structures?: ResonanceForm[];
   exception_flags: {
     electron_deficient: boolean;
