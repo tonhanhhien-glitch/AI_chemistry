@@ -1224,23 +1224,137 @@ def calculate_ligand_angles(
 
     return calculated_angles
 
+def get_valid_molecular_angles(
+    molecular_geometry: str
+):
+    """
+    Return all valid ligand-ligand bond angles
+    for a molecular geometry.
+    """
+
+    angle_map = {
+
+        "linear": [
+            180.0
+        ],
+
+        "trigonal_planar": [
+            120.0
+        ],
+
+        "tetrahedral": [
+            109.5
+        ],
+
+        "trigonal_pyramidal": [
+            107.0
+        ],
+
+        "bent": [
+            104.5
+        ],
+
+        "trigonal_bipyramidal": [
+            90.0,
+            120.0,
+            180.0
+        ],
+
+        "octahedral": [
+            90.0,
+            180.0
+        ]
+    }
+
+    if molecular_geometry not in angle_map:
+
+        raise ValueError(
+            f"Unsupported molecular geometry: "
+            f"{molecular_geometry}"
+        )
+
+    return angle_map[
+        molecular_geometry
+    ]
 
 def validate_molecular_angles(
     positions: list,
-    expected_angle: float,
+    expected_angle,
     tolerance: float = 0.5
 ):
     """
-    Validate all molecular bond angles
-    against the expected characteristic angle.
+    Validate all molecular bond angles.
+
+    expected_angle may be either:
+
+        1. A single number
+           Example: 109.5
+
+        2. A list of valid angles
+           Example: [90.0, 120.0, 180.0]
+
+    This allows geometries such as:
+
+        linear
+            -> 180°
+
+        trigonal planar
+            -> 120°
+
+        tetrahedral
+            -> 109.5°
+
+        trigonal bipyramidal
+            -> 90°, 120°, 180°
+
+        octahedral
+            -> 90°, 180°
     """
 
-    if expected_angle <= 0:
+    # ==================================================
+    # NORMALIZE EXPECTED ANGLES
+    # ==================================================
+
+    if isinstance(expected_angle, (int, float)):
+
+        expected_angles = [
+            float(expected_angle)
+        ]
+
+    elif isinstance(expected_angle, (list, tuple)):
+
+        expected_angles = [
+            float(angle)
+            for angle in expected_angle
+        ]
+
+    else:
 
         raise ValueError(
             "Expected bond angle must be "
+            "a number or a list of numbers."
+        )
+
+    if not expected_angles:
+
+        raise ValueError(
+            "At least one expected bond angle "
+            "must be provided."
+        )
+
+    if any(
+        angle <= 0
+        for angle in expected_angles
+    ):
+
+        raise ValueError(
+            "Expected bond angles must be "
             "greater than zero."
         )
+
+    # ==================================================
+    # CALCULATE ACTUAL ANGLES
+    # ==================================================
 
     calculated_angles = (
         calculate_ligand_angles(
@@ -1248,16 +1362,28 @@ def validate_molecular_angles(
         )
     )
 
+    # ==================================================
+    # VALIDATE EACH ANGLE
+    # ==================================================
+
     invalid_angles = []
 
     for result in calculated_angles:
 
-        difference = abs(
-            result["angle"]
-            - expected_angle
+        actual_angle = result["angle"]
+
+        differences = [
+            abs(
+                actual_angle - expected
+            )
+            for expected in expected_angles
+        ]
+
+        minimum_difference = min(
+            differences
         )
 
-        if difference > tolerance:
+        if minimum_difference > tolerance:
 
             invalid_angles.append({
                 "position_1":
@@ -1267,21 +1393,25 @@ def validate_molecular_angles(
                     result["position_2"],
 
                 "expected":
-                    expected_angle,
+                    expected_angles,
 
                 "actual":
-                    result["angle"],
+                    actual_angle,
 
                 "difference":
                     round(
-                        difference,
+                        minimum_difference,
                         4
                     )
             })
 
+    # ==================================================
+    # RESULT
+    # ==================================================
+
     return {
         "expected_angle":
-            expected_angle,
+            expected_angles,
 
         "calculated_angles":
             calculated_angles,
@@ -1295,7 +1425,6 @@ def validate_molecular_angles(
         "valid":
             len(invalid_angles) == 0
     }
-
 
 if __name__ == "__main__":
 
