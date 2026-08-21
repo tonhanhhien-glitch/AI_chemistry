@@ -10,6 +10,8 @@ from chemistry.geometry_3d import (
     get_valid_molecular_angles,
     scale_vector,
 )
+from .resonance_detector import resolve_resonance
+from chemistry.resonance_detector import resolve_resonance
 
 # ============================================================
 # BOND LENGTH DATA
@@ -17,52 +19,23 @@ from chemistry.geometry_3d import (
 
 BOND_LENGTHS = {
     "H2O": [0.96, 0.96],
-
-    "NH3": [
-        1.01,
-        1.01,
-        1.01
-    ],
-
-    "CH4": [
-        1.09,
-        1.09,
-        1.09,
-        1.09
-    ],
-
-    "CO2": [
-        1.16,
-        1.16
-    ],
-
-    "BF3": [
-        1.30,
-        1.30,
-        1.30
-    ],
-
-    "PCl5": [
-        2.02,
-        2.02,
-        2.02,
-        2.02,
-        2.02
-    ],
-
-    "SF6": [
-        1.56,
-        1.56,
-        1.56,
-        1.56,
-        1.56,
-        1.56
-    ],
+    "CO2": [1.16, 1.16],
+    "NH3": [1.01, 1.01, 1.01],
+    "CH4": [1.09, 1.09, 1.09, 1.09],
+    "BF3": [1.30, 1.30, 1.30],
+    "PCl5": [2.02, 2.02, 2.02, 2.02, 2.02],
+    "SF6": [1.56, 1.56, 1.56, 1.56, 1.56, 1.56],
 
     "NH4": [1.01, 1.01, 1.01, 1.01],
     "H3O": [0.98, 0.98, 0.98],
     "OH": [0.97],
+
+    "NO3": [1.24, 1.24, 1.24],
+    "CO3": [1.28, 1.28, 1.28],
+    "SO4": [1.47, 1.47, 1.47, 1.47],
+    "PO4": [1.54, 1.54, 1.54, 1.54],
 }
+
 
 # ============================================================
 # 3D LIGAND POSITION ADAPTER
@@ -516,13 +489,24 @@ def analyze_chemistry(
         central_id
     )
 
+    resonance_result = resolve_resonance(
+        lewis_result["atom_objects"],
+        lewis_result["bonds"],
+        charge
+    )
+
     # ========================================================
     # FINAL CHEMISTRY RESULT
     # ========================================================
 
     return {
         "lewis": lewis_result,
-        "vsepr": vsepr_result
+        "vsepr": vsepr_result,
+        "ligand_atoms": ligand_atoms,
+        "bond_lengths": bond_lengths,
+        "coordinates": coordinates,
+        "angle_validation": angle_validation,
+        "resonance": resonance_result
     }
 
 def analyze_molecule(
@@ -1129,6 +1113,9 @@ for test in ION_TESTS:
                 central_atom,
                 charge
             )
+
+            print("Resonance:")
+            print(result["resonance"])
 
             print(
                 "Formula:",
