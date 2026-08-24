@@ -1,20 +1,30 @@
-"""FastAPI application entrypoint: creates the app, configures CORS, and mounts the v1 API router."""
-
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1.router import api_router
-from app.core.config import settings
+from backend.app.api.v1.router import api_router
 
-app = FastAPI(title="VSEPR-AI", version="0.1.0")
+app = FastAPI(
+    title="VSEPR-AI",
+    version="0.1.0",
+    description="AI-powered Lewis Structure & VSEPR Analysis"
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(api_router, prefix="/api/v1")
+app.include_router(api_router)
+
+@app.get("/")
+def root():
+    return {
+        "name": "VSEPR-AI",
+        "status": "running"
+    }

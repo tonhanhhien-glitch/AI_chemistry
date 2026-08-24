@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 import re
 
-from app.core.exceptions import (
+from backend.app.core.exceptions import (
     FormulaParseError,
     UnsupportedElementError,
     UnsupportedFormulaSyntaxError,

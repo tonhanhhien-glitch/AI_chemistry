@@ -255,6 +255,15 @@ def resolve_resonance(
             current_bonds
         )
 
+        return {
+            "has_resonance": len(candidates) > 0,
+            "candidate_count": len(candidates),
+            "candidates": candidates,
+            "atom_objects": current_atoms,
+            "bonds": current_bonds,
+            "resolved": len(candidates) > 0
+        }
+
 if __name__ == "__main__":
 
     print("===== RESONANCE ENGINE TEST =====")

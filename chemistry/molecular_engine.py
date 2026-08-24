@@ -459,6 +459,19 @@ def analyze_chemistry(
     )
 
     # ========================================================
+    # STEP 1.5 — RESONANCE OPTIMIZATION
+    # ========================================================
+
+    resonance_result = resolve_resonance(
+        lewis_result["atom_objects"],
+        lewis_result["bonds"],
+        charge
+    )
+
+    lewis_result["atom_objects"] = resonance_result["atom_objects"]
+    lewis_result["bonds"] = resonance_result["bonds"]
+
+    # ========================================================
     # STEP 2 — FIND CENTRAL ATOM ID
     # ========================================================
 
@@ -500,12 +513,23 @@ def analyze_chemistry(
     # ========================================================
 
     return {
+
+        "formula": formula,
+
+        "central_atom": central_id,
+
         "lewis": lewis_result,
+
         "vsepr": vsepr_result,
+
         "ligand_atoms": ligand_atoms,
+
         "bond_lengths": bond_lengths,
+
         "coordinates": coordinates,
+
         "angle_validation": angle_validation,
+
         "resonance": resonance_result
     }
 
@@ -538,6 +562,19 @@ def analyze_molecule(
         charge
     )
 
+    # ========================================================
+    # STEP 1.5 — RESONANCE DETECTION
+    # ========================================================
+
+    resonance_result = resolve_resonance(
+        lewis_result["atom_objects"],
+        lewis_result["bonds"],
+        charge
+    )
+
+    # Update Lewis structure with resonance-adjusted bonds
+    lewis_result["atom_objects"] = resonance_result["atom_objects"]
+    lewis_result["bonds"] = resonance_result["bonds"]
 
     # ========================================================
     # STEP 2 — FIND CENTRAL ATOM ID
@@ -752,7 +789,9 @@ def analyze_molecule(
 
         "coordinates": coordinates,
 
-        "angle_validation": angle_validation
+        "angle_validation": angle_validation,
+
+        "resonance": resonance_result
     }
 
 
