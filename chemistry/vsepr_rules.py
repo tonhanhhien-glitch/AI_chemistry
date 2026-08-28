@@ -442,17 +442,27 @@ def analyze_vsepr(
 
     return {
         "central_atom": central_id,
+
+        # VSEPR core
+        "steric_number": steric_number,
+        "electron_domains": total_domains,
+        "bonding_pairs": bonding_domains,
+        "lone_pairs": lone_pair_domains,
+
+        # Giữ tương thích code cũ
         "bonding_domains": bonding_domains,
         "lone_pair_domains": lone_pair_domains,
         "total_domains": total_domains,
-        "steric_number": steric_number,
+
         "electron_geometry": electron_geometry,
         "molecular_geometry": molecular_geometry,
+
         "ideal_bond_angle": ideal_bond_angle,
+        "bond_angle": characteristic_bond_angle,
+        "characteristic_bond_angle": characteristic_bond_angle,
+
         "lone_pair_effect": lone_pair_effect,
-        "characteristic_bond_angle":
-            characteristic_bond_angle,
-        "validation": validation
+        "validation": validation,
     }
 
 if __name__ == "__main__":

@@ -1,49 +1,64 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 
-from backend.app.core.exceptions import FormulaParseError
-from backend.app.schemas.formula_schema import FormulaParseResponse
 from backend.app.services.formula_parser import parse_formula
-
-from chemistry.molecular_engine import analyze_molecule
+from backend.app.services.lewis_service import analyze_formula as analyze_lewis
 
 router = APIRouter()
 
 
-@router.get("/formula/parse", response_model=FormulaParseResponse)
-def parse_formula_endpoint(
-    formula: str = Query(..., description="Ví dụ: H2O, NH3, SO4^2-")
+def guess_central_atom(atoms: dict[str, int]) -> str:
+    """
+    Chọn nguyên tử trung tâm cho các phân tử vô cơ nhóm chính.
+    """
+
+    non_h = [atom for atom in atoms if atom != "H"]
+
+    if not non_h:
+        return "H"
+
+    if len(non_h) == 1:
+        return non_h[0]
+
+    priority = [
+        "C",
+        "N",
+        "P",
+        "S",
+        "B",
+        "Si",
+        "O",
+        "Cl",
+        "Br",
+        "I",
+        "F",
+    ]
+
+    for element in priority:
+        if element in non_h:
+            return element
+
+    return non_h[0]
+
+
+@router.get("/analyze")
+def analyze_formula_route(
+    formula: str = Query(..., description="Chemical formula, ví dụ: H2O"),
 ):
     try:
         parsed = parse_formula(formula)
 
-        return FormulaParseResponse(
-            success=True,
-            data=parsed
+        central = guess_central_atom(parsed.atoms)
+
+        result = analyze_lewis(
+            atoms=parsed.atoms,
+            central_atom=central,
+            charge=parsed.charge,
         )
 
-    except FormulaParseError as e:
-        return FormulaParseResponse(
-            success=False,
-            error={
-                "code": e.code,
-                "message": e.message
-            }
-        )
+        return {
+            "success": True,
+            "data": result,
+        }
 
-
-@router.get("/analyze")
-def analyze_formula(
-    formula: str = Query(..., description="Chemical formula")
-):
-    parsed = parse_formula(formula)
-
-    result = analyze_molecule(
-        atoms=parsed["atoms"],
-        central_atom=parsed["central_atom"],
-        charge=parsed["charge"]
-    )
-
-    return {
-        "success": True,
-        "data": result
-    }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

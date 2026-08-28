@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { analyzeFormula } from "./api/moleculeApi";
 
@@ -12,45 +12,57 @@ import MoleculeViewer from "./components/MoleculeViewer";
 export default function App() {
   const [formula, setFormula] = useState("H2O");
   const [result, setResult] = useState<any>(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 900);
+  const [animate, setAnimate] = useState(false);
+  const [showDomains, setShowDomains] = useState(true);
 
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  async function handleAnalyze(selectedFormula?: string) {
-    const target = selectedFormula ?? formula;
-
-    setLoading(true);
-    setError("");
+  async function handleAnalyze() {
+    if (!formula.trim()) return;
 
     try {
-      const data = await analyzeFormula(target);
+      setLoading(true);
+      setError("");
 
-      setFormula(target);
+      const data = await analyzeFormula(formula.trim());
+
       setResult(data);
+      setAnimate(false);
     } catch (err) {
       console.error(err);
-      setError("Không thể kết nối tới backend hoặc công thức không hợp lệ.");
+      setError("Không thể phân tích phân tử.");
     } finally {
       setLoading(false);
     }
   }
 
-  const examples = ["H2O", "CO2", "NH3", "CH4", "BF3", "PCl5", "SF6"];
+  async function quickAnalyze(f: string) {
+    setFormula(f);
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const data = await analyzeFormula(f);
+
+      setResult(data);
+      setAnimate(false);
+    } catch (err) {
+      console.error(err);
+      setError("Không thể phân tích phân tử.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div
       style={{
         background: "#EEF3EF",
         minHeight: "100vh",
-        padding: isMobile ? 20 : 40,
+        padding: 40,
         fontFamily: "system-ui",
       }}
     >
@@ -69,117 +81,29 @@ export default function App() {
           onAnalyze={handleAnalyze}
         />
 
-        {/* Quick Examples */}
-
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            flexWrap: "wrap",
-            marginBottom: 28,
-          }}
-        >
-          {examples.map((item) => (
-            <button
-              key={item}
-              onClick={() => handleAnalyze(item)}
-              disabled={loading}
-              style={{
-                padding: "8px 14px",
-                borderRadius: 999,
-                border: "1px solid #D7E3DD",
-                background: "white",
-                cursor: "pointer",
-                fontWeight: 500,
-              }}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-
         {error && (
           <div
             style={{
-              background: "#FDECEC",
-              border: "1px solid #F5B7B7",
-              color: "#B3261E",
-              padding: 16,
-              borderRadius: 14,
-              marginBottom: 24,
+              background: "#FFECEC",
+              color: "#C62828",
+              padding: 12,
+              borderRadius: 12,
+              marginBottom: 20,
             }}
           >
             {error}
           </div>
         )}
 
-        {/* Empty State */}
-
-        {!result && !loading && (
-          <div
-            style={{
-              background: "white",
-              borderRadius: 18,
-              padding: 50,
-              textAlign: "center",
-              border: "1px dashed #C7D5CF",
-            }}
-          >
-            <h2 style={{ color: "#0F2F28" }}>🧪 Bắt đầu phân tích</h2>
-
-            <p
-              style={{
-                marginTop: 12,
-                color: "#667085",
-              }}
-            >
-              Nhập một công thức hóa học hoặc chọn một ví dụ phía trên rồi nhấn Analyze.
-            </p>
-          </div>
-        )}
-
-        {/* Loading */}
-
-        {loading && (
-          <div
-            style={{
-              background: "white",
-              borderRadius: 18,
-              padding: 50,
-              textAlign: "center",
-              border: "1px solid #DDD",
-            }}
-          >
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                border: "4px solid #D7E3DD",
-                borderTopColor: "#147A5A",
-                borderRadius: "50%",
-                margin: "0 auto 18px",
-                animation: "spin 1s linear infinite",
-              }}
-            />
-
-            <h3 style={{ color: "#0F2F28" }}>Analyzing Molecule...</h3>
-
-            <p style={{ color: "#667085" }}>
-              Đang xây dựng Lewis Structure và tính toán VSEPR.
-            </p>
-          </div>
-        )}
-
-        {/* Result */}
-
-        {result && !loading && (
+        {result && (
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "1fr 520px",
+              gridTemplateColumns: "1fr 520px",
               gap: 24,
             }}
           >
+            {/* LEFT */}
             <div>
               <InfoCard result={result} />
 
@@ -188,33 +112,200 @@ export default function App() {
               <ExplanationCard result={result} />
             </div>
 
+            {/* RIGHT */}
             <div
               style={{
                 background: "white",
                 borderRadius: 18,
                 overflow: "hidden",
-                height: 500,
-                border: "1px solid #DDD",
-                boxShadow: "0 8px 20px rgba(0,0,0,.05)",
+                padding: 18,
+                boxShadow: "0 6px 18px rgba(0,0,0,.08)",
               }}
             >
-              <MoleculeViewer
-                coordinates={result.data.coordinates}
-                atoms={result.data.lewis.atom_objects}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 12,
+                }}
+              >
+                <h3
+                  style={{
+                    margin: 0,
+                    color: "#0F2F28",
+                  }}
+                >
+                  3D Molecule
+                </h3>
+
+                <button
+                  onClick={() => setAnimate(!animate)}
+                  style={{
+                    background: animate ? "#147A5A" : "#EEF3EF",
+                    color: animate ? "white" : "#147A5A",
+                    border: "none",
+                    borderRadius: 999,
+                    padding: "8px 16px",
+                    cursor: "pointer",
+                    fontWeight: 700,
+                  }}
+                >
+                  {animate ? "Pause" : "Play"}
+                </button>
+              </div>
+
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 12,
+                  cursor: "pointer",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={showDomains}
+                  onChange={() =>
+                    setShowDomains(!showDomains)
+                  }
+                />
+                Electron Domains
+              </label>
+
+              <div
+                style={{
+                  width: "100%",
+                  height: 420,
+                  borderRadius: 14,
+                  overflow: "hidden",
+                  border: "1px solid #E3E7E5",
+                }}
+              >
+                <MoleculeViewer
+                  coordinates={result.data.coordinates}
+                  atoms={result.data.lewis.atom_objects}
+                  bondAngle={result.data.vsepr?.bond_angle}
+                  electronGeometry={
+                    result.data.vsepr?.electron_geometry
+                  }
+                  molecularGeometry={
+                    result.data.vsepr?.molecular_geometry
+                  }
+                  electronDomains={
+                    result.data.vsepr?.electron_domains
+                  }
+                  bondingPairs={
+                    result.data.vsepr?.bonding_pairs
+                  }
+                  lonePairs={result.data.vsepr?.lone_pairs}
+                  animate={animate}
+                  showDomains={showDomains}
+                />
+              </div>
+
+              <div
+                style={{
+                  marginTop: 14,
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 10,
+                }}
+              >
+                <div
+                  style={{
+                    background: "#F6F8F7",
+                    borderRadius: 12,
+                    padding: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "#666",
+                    }}
+                  >
+                    Electron Geometry
+                  </div>
+
+                  <strong>
+                    {result.data.vsepr?.electron_geometry ??
+                      "-"}
+                  </strong>
+                </div>
+
+                <div
+                  style={{
+                    background: "#F6F8F7",
+                    borderRadius: 12,
+                    padding: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "#666",
+                    }}
+                  >
+                    Molecular Geometry
+                  </div>
+
+                  <strong>
+                    {result.data.vsepr?.molecular_geometry ??
+                      "-"}
+                  </strong>
+                </div>
+
+                <div
+                  style={{
+                    background: "#F6F8F7",
+                    borderRadius: 12,
+                    padding: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "#666",
+                    }}
+                  >
+                    Bond Angle
+                  </div>
+
+                  <strong>
+                    {result.data.vsepr?.bond_angle ?? "-"}°
+                  </strong>
+                </div>
+
+                <div
+                  style={{
+                    background: "#F6F8F7",
+                    borderRadius: 12,
+                    padding: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "#666",
+                    }}
+                  >
+                    AXE Model
+                  </div>
+
+                  <strong>
+                    AX
+                    {result.data.vsepr?.bonding_pairs ?? 0}
+                    E
+                    {result.data.vsepr?.lone_pairs ?? 0}
+                  </strong>
+                </div>
+              </div>
             </div>
           </div>
         )}
       </div>
-
-      {/* Spinner animation */}
-
-      <style>{`
-        @keyframes spin{
-          from{transform:rotate(0deg);}
-          to{transform:rotate(360deg);}
-        }
-      `}</style>
     </div>
   );
 }
