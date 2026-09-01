@@ -7,7 +7,7 @@ import FormulaInput from "./components/FormulaInput";
 import InfoCard from "./components/InfoCard";
 import LewisCard from "./components/LewisCard";
 import ExplanationCard from "./components/ExplanationCard";
-import MoleculeViewer from "./components/MoleculeViewer";
+// import MoleculeViewer from "./components/MoleculeViewer";
 
 export default function App() {
   const [formula, setFormula] = useState("H2O");
@@ -183,26 +183,21 @@ export default function App() {
                   border: "1px solid #E3E7E5",
                 }}
               >
-                <MoleculeViewer
-                  coordinates={result.data.coordinates}
-                  atoms={result.data.lewis.atom_objects}
-                  bondAngle={result.data.vsepr?.bond_angle}
-                  electronGeometry={
-                    result.data.vsepr?.electron_geometry
-                  }
-                  molecularGeometry={
-                    result.data.vsepr?.molecular_geometry
-                  }
-                  electronDomains={
-                    result.data.vsepr?.electron_domains
-                  }
-                  bondingPairs={
-                    result.data.vsepr?.bonding_pairs
-                  }
-                  lonePairs={result.data.vsepr?.lone_pairs}
-                  animate={animate}
-                  showDomains={showDomains}
-                />
+                <div
+                  style={{
+                    width: "100%",
+                    height: "420px",
+                    display: "grid",
+                    placeItems: "center",
+                    background: "#F6F8F7",
+                    color: "#147A5A",
+                    borderRadius: 14,
+                    border: "1px solid #E3E7E5",
+                    fontWeight: 700,
+                  }}
+                >
+                  3D Viewer tạm thời tắt để sửa
+                </div>
               </div>
 
               <div
