@@ -2,6 +2,25 @@ type Props = {
   result: any;
 };
 
+const LABELS: Record<string, string> = {
+  bent: "Bent",
+  linear: "Linear",
+  tetrahedral: "Tetrahedral",
+  trigonal_planar: "Trigonal Planar",
+  trigonal_bipyramidal: "Trigonal Bipyramidal",
+  octahedral: "Octahedral",
+};
+
+const translate = (value: any) => {
+  if (value === undefined || value === null || value === "") return "-";
+  return LABELS[value] ?? value;
+};
+
+const cleanAtom = (text?: string) => {
+  if (!text) return "-";
+  return text.replace(/\d+$/, "");
+};
+
 export default function InfoCard({ result }: Props) {
   const data = result.data;
 
@@ -13,27 +32,30 @@ export default function InfoCard({ result }: Props) {
     },
     {
       label: "Central Atom",
-      value: data.central_atom,
+      value: cleanAtom(data.central_atom),
       icon: "⚛️",
     },
     {
       label: "Molecular Geometry",
-      value: data.vsepr?.molecular_geometry,
+      value: translate(data.vsepr?.molecular_geometry),
       icon: "📐",
     },
     {
       label: "Electron Geometry",
-      value: data.vsepr?.electron_geometry,
+      value: translate(data.vsepr?.electron_geometry),
       icon: "🔷",
     },
     {
       label: "Bond Angle",
-      value: `${data.vsepr?.characteristic_bond_angle}°`,
+      value:
+        data.vsepr?.characteristic_bond_angle !== undefined
+          ? `${data.vsepr.characteristic_bond_angle}°`
+          : "-",
       icon: "📏",
     },
     {
       label: "Formal Charge",
-      value: data.lewis?.total_formal_charge,
+      value: data.lewis?.total_formal_charge ?? "-",
       icon: "➕",
     },
     {
@@ -53,8 +75,6 @@ export default function InfoCard({ result }: Props) {
         overflow: "hidden",
       }}
     >
-      {/* Header */}
-
       <div
         style={{
           background: "#147A5A",
@@ -73,8 +93,6 @@ export default function InfoCard({ result }: Props) {
           VSEPR Analysis
         </p>
       </div>
-
-      {/* Content */}
 
       <div
         style={{
