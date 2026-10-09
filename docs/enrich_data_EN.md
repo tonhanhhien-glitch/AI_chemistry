@@ -136,6 +136,7 @@ len(atom_symbols)   = N
 len(bond_orders)    = N - 1
 len(lone_pairs)     = N
 len(formal_charges) = N
+len(unpaired_electrons) = N   (only when present)
 ```
 
 Also:
@@ -158,6 +159,38 @@ bonding_domains + lone_pair_domains = steric_number
 ```
 
 A double or triple bond still counts as **one bonding domain**.
+
+### Odd-electron species (NO2, ClO2)
+
+A species with an odd number of valence electrons has one electron that is neither a bond nor a lone pair. Record it in the optional per-atom array `unpaired_electrons`, aligned with `atom_symbols`:
+
+```json
+"atom_symbols": ["N", "O", "O"],
+"bond_orders": [2, 1],
+"lone_pairs": [0, 2, 3],
+"unpaired_electrons": [1, 0, 0],
+"formal_charges": [1, 0, -1],
+"exception_flags": {"electron_deficient": false, "expanded_octet": false, "odd_electron": true}
+```
+
+Even-electron records omit the field. When it is present, the accounting becomes:
+
+```text
+2 × sum(bond_orders) + 2 × sum(lone_pairs) + sum(unpaired_electrons)
+= total_valence_electrons
+```
+
+and a single electron on the central atom counts as a non-bonding VSEPR domain:
+
+```text
+lone_pair_domains = lone_pairs[0] + unpaired_electrons[0]
+```
+
+So NO2 is `AX2E` (bent, measured 134.1°) and ClO2 is `AX2E2`. `odd_electron` must be `true` exactly when `total_valence_electrons` is odd. The Lewis diagram draws the electron as one dot, and the 3D view shows a one-electron lobe.
+
+### Single-centre records only
+
+Every curated record describes one central atom bonded to all other atoms (`bond_orders[i]` is the bond from the centre to atom `i + 1`). Molecules with two or more centres, such as N2O5 (O2N–O–NO2), H2O2 or N2O4, cannot be represented in this format yet.
 
 ### Molecule-specific angle
 
@@ -703,6 +736,7 @@ Before committing a molecule:
 - [ ] Central atom is first in `atom_symbols`.
 - [ ] Lewis bond orders are correct.
 - [ ] Lone-pair counts are correct.
+- [ ] Odd-electron species list their single electron in `unpaired_electrons` and set `odd_electron`.
 - [ ] Formal charges are correct and sum to total charge.
 - [ ] Total valence-electron count is correct.
 - [ ] Resonance information is correct.

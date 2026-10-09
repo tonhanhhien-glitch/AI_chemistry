@@ -2393,6 +2393,2890 @@
         "comments": "Herzberg, G., Electronic Spectra and Electronic Structure of Polyatomic Molecules, Van Nostrand, New York, 1966, as tabulated by NIST CCCBDB. The two O-O bonds are equivalent by resonance/symmetry despite the Lewis structure's formal single/double bond distinction.",
         "retrieved_at": "2026-08-18T00:00:00Z"
       }
+    },
+    {
+      "id": "nist-cccbdb-n2o-1966herzberg",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "N2O",
+        "charge": 0,
+        "atom_inventory": {
+          "N": 2,
+          "O": 1
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "10024-97-2",
+        "pubchem_cid": 948,
+        "inchi": "InChI=1S/N2O/c1-2-3",
+        "inchikey": "GQPLMRYTRLFLPF-UHFFFAOYSA-N",
+        "curated_molecule_id": "n2o"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1Sigma+",
+      "conformation": "equilibrium",
+      "point_group": "Cinfv",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "N",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "N",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "O",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "n2o-r-nn",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.128,
+          "equivalent_count": 1,
+          "label": "N–N"
+        },
+        {
+          "id": "n2o-r-no",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.184,
+          "equivalent_count": 1,
+          "label": "N–O"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "n2o-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 180.0,
+          "equivalent_count": 1,
+          "label": "N–N–O"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "N",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -0.0716
+        },
+        {
+          "id": "a1",
+          "element": "N",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -1.1998
+        },
+        {
+          "id": "a2",
+          "element": "O",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.1126
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1966Herzberg",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10024972&charge=0",
+        "comments": "Herzberg, G., Electronic Spectra and Electronic Structure of Polyatomic Molecules, Van Nostrand, New York, 1966, as tabulated by NIST CCCBDB. The central atom is the middle N (N–N–O).",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-no2-1966herzberg",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "NO2",
+        "charge": 0,
+        "atom_inventory": {
+          "N": 1,
+          "O": 2
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "10102-44-0",
+        "pubchem_cid": 3032552,
+        "inchi": "InChI=1S/NO2/c2-1-3",
+        "inchikey": "JCXJVPUVTGWSNB-UHFFFAOYSA-N",
+        "curated_molecule_id": "no2"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 2A1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "N",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "O",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "no2-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.193,
+          "equivalent_count": 2,
+          "label": "N–O"
+        },
+        {
+          "id": "no2-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.193,
+          "equivalent_count": 2,
+          "label": "N–O"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "no2-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 134.1,
+          "equivalent_count": 1,
+          "label": "O–N–O"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "N",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "x": 0.0,
+          "y": 1.0989,
+          "z": 0.4653
+        },
+        {
+          "id": "a2",
+          "element": "O",
+          "x": 0.0,
+          "y": -1.0989,
+          "z": 0.4653
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1966Herzberg",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10102440&charge=0",
+        "comments": "Herzberg, G., Electronic Spectra and Electronic Structure of Polyatomic Molecules, Van Nostrand, New York, 1966, as tabulated by NIST CCCBDB. Doublet (odd-electron) ground state; both N–O bonds are equivalent.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-clo2-1992kuchitsu",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "ClO2",
+        "charge": 0,
+        "atom_inventory": {
+          "Cl": 1,
+          "O": 2
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "10049-04-4",
+        "pubchem_cid": 24870,
+        "inchi": "InChI=1S/ClO2/c2-1-3",
+        "inchikey": "OSVXSBDYLRYLIG-UHFFFAOYSA-N",
+        "curated_molecule_id": "clo2"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 2B1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "Cl",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "O",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "clo2-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.47,
+          "equivalent_count": 2,
+          "label": "Cl–O"
+        },
+        {
+          "id": "clo2-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.47,
+          "equivalent_count": 2,
+          "label": "Cl–O"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "clo2-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 117.4033,
+          "equivalent_count": 1,
+          "label": "O–Cl–O"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": null,
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1992Kuchitsu(II/21)",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10049044&charge=0",
+        "comments": "Kuchitsu, K. (ed.), Landolt-Börnstein Group II Volume 21: Structure Data of Free Polyatomic Molecules, Springer, Berlin, 1992, as tabulated by NIST CCCBDB. Doublet (odd-electron) ground state; both Cl–O bonds are equivalent.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-cl2o-1995sugaya",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "Cl2O",
+        "charge": 0,
+        "atom_inventory": {
+          "Cl": 2,
+          "O": 1
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7791-21-1",
+        "pubchem_cid": 24646,
+        "inchi": "InChI=1S/Cl2O/c1-3-2",
+        "inchikey": "RCJVRSBWZCNNQT-UHFFFAOYSA-N",
+        "curated_molecule_id": "cl2o"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "O",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "cl2o-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.696,
+          "equivalent_count": 2,
+          "label": "O–Cl"
+        },
+        {
+          "id": "cl2o-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.696,
+          "equivalent_count": 2,
+          "label": "O–Cl"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "cl2o-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 110.88,
+          "equivalent_count": 1,
+          "label": "Cl–O–Cl"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "O",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.7788
+        },
+        {
+          "id": "a1",
+          "element": "Cl",
+          "x": 0.0,
+          "y": 1.3966,
+          "z": -0.1832
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "x": 0.0,
+          "y": -1.3966,
+          "z": -0.1832
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1995Sug/Aya:259",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7791211&charge=0",
+        "comments": "Sugie, M.; Ayabe, M.; Takeo, H.; Matsumura, C., Microwave spectra of dichlorine monoxide in its excited vibrational states, J. Mol. Struct. 352/353, 259-265 (1995), as tabulated by NIST CCCBDB.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-of2-1979harlau",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "OF2",
+        "charge": 0,
+        "atom_inventory": {
+          "O": 1,
+          "F": 2
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7783-41-7",
+        "pubchem_cid": 24547,
+        "inchi": "InChI=1S/F2O/c1-3-2",
+        "inchikey": "UJMWVICAENGCRF-UHFFFAOYSA-N",
+        "curated_molecule_id": "of2"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "O",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "of2-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.405,
+          "equivalent_count": 2,
+          "label": "O–F"
+        },
+        {
+          "id": "of2-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.405,
+          "equivalent_count": 2,
+          "label": "O–F"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "of2-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 103.1,
+          "equivalent_count": 1,
+          "label": "F–O–F"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "O",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.6049
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "x": 0.0,
+          "y": 1.1003,
+          "z": -0.2688
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "x": 0.0,
+          "y": -1.1003,
+          "z": -0.2688
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1979Har/Lau:619",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7783417&charge=0",
+        "comments": "Harmony, M. D.; Laurie, V. W.; Kuczkowski, R. L., et al., Molecular structures of gas-phase polyatomic molecules determined by spectroscopic methods, J. Phys. Chem. Ref. Data 8, 619-722 (1979), as tabulated by NIST CCCBDB. Equilibrium (re) bond length.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-nocl-1976hellwege",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "NOCl",
+        "charge": 0,
+        "atom_inventory": {
+          "N": 1,
+          "O": 1,
+          "Cl": 1
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "2696-92-6",
+        "pubchem_cid": 17601,
+        "inchi": "InChI=1S/ClNO/c1-2-3",
+        "inchikey": "VPCDQGACGWYTMC-UHFFFAOYSA-N",
+        "curated_molecule_id": "nocl"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A'",
+      "conformation": "equilibrium",
+      "point_group": "Cs",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "N",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "nocl-r-no",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.139,
+          "equivalent_count": 1,
+          "label": "N–O"
+        },
+        {
+          "id": "nocl-r-ncl",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.975,
+          "equivalent_count": 1,
+          "label": "N–Cl"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "nocl-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 113.3,
+          "equivalent_count": 1,
+          "label": "O–N–Cl"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "N",
+          "x": 0.0,
+          "y": 0.9724,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "x": 1.1287,
+          "y": 1.125,
+          "z": 0.0
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "x": -0.5312,
+          "y": -0.9298,
+          "z": 0.0
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1976Hellwege(II/7)",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=2696926&charge=0",
+        "comments": "Hellwege, K.-H. and Hellwege, A. M. (eds.), Landolt-Börnstein Group II Volume 7: Structure Data of Free Polyatomic Molecules, Springer, Berlin, 1976, as tabulated by NIST CCCBDB. The central atom is N (O=N–Cl).",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-so3-1991meysut",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "SO3",
+        "charge": 0,
+        "atom_inventory": {
+          "S": 1,
+          "O": 3
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7446-11-9",
+        "pubchem_cid": 24682,
+        "inchi": "InChI=1S/O3S/c1-4(2)3",
+        "inchikey": "AKEJUJNQAAGONA-UHFFFAOYSA-N",
+        "curated_molecule_id": "so3"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1'",
+      "conformation": "equilibrium",
+      "point_group": "D3h",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "S",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "O",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "O",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "so3-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.418,
+          "equivalent_count": 3,
+          "label": "S–O"
+        },
+        {
+          "id": "so3-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.418,
+          "equivalent_count": 3,
+          "label": "S–O"
+        },
+        {
+          "id": "so3-r3",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.418,
+          "equivalent_count": 3,
+          "label": "S–O"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "so3-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "O–S–O"
+        },
+        {
+          "id": "so3-a2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "O–S–O"
+        },
+        {
+          "id": "so3-a3",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "O–S–O"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "S",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "x": 0.0,
+          "y": 1.4175,
+          "z": 0.0
+        },
+        {
+          "id": "a2",
+          "element": "O",
+          "x": 1.2276,
+          "y": -0.7088,
+          "z": 0.0
+        },
+        {
+          "id": "a3",
+          "element": "O",
+          "x": -1.2276,
+          "y": -0.7088,
+          "z": 0.0
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1991Mey/Sut:710",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7446119&charge=0",
+        "comments": "Meyer, V.; Sutter, D. H.; Dreizler, H., The centrifugally induced pure rotational spectrum and the structure of sulfur trioxide, Z. Naturforsch. 46a, 710-714 (1991), as tabulated by NIST CCCBDB.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-h2s-1975coodel",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "H2S",
+        "charge": 0,
+        "atom_inventory": {
+          "H": 2,
+          "S": 1
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7783-06-4",
+        "pubchem_cid": 402,
+        "inchi": "InChI=1S/H2S/h1H2",
+        "inchikey": "RWSOTUBLDIXVET-UHFFFAOYSA-N",
+        "curated_molecule_id": "h2s"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "S",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "h2s-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.336,
+          "equivalent_count": 2,
+          "label": "S–H"
+        },
+        {
+          "id": "h2s-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.336,
+          "equivalent_count": 2,
+          "label": "S–H"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "h2s-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 92.11,
+          "equivalent_count": 1,
+          "label": "H–S–H"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "S",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.103
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "x": 0.0,
+          "y": 0.9616,
+          "z": -0.8239
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "x": 0.0,
+          "y": -0.9616,
+          "z": -0.8239
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1975Coo/DeL:237",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7783064&charge=0",
+        "comments": "Cook, R. L.; De Lucia, F. C.; Helminger, P., Molecular force field and structure of hydrogen sulfide: recent microwave results, J. Mol. Struct. 28, 237-246 (1975), as tabulated by NIST CCCBDB.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-ph3-1966herzberg",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "PH3",
+        "charge": 0,
+        "atom_inventory": {
+          "P": 1,
+          "H": 3
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7803-51-2",
+        "pubchem_cid": 24404,
+        "inchi": "InChI=1S/H3P/h1H3",
+        "inchikey": "XYFCBTPGUUZFHI-UHFFFAOYSA-N",
+        "curated_molecule_id": "ph3"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C3v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "P",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "H",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "ph3-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.421,
+          "equivalent_count": 3,
+          "label": "P–H"
+        },
+        {
+          "id": "ph3-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.421,
+          "equivalent_count": 3,
+          "label": "P–H"
+        },
+        {
+          "id": "ph3-r3",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.421,
+          "equivalent_count": 3,
+          "label": "P–H"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "ph3-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 93.3,
+          "equivalent_count": 3,
+          "label": "H–P–H"
+        },
+        {
+          "id": "ph3-a2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 93.3,
+          "equivalent_count": 3,
+          "label": "H–P–H"
+        },
+        {
+          "id": "ph3-a3",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 93.3,
+          "equivalent_count": 3,
+          "label": "H–P–H"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "P",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "x": 0.0,
+          "y": -1.1932,
+          "z": -0.7717
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "x": 1.0333,
+          "y": 0.5966,
+          "z": -0.7717
+        },
+        {
+          "id": "a3",
+          "element": "H",
+          "x": -1.0333,
+          "y": 0.5966,
+          "z": -0.7717
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1966Herzberg",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7803512&charge=0",
+        "comments": "Herzberg, G., Electronic Spectra and Electronic Structure of Polyatomic Molecules, Van Nostrand, New York, 1966, as tabulated by NIST CCCBDB.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-pcl3-1976hellwege",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "PCl3",
+        "charge": 0,
+        "atom_inventory": {
+          "P": 1,
+          "Cl": 3
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7719-12-2",
+        "pubchem_cid": 24387,
+        "inchi": "InChI=1S/Cl3P/c1-4(2)3",
+        "inchikey": "FAIAAWCVCHQXDN-UHFFFAOYSA-N",
+        "curated_molecule_id": "pcl3"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C3v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "P",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "pcl3-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 2.043,
+          "equivalent_count": 3,
+          "label": "P–Cl"
+        },
+        {
+          "id": "pcl3-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 2.043,
+          "equivalent_count": 3,
+          "label": "P–Cl"
+        },
+        {
+          "id": "pcl3-r3",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 2.043,
+          "equivalent_count": 3,
+          "label": "P–Cl"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "pcl3-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 100.1,
+          "equivalent_count": 3,
+          "label": "Cl–P–Cl"
+        },
+        {
+          "id": "pcl3-a2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 100.1,
+          "equivalent_count": 3,
+          "label": "Cl–P–Cl"
+        },
+        {
+          "id": "pcl3-a3",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 100.1,
+          "equivalent_count": 3,
+          "label": "Cl–P–Cl"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "P",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.7343
+        },
+        {
+          "id": "a1",
+          "element": "Cl",
+          "x": 0.0,
+          "y": 1.8085,
+          "z": -0.216
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "x": 1.5662,
+          "y": -0.9043,
+          "z": -0.216
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "x": -1.5662,
+          "y": -0.9043,
+          "z": -0.216
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1976Hellwege(II/7)",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7719122&charge=0",
+        "comments": "Hellwege, K.-H. and Hellwege, A. M. (eds.), Landolt-Börnstein Group II Volume 7: Structure Data of Free Polyatomic Molecules, Springer, Berlin, 1976, as tabulated by NIST CCCBDB.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-pf5-gurvich",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "PF5",
+        "charge": 0,
+        "atom_inventory": {
+          "P": 1,
+          "F": 5
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7647-19-0",
+        "pubchem_cid": 24295,
+        "inchi": "InChI=1S/F5P/c1-6(2,3,4)5",
+        "inchikey": "OBCUTHMOOONNBS-UHFFFAOYSA-N",
+        "curated_molecule_id": "pf5"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1'",
+      "conformation": "equilibrium",
+      "point_group": "D3h",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "P",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a4",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a5",
+          "element": "F",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a4",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a5",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "pf5-r-ax-1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.577,
+          "equivalent_count": 2,
+          "label": "P–F axial"
+        },
+        {
+          "id": "pf5-r-ax-2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.577,
+          "equivalent_count": 2,
+          "label": "P–F axial"
+        },
+        {
+          "id": "pf5-r-eq-1",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.534,
+          "equivalent_count": 3,
+          "label": "P–F equatorial"
+        },
+        {
+          "id": "pf5-r-eq-2",
+          "atom1_id": "a0",
+          "atom2_id": "a4",
+          "value_angstrom": 1.534,
+          "equivalent_count": 3,
+          "label": "P–F equatorial"
+        },
+        {
+          "id": "pf5-r-eq-3",
+          "atom1_id": "a0",
+          "atom2_id": "a5",
+          "value_angstrom": 1.534,
+          "equivalent_count": 3,
+          "label": "P–F equatorial"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "pf5-a-ax-ax",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 180.0,
+          "equivalent_count": 1,
+          "label": "F(ax)–P–F(ax)"
+        },
+        {
+          "id": "pf5-a-ax-eq-1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 90.0,
+          "equivalent_count": 6,
+          "label": "F(ax)–P–F(eq)"
+        },
+        {
+          "id": "pf5-a-ax-eq-2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 90.0,
+          "equivalent_count": 6,
+          "label": "F(ax)–P–F(eq)"
+        },
+        {
+          "id": "pf5-a-ax-eq-3",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a5",
+          "value_deg": 90.0,
+          "equivalent_count": 6,
+          "label": "F(ax)–P–F(eq)"
+        },
+        {
+          "id": "pf5-a-ax-eq-4",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 90.0,
+          "equivalent_count": 6,
+          "label": "F(ax)–P–F(eq)"
+        },
+        {
+          "id": "pf5-a-ax-eq-5",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 90.0,
+          "equivalent_count": 6,
+          "label": "F(ax)–P–F(eq)"
+        },
+        {
+          "id": "pf5-a-ax-eq-6",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a5",
+          "value_deg": 90.0,
+          "equivalent_count": 6,
+          "label": "F(ax)–P–F(eq)"
+        },
+        {
+          "id": "pf5-a-eq-eq-1",
+          "atom1_id": "a3",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "F(eq)–P–F(eq)"
+        },
+        {
+          "id": "pf5-a-eq-eq-2",
+          "atom1_id": "a3",
+          "center_atom_id": "a0",
+          "atom2_id": "a5",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "F(eq)–P–F(eq)"
+        },
+        {
+          "id": "pf5-a-eq-eq-3",
+          "atom1_id": "a4",
+          "center_atom_id": "a0",
+          "atom2_id": "a5",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "F(eq)–P–F(eq)"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "P",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.577
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -1.577
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "x": 0.0,
+          "y": 1.534,
+          "z": 0.0
+        },
+        {
+          "id": "a4",
+          "element": "F",
+          "x": 1.3285,
+          "y": -0.767,
+          "z": 0.0
+        },
+        {
+          "id": "a5",
+          "element": "F",
+          "x": -1.3285,
+          "y": -0.767,
+          "z": 0.0
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "Gurvich",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7647190&charge=0",
+        "comments": "Gurvich, L. V.; Veyts, I. V.; Alcock, C. B., Thermodynamic Properties of Individual Substances, 4th ed., Hemisphere, New York, 1989, as tabulated by NIST CCCBDB. Gas-phase P–F axial and equatorial bond lengths. The D3h point group fixes every F–P–F angle at exactly 90, 120 or 180 degrees; CCCBDB lists no separate angle measurement.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-bcl3-1976hellwege",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "BCl3",
+        "charge": 0,
+        "atom_inventory": {
+          "B": 1,
+          "Cl": 3
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "10294-34-5",
+        "pubchem_cid": 25135,
+        "inchi": "InChI=1S/BCl3/c2-1(3)4",
+        "inchikey": "FAQYAMRNWDIXMY-UHFFFAOYSA-N",
+        "curated_molecule_id": "bcl3"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1'",
+      "conformation": "equilibrium",
+      "point_group": "D3h",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "B",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "bcl3-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.742,
+          "equivalent_count": 3,
+          "label": "B–Cl"
+        },
+        {
+          "id": "bcl3-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.742,
+          "equivalent_count": 3,
+          "label": "B–Cl"
+        },
+        {
+          "id": "bcl3-r3",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.742,
+          "equivalent_count": 3,
+          "label": "B–Cl"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "bcl3-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "Cl–B–Cl"
+        },
+        {
+          "id": "bcl3-a2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "Cl–B–Cl"
+        },
+        {
+          "id": "bcl3-a3",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 120.0,
+          "equivalent_count": 3,
+          "label": "Cl–B–Cl"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "B",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "Cl",
+          "x": 0.0,
+          "y": 1.7421,
+          "z": 0.0
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "x": 1.5087,
+          "y": -0.8711,
+          "z": 0.0
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "x": -1.5087,
+          "y": -0.8711,
+          "z": 0.0
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1976Hellwege(II/7)",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=10294345&charge=0",
+        "comments": "Hellwege, K.-H. and Hellwege, A. M. (eds.), Landolt-Börnstein Group II Volume 7: Structure Data of Free Polyatomic Molecules, Springer, Berlin, 1976, as tabulated by NIST CCCBDB. The D3h point group fixes every Cl–B–Cl angle at exactly 120 degrees; CCCBDB lists the bond length only.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-sif4-1983takkuz",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "SiF4",
+        "charge": 0,
+        "atom_inventory": {
+          "Si": 1,
+          "F": 4
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7783-61-1",
+        "pubchem_cid": 24556,
+        "inchi": "InChI=1S/F4Si/c1-5(2,3)4",
+        "inchikey": "ABTOQLMXBSRXSM-UHFFFAOYSA-N",
+        "curated_molecule_id": "sif4"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "Td",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "Si",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a4",
+          "element": "F",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a4",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "sif4-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.554,
+          "equivalent_count": 4,
+          "label": "Si–F"
+        },
+        {
+          "id": "sif4-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.554,
+          "equivalent_count": 4,
+          "label": "Si–F"
+        },
+        {
+          "id": "sif4-r3",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.554,
+          "equivalent_count": 4,
+          "label": "Si–F"
+        },
+        {
+          "id": "sif4-r4",
+          "atom1_id": "a0",
+          "atom2_id": "a4",
+          "value_angstrom": 1.554,
+          "equivalent_count": 4,
+          "label": "Si–F"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "sif4-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "F–Si–F"
+        },
+        {
+          "id": "sif4-a2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "F–Si–F"
+        },
+        {
+          "id": "sif4-a3",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "F–Si–F"
+        },
+        {
+          "id": "sif4-a4",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "F–Si–F"
+        },
+        {
+          "id": "sif4-a5",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "F–Si–F"
+        },
+        {
+          "id": "sif4-a6",
+          "atom1_id": "a3",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "F–Si–F"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "Si",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "x": 0.8972,
+          "y": 0.8972,
+          "z": 0.8972
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "x": -0.8972,
+          "y": -0.8972,
+          "z": 0.8972
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "x": -0.8972,
+          "y": 0.8972,
+          "z": -0.8972
+        },
+        {
+          "id": "a4",
+          "element": "F",
+          "x": 0.8972,
+          "y": -0.8972,
+          "z": -0.8972
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1983Tak/Kuz:2204",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7783611&charge=0",
+        "comments": "Takami, M.; Kuze, H., Infrared-microwave double resonance spectroscopy of the SiF4 nu3 fundamental using a tunable diode laser, J. Chem. Phys. 78, 2204-2209 (1983), as tabulated by NIST CCCBDB. Bond length derived from the ground-state rotational constant B0; F–Si–F angles fixed by Td symmetry.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-ccl4-1998kuc",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "CCl4",
+        "charge": 0,
+        "atom_inventory": {
+          "C": 1,
+          "Cl": 4
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "56-23-5",
+        "pubchem_cid": 5943,
+        "inchi": "InChI=1S/CCl4/c2-1(3,4)5",
+        "inchikey": "VZGDMQKNWNREIO-UHFFFAOYSA-N",
+        "curated_molecule_id": "ccl4"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "Td",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "C",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a4",
+          "element": "Cl",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a4",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "ccl4-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.767,
+          "equivalent_count": 4,
+          "label": "C–Cl"
+        },
+        {
+          "id": "ccl4-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.767,
+          "equivalent_count": 4,
+          "label": "C–Cl"
+        },
+        {
+          "id": "ccl4-r3",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.767,
+          "equivalent_count": 4,
+          "label": "C–Cl"
+        },
+        {
+          "id": "ccl4-r4",
+          "atom1_id": "a0",
+          "atom2_id": "a4",
+          "value_angstrom": 1.767,
+          "equivalent_count": 4,
+          "label": "C–Cl"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "ccl4-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "Cl–C–Cl"
+        },
+        {
+          "id": "ccl4-a2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "Cl–C–Cl"
+        },
+        {
+          "id": "ccl4-a3",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "Cl–C–Cl"
+        },
+        {
+          "id": "ccl4-a4",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "Cl–C–Cl"
+        },
+        {
+          "id": "ccl4-a5",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "Cl–C–Cl"
+        },
+        {
+          "id": "ccl4-a6",
+          "atom1_id": "a3",
+          "center_atom_id": "a0",
+          "atom2_id": "a4",
+          "value_deg": 109.4712,
+          "equivalent_count": 6,
+          "label": "Cl–C–Cl"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "C",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "Cl",
+          "x": 1.0202,
+          "y": 1.0202,
+          "z": 1.0202
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "x": -1.0202,
+          "y": -1.0202,
+          "z": 1.0202
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "x": -1.0202,
+          "y": 1.0202,
+          "z": -1.0202
+        },
+        {
+          "id": "a4",
+          "element": "Cl",
+          "x": 1.0202,
+          "y": -1.0202,
+          "z": -1.0202
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1998Kuc",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=56235&charge=0",
+        "comments": "Kuchitsu, K. (ed.), Structure of Free Polyatomic Molecules - Basic Data, Springer, Berlin, 1998, as tabulated by NIST CCCBDB. Cl–C–Cl angles fixed by Td symmetry.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-hcn-1966herzberg",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "HCN",
+        "charge": 0,
+        "atom_inventory": {
+          "H": 1,
+          "C": 1,
+          "N": 1
+        },
+        "formula_identity_unambiguous": false,
+        "cas_rn": "74-90-8",
+        "pubchem_cid": 768,
+        "inchi": "InChI=1S/CHN/c1-2/h1H",
+        "inchikey": "LELOWRISYMNNSU-UHFFFAOYSA-N",
+        "curated_molecule_id": "hcn"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1Sigma+",
+      "conformation": "equilibrium",
+      "point_group": "Cinfv",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "C",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "N",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "hcn-r-ch",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.064,
+          "equivalent_count": 1,
+          "label": "C–H"
+        },
+        {
+          "id": "hcn-r-cn",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.156,
+          "equivalent_count": 1,
+          "label": "C–N"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "hcn-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 180.0,
+          "equivalent_count": 1,
+          "label": "H–C–N"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "C",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "H",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.064
+        },
+        {
+          "id": "a2",
+          "element": "N",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -1.156
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1966Herzberg",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=74908&charge=0",
+        "comments": "Herzberg, G., Electronic Spectra and Electronic Structure of Polyatomic Molecules, Van Nostrand, New York, 1966, as tabulated by NIST CCCBDB. The central atom is C (H–C≡N); the isomer HNC is a different species.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-cocl2-1998kuc",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "COCl2",
+        "charge": 0,
+        "atom_inventory": {
+          "C": 1,
+          "O": 1,
+          "Cl": 2
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "75-44-5",
+        "pubchem_cid": 6371,
+        "inchi": "InChI=1S/CCl2O/c2-1(3)4",
+        "inchikey": "YGYAWVDWMABLBF-UHFFFAOYSA-N",
+        "curated_molecule_id": "cocl2"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "C",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "cocl2-r-co",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.177,
+          "equivalent_count": 1,
+          "label": "C–O"
+        },
+        {
+          "id": "cocl2-r-ccl1",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.737,
+          "equivalent_count": 2,
+          "label": "C–Cl"
+        },
+        {
+          "id": "cocl2-r-ccl2",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.737,
+          "equivalent_count": 2,
+          "label": "C–Cl"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "cocl2-a-clccl",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 111.91,
+          "equivalent_count": 1,
+          "label": "Cl–C–Cl"
+        },
+        {
+          "id": "cocl2-a-occl-1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 124.045,
+          "equivalent_count": 2,
+          "label": "O–C–Cl"
+        },
+        {
+          "id": "cocl2-a-occl-2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 124.045,
+          "equivalent_count": 2,
+          "label": "O–C–Cl"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": null,
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1998Kuc",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=75445&charge=0",
+        "comments": "Kuchitsu, K. (ed.), Structure of Free Polyatomic Molecules - Basic Data, Springer, Berlin, 1998, as tabulated by NIST CCCBDB. Equilibrium (re) bond lengths. O–C–Cl follows from Cl–C–Cl by symmetry. CCCBDB's Cartesian coordinates for this species do not reproduce these internal coordinates, so they are omitted and rebuilt from the observations.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-ch2o-gurvich",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "CH2O",
+        "charge": 0,
+        "atom_inventory": {
+          "C": 1,
+          "H": 2,
+          "O": 1
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "50-00-0",
+        "pubchem_cid": 712,
+        "inchi": "InChI=1S/CH2O/c1-2/h1H2",
+        "inchikey": "WSFSSNUMVMOOMR-UHFFFAOYSA-N",
+        "curated_molecule_id": "ch2o"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "C",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "H",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "ch2o-r-co",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.205,
+          "equivalent_count": 1,
+          "label": "C–O"
+        },
+        {
+          "id": "ch2o-r-ch1",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.111,
+          "equivalent_count": 2,
+          "label": "C–H"
+        },
+        {
+          "id": "ch2o-r-ch2",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.111,
+          "equivalent_count": 2,
+          "label": "C–H"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "ch2o-a-hch",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 116.133,
+          "equivalent_count": 1,
+          "label": "H–C–H"
+        },
+        {
+          "id": "ch2o-a-hco-1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 121.93,
+          "equivalent_count": 2,
+          "label": "H–C–O"
+        },
+        {
+          "id": "ch2o-a-hco-2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 121.93,
+          "equivalent_count": 2,
+          "label": "H–C–O"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "C",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.205
+        },
+        {
+          "id": "a2",
+          "element": "H",
+          "x": 0.0,
+          "y": 0.9429,
+          "z": -0.5876
+        },
+        {
+          "id": "a3",
+          "element": "H",
+          "x": 0.0,
+          "y": -0.9429,
+          "z": -0.5876
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "Gurvich",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=50000&charge=0",
+        "comments": "Gurvich, L. V.; Veyts, I. V.; Alcock, C. B., Thermodynamic Properties of Individual Substances, 4th ed., Hemisphere, New York, 1989, as tabulated by NIST CCCBDB. H–C–O follows from H–C–H by planar C2v symmetry, (360° − 116.133°)/2 = 121.93°; CCCBDB lists it rounded to 121.9°.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-socl2-1976hellwege",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "SOCl2",
+        "charge": 0,
+        "atom_inventory": {
+          "S": 1,
+          "O": 1,
+          "Cl": 2
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7719-09-7",
+        "pubchem_cid": 24386,
+        "inchi": "InChI=1S/Cl2OS/c1-4(2)3",
+        "inchikey": "FYSNRJHAOHDILO-UHFFFAOYSA-N",
+        "curated_molecule_id": "socl2"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A'",
+      "conformation": "equilibrium",
+      "point_group": "Cs",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "S",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "socl2-r-so",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.443,
+          "equivalent_count": 1,
+          "label": "S–O"
+        },
+        {
+          "id": "socl2-r-scl1",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 2.076,
+          "equivalent_count": 2,
+          "label": "S–Cl"
+        },
+        {
+          "id": "socl2-r-scl2",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 2.076,
+          "equivalent_count": 2,
+          "label": "S–Cl"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "socl2-a-clscl",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 96.1,
+          "equivalent_count": 1,
+          "label": "Cl–S–Cl"
+        },
+        {
+          "id": "socl2-a-oscl-1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 106.3,
+          "equivalent_count": 2,
+          "label": "O–S–Cl"
+        },
+        {
+          "id": "socl2-a-oscl-2",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 106.3,
+          "equivalent_count": 2,
+          "label": "O–S–Cl"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "S",
+          "x": 0.0,
+          "y": 0.752,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "O",
+          "x": 1.4168,
+          "y": 1.0255,
+          "z": 0.0
+        },
+        {
+          "id": "a2",
+          "element": "Cl",
+          "x": -0.3334,
+          "y": -0.5952,
+          "z": 1.544
+        },
+        {
+          "id": "a3",
+          "element": "Cl",
+          "x": -0.3334,
+          "y": -0.5952,
+          "z": -1.544
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1976Hellwege(II/7)",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7719097&charge=0",
+        "comments": "Hellwege, K.-H. and Hellwege, A. M. (eds.), Landolt-Börnstein Group II Volume 7: Structure Data of Free Polyatomic Molecules, Springer, Berlin, 1976, as tabulated by NIST CCCBDB. Electron-diffraction (ra) structure.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-brf3-1957mag",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "BrF3",
+        "charge": 0,
+        "atom_inventory": {
+          "Br": 1,
+          "F": 3
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "7787-71-5",
+        "pubchem_cid": 24594,
+        "inchi": "InChI=1S/BrF3/c2-1(3)4",
+        "inchikey": "FQFKTKUFHWNTBN-UHFFFAOYSA-N",
+        "curated_molecule_id": "brf3"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1A1",
+      "conformation": "equilibrium",
+      "point_group": "C2v",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "Br",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "role": "ligand"
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "brf3-r-ax-1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.81,
+          "equivalent_count": 2,
+          "label": "Br–F axial"
+        },
+        {
+          "id": "brf3-r-ax-2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.81,
+          "equivalent_count": 2,
+          "label": "Br–F axial"
+        },
+        {
+          "id": "brf3-r-eq",
+          "atom1_id": "a0",
+          "atom2_id": "a3",
+          "value_angstrom": 1.721,
+          "equivalent_count": 1,
+          "label": "Br–F equatorial"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "brf3-a-ax-eq-1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 86.21,
+          "equivalent_count": 2,
+          "label": "F(ax)–Br–F(eq)"
+        },
+        {
+          "id": "brf3-a-ax-eq-2",
+          "atom1_id": "a2",
+          "center_atom_id": "a0",
+          "atom2_id": "a3",
+          "value_deg": 86.21,
+          "equivalent_count": 2,
+          "label": "F(ax)–Br–F(eq)"
+        },
+        {
+          "id": "brf3-a-ax-ax",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 172.42,
+          "equivalent_count": 1,
+          "label": "F(ax)–Br–F(ax)"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "Br",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.2846
+        },
+        {
+          "id": "a1",
+          "element": "F",
+          "x": 0.0,
+          "y": 1.806,
+          "z": 0.1649
+        },
+        {
+          "id": "a2",
+          "element": "F",
+          "x": 0.0,
+          "y": -1.806,
+          "z": 0.1649
+        },
+        {
+          "id": "a3",
+          "element": "F",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -1.4364
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1957Mag:223",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=7787715&charge=0",
+        "comments": "Magnuson, D. W., Microwave spectrum and molecular structure of bromine trifluoride, J. Chem. Phys. 27, 223 (1957), as tabulated by NIST CCCBDB. T-shaped C2v structure. F(ax)–Br–F(ax) = 2 × 86.21° follows from planarity.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
+    },
+    {
+      "id": "nist-cccbdb-cs2-1966herzberg",
+      "evidence_type": "experimental",
+      "identity": {
+        "formula": "CS2",
+        "charge": 0,
+        "atom_inventory": {
+          "C": 1,
+          "S": 2
+        },
+        "formula_identity_unambiguous": true,
+        "cas_rn": "75-15-0",
+        "pubchem_cid": 6348,
+        "inchi": "InChI=1S/CS2/c2-1-3",
+        "inchikey": "QGJOPFRUJISHPQ-UHFFFAOYSA-N",
+        "curated_molecule_id": "cs2"
+      },
+      "units": "angstrom",
+      "phase": "gas",
+      "electronic_state": "X 1Sigma+g",
+      "conformation": "equilibrium",
+      "point_group": "Dinfh",
+      "atoms": [
+        {
+          "id": "a0",
+          "element": "C",
+          "role": "center"
+        },
+        {
+          "id": "a1",
+          "element": "S",
+          "role": "ligand"
+        },
+        {
+          "id": "a2",
+          "element": "S",
+          "role": "ligand"
+        }
+      ],
+      "bonds": [
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "order": 1
+        },
+        {
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "order": 1
+        }
+      ],
+      "bond_lengths": [
+        {
+          "id": "cs2-r1",
+          "atom1_id": "a0",
+          "atom2_id": "a1",
+          "value_angstrom": 1.554,
+          "equivalent_count": 2,
+          "label": "C–S"
+        },
+        {
+          "id": "cs2-r2",
+          "atom1_id": "a0",
+          "atom2_id": "a2",
+          "value_angstrom": 1.554,
+          "equivalent_count": 2,
+          "label": "C–S"
+        }
+      ],
+      "bond_angles": [
+        {
+          "id": "cs2-a1",
+          "atom1_id": "a1",
+          "center_atom_id": "a0",
+          "atom2_id": "a2",
+          "value_deg": 180.0,
+          "equivalent_count": 1,
+          "label": "S–C–S"
+        }
+      ],
+      "dihedrals": [],
+      "coordinates": [
+        {
+          "id": "a0",
+          "element": "C",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "id": "a1",
+          "element": "S",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.554
+        },
+        {
+          "id": "a2",
+          "element": "S",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -1.554
+        }
+      ],
+      "source": {
+        "name": "NIST CCCBDB",
+        "reference": "1966Herzberg",
+        "url": "https://cccbdb.nist.gov/expgeom2x.asp?casno=75150&charge=0",
+        "comments": "Herzberg, G., Electronic Spectra and Electronic Structure of Polyatomic Molecules, Van Nostrand, New York, 1966, as tabulated by NIST CCCBDB.",
+        "retrieved_at": "2026-10-09T00:00:00Z"
+      }
     }
   ]
 }

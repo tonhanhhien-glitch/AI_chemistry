@@ -118,6 +118,8 @@ def test_experimental_snapshot_records_are_complete_and_validated() -> None:
     assert {record.identity.formula for record in records} == {
         "NF3", "NH3", "ClF3", "H2O", "CH4", "CO2", "SO2", "BF3", "PCl5", "SF4",
         "XeF2", "XeF4", "SF6", "BrF5", "O3",
+        "N2O", "NO2", "ClO2", "Cl2O", "OF2", "NOCl", "SO3", "H2S", "PH3", "PCl3",
+        "PF5", "BCl3", "SiF4", "CCl4", "HCN", "COCl2", "CH2O", "SOCl2", "BrF3", "CS2",
     }
     for record in records:
         assert record.source.reference and record.source.retrieved_at and record.units == "angstrom"

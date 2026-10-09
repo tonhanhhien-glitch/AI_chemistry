@@ -149,7 +149,7 @@ def test_revert_restores_baseline_and_reload_needs_no_restart(admin_client: Test
 
 def test_add_new_molecule_via_deterministic_draft_then_save(admin_client: TestClient) -> None:
     draft_response = admin_client.post(
-        "/api/v1/admin/molecules/draft", json={"formula": "PH3", "charge": 0, "id": "ph3-test"}
+        "/api/v1/admin/molecules/draft", json={"formula": "SiH4", "charge": 0, "id": "sih4-test"}
     )
     assert draft_response.status_code == 200
     draft = draft_response.json()
@@ -159,8 +159,8 @@ def test_add_new_molecule_via_deterministic_draft_then_save(admin_client: TestCl
     assert created.status_code == 200
     assert created.json()["molecule"]["is_admin_added"] is True
 
-    listed = admin_client.get("/api/v1/admin/molecules", params={"q": "PH3"})
-    assert any(item["id"] == "ph3-test" for item in listed.json()["results"])
+    listed = admin_client.get("/api/v1/admin/molecules", params={"q": "SiH4"})
+    assert any(item["id"] == "sih4-test" for item in listed.json()["results"])
 
 
 def test_experimental_geometry_round_trips_and_revert_restores_baseline(admin_client: TestClient) -> None:

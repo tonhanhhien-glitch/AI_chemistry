@@ -26,10 +26,12 @@ from pydantic import ValidationError
 from app.core.config import settings
 from app.geometry.adapters.nist_cccbdb_adapter import (
     NIST_SERVICE_NAME,
+    cccbdb_page_lists_no_geometry,
     cccbdb_url,
     fetch_cccbdb_geometry_html,
     parse_cccbdb_geometry_html,
 )
+from app.geometry.fitter import fit_cartesian_coordinates
 from app.geometry.providers.base import GeometryProviderResult, GeometryQuery, provider_status
 from app.schemas.geometry_evidence_schema import GeometryIdentity, MolecularGeometryEvidence
 from app.schemas.molecule_schema import ExternalServiceState
@@ -153,6 +155,15 @@ class NistCccbdbProvider:
         if not settings.ENABLE_NIST_CCCBDB:
             return GeometryProviderResult(None, provider_status(self.service, ExternalServiceState.DISABLED))
 
+        if query.charge != 0:
+            # CCCBDB answers an ion it has no geometry for with the neutral molecule's
+            # page (NO2+, NO2- and ClO2- all come back as NO2/ClO2), which the atom
+            # inventory cannot catch. Ion geometry is served from the reviewed snapshot only.
+            return GeometryProviderResult(None, provider_status(
+                self.service, ExternalServiceState.NOT_FOUND,
+                message="Ion geometries are not fetched from CCCBDB; add them to the reviewed snapshot.",
+            ))
+
         cas_rn = query.cas_rn
         if not cas_rn:
             from app.services.chemical_query_resolver import cas_for_identity
@@ -178,9 +189,22 @@ class NistCccbdbProvider:
             retrieved_at=datetime.now(UTC),
         )
         if evidence is None:
+            if cccbdb_page_lists_no_geometry(html):
+                return GeometryProviderResult(None, provider_status(
+                    self.service, ExternalServiceState.NOT_FOUND,
+                    message="CCCBDB lists no experimental geometry for this species.",
+                ))
             return GeometryProviderResult(None, provider_status(
                 self.service, ExternalServiceState.INVALID_RESPONSE,
                 message="The CCCBDB page held no complete geometry for this species.",
+            ))
+        fit = fit_cartesian_coordinates(evidence)
+        if not fit.accepted:
+            # Not cached: a page whose own numbers cannot be reproduced would otherwise
+            # be served -- and rejected downstream -- until the cache expired.
+            return GeometryProviderResult(None, provider_status(
+                self.service, ExternalServiceState.INVALID_RESPONSE,
+                message=f"The CCCBDB geometry failed validation: {fit.rejection_reason}",
             ))
         _store(query, evidence)
         return GeometryProviderResult(evidence, provider_status(self.service, ExternalServiceState.SUCCESS))

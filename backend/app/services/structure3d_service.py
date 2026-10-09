@@ -220,15 +220,21 @@ def _electron_domains(
     elif lone_pair_count:
         raw = template_lone_pairs if template_lone_pairs is not None else _templates()[record["ax_en"]]["lone_pairs"]
         directions = [_normalize(tuple(float(value) for value in vector)) for vector in raw[:lone_pair_count]]
+    # An odd-electron centre (N in NO2) counts its single electron as a non-bonding
+    # domain holding one electron; it takes the last non-bonding direction(s).
+    unpaired = record.get("unpaired_electrons") or []
+    single_electron_domains = min(int(unpaired[0]) if unpaired else 0, len(directions))
     for index, direction in enumerate(directions):
         distance = 1.15
+        single = index >= len(directions) - single_electron_domains
         domains.append(ElectronDomain3D(
             id=f"lone-pair-{index}", center_atom_id=center_id, kind="lone_pair",
+            occupancy=1 if single else 2,
             direction=Vector3D(x=direction[0], y=direction[1], z=direction[2]),
             position=Vector3D(x=center.x + distance * direction[0], y=center.y + distance * direction[1], z=center.z + distance * direction[2]),
             source="illustrative VSEPR orientation", is_illustrative=True,
-            label_vi="Miền cặp electron tự do (minh họa)",
-            label_en="Lone-pair electron domain (illustrative)",
+            label_vi="Miền một electron độc thân (minh họa)" if single else "Miền cặp electron tự do (minh họa)",
+            label_en="Single-electron domain (illustrative)" if single else "Lone-pair electron domain (illustrative)",
         ))
     return domains
 

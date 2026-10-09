@@ -109,38 +109,12 @@ def test_resonance_individual_structures_are_preserved() -> None:
 
 
 def test_geometry_fitter_prefers_direct_valid_cartesian_coordinates() -> None:
-    raw_html = """
-    <html><body>
-    <h1>Geometry for ClF3</h1>
-    <p>Point group C2v</p>
-    <h2>Cartesian Coordinates (Angstroms)</h2>
-    <table>
-      <tr><th>Atom</th><th>X</th><th>Y</th><th>Z</th></tr>
-      <tr><td>Cl</td><td>0.000000</td><td>0.000000</td><td>0.000000</td></tr>
-      <tr><td>F</td><td>0.075550</td><td>1.696318</td><td>0.000000</td></tr>
-      <tr><td>F</td><td>0.075550</td><td>-1.696318</td><td>0.000000</td></tr>
-      <tr><td>F</td><td>1.598000</td><td>0.000000</td><td>0.000000</td></tr>
-    </table>
-    <h2>Bond Lengths (Angstroms)</h2>
-    <table>
-      <tr><th>Bond</th><th>Length</th></tr>
-      <tr><td>Cl1-F2</td><td>1.698</td></tr>
-      <tr><td>Cl1-F3</td><td>1.698</td></tr>
-      <tr><td>Cl1-F4</td><td>1.598</td></tr>
-    </table>
-    <h2>Bond Angles (degrees)</h2>
-    <table>
-      <tr><th>Angle</th><th>Value</th></tr>
-      <tr><td>F2-Cl1-F4</td><td>87.45</td></tr>
-      <tr><td>F3-Cl1-F4</td><td>87.45</td></tr>
-      <tr><td>F2-Cl1-F3</td><td>174.90</td></tr>
-    </table>
-    </body></html>
-    """
+    # A real CCCBDB page whose published coordinates reproduce every listed value.
+    raw_html = (Path(__file__).parent / "fixtures" / "cccbdb_sif4_experimental.html").read_text(encoding="utf-8")
     evidence = parse_cccbdb_geometry_html(
         raw_html,
-        identity=GeometryIdentity(formula="ClF3", charge=0, atom_inventory={"Cl": 1, "F": 3}),
-        source_url="https://example.invalid/clf3",
+        identity=GeometryIdentity(formula="SiF4", charge=0, atom_inventory={"Si": 1, "F": 4}),
+        source_url="https://example.invalid/sif4",
     )
     assert evidence is not None
     assert evidence.coordinates is not None

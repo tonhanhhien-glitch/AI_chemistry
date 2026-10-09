@@ -23,6 +23,12 @@ export default function LewisEditor({
     next[index] = value;
     onChange({ lone_pairs: next });
   }
+  function updateUnpairedAt(index: number, value: number) {
+    const next = atoms.map((_, i) => draft.unpaired_electrons?.[i] ?? 0);
+    next[index] = value;
+    // Keep even-electron records free of an all-zero array.
+    onChange({ unpaired_electrons: next.some((count) => count > 0) ? next : [] });
+  }
   function updateFormalChargeAt(index: number, value: number) {
     const next = [...draft.formal_charges];
     next[index] = value;
@@ -34,20 +40,24 @@ export default function LewisEditor({
     onChange({ bond_orders: next });
   }
   function addLigand() {
+    const unpaired = draft.unpaired_electrons ?? [];
     onChange({
       atom_symbols: [...atoms, ""],
       lone_pairs: [...draft.lone_pairs, 0],
       formal_charges: [...draft.formal_charges, 0],
       bond_orders: [...draft.bond_orders, 1],
+      ...(unpaired.length ? { unpaired_electrons: [...unpaired, 0] } : {}),
     });
   }
   function removeLigand(index: number) {
     if (index === 0) return;
+    const unpaired = draft.unpaired_electrons ?? [];
     onChange({
       atom_symbols: atoms.filter((_, i) => i !== index),
       lone_pairs: draft.lone_pairs.filter((_, i) => i !== index),
       formal_charges: draft.formal_charges.filter((_, i) => i !== index),
       bond_orders: draft.bond_orders.filter((_, i) => i !== index - 1),
+      ...(unpaired.length ? { unpaired_electrons: unpaired.filter((_, i) => i !== index) } : {}),
     });
   }
 
@@ -66,6 +76,7 @@ export default function LewisEditor({
             <th>{t("moleculeData.lewis.atom")}</th>
             <th>{t("moleculeData.lewis.element")}</th>
             <th>{t("moleculeData.lewis.lonePairs")}</th>
+            <th>{t("moleculeData.lewis.unpaired")}</th>
             <th>{t("moleculeData.lewis.formalCharge")}</th>
             <th>{t("moleculeData.lewis.bondOrder")}</th>
             <th />
@@ -78,6 +89,8 @@ export default function LewisEditor({
               <td><input value={symbol} onChange={(event) => updateAtomAt(index, event.target.value)} /></td>
               <td><input type="number" min={0} value={draft.lone_pairs[index] ?? 0}
                 onChange={(event) => updateLonePairAt(index, Number(event.target.value) || 0)} /></td>
+              <td><input type="number" min={0} max={1} value={draft.unpaired_electrons?.[index] ?? 0}
+                onChange={(event) => updateUnpairedAt(index, Number(event.target.value) || 0)} /></td>
               <td><input type="number" value={draft.formal_charges[index] ?? 0}
                 onChange={(event) => updateFormalChargeAt(index, Number(event.target.value) || 0)} /></td>
               <td>

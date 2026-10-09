@@ -11,6 +11,7 @@ class LewisAtom(BaseModel):
     x: float
     y: float
     lone_pairs: int = Field(ge=0)
+    unpaired_electrons: int = Field(default=0, ge=0)
     formal_charge: int = 0
 
 
@@ -26,6 +27,7 @@ class ResonanceForm(BaseModel):
     bond_orders: list[int]
     lone_pairs: list[int]
     formal_charges: list[int]
+    unpaired_electrons: list[int] = Field(default_factory=list)
 
 
 class OctetExceptionFlags(BaseModel):

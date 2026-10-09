@@ -20,19 +20,28 @@ def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
     orders = record["bond_orders"]
     lone_pairs = record["lone_pairs"]
     charges = record["formal_charges"]
-    if not (len(symbols) == len(lone_pairs) == len(charges)):
+    # Odd-electron species (NO2, ClO2) carry a single electron that is neither a bond
+    # nor a lone pair; even-electron records simply omit the field.
+    unpaired = record.get("unpaired_electrons") or [0] * len(symbols)
+    if not (len(symbols) == len(lone_pairs) == len(charges) == len(unpaired)):
         raise ChemistryValidationError("Lewis atom data is inconsistent.")
     if len(orders) != len(symbols) - 1:
         raise ChemistryValidationError("The Lewis bond framework is inconsistent.")
     computed_total = total_valence_electrons(record["atom_inventory"], record["charge"])
-    represented_total = 2 * sum(orders) + 2 * sum(lone_pairs)
+    represented_total = 2 * sum(orders) + 2 * sum(lone_pairs) + sum(unpaired)
     if computed_total != record["total_valence_electrons"] or represented_total != computed_total:
         raise ChemistryValidationError("The Lewis representation does not conserve valence electrons.")
     validate_formal_charge_sum(charges, record["charge"])
     # Where the atoms are drawn follows the VSEPR classification already in the record:
     # see services/lewis_layout.py. The electron accounting above is unaffected by it.
     positions = compute_lewis_layout(record).atom_positions
-    atoms = [LewisAtom(id=f"a{i}", element=symbol, x=positions[i][0], y=positions[i][1], lone_pairs=lone_pairs[i], formal_charge=charges[i]) for i, symbol in enumerate(symbols)]
+    atoms = [
+        LewisAtom(
+            id=f"a{i}", element=symbol, x=positions[i][0], y=positions[i][1],
+            lone_pairs=lone_pairs[i], unpaired_electrons=unpaired[i], formal_charge=charges[i],
+        )
+        for i, symbol in enumerate(symbols)
+    ]
     bonds = [LewisBond(id=f"b{i}", atom1_id="a0", atom2_id=f"a{i + 1}", order=order) for i, order in enumerate(orders)]
     flags = dict(record["exception_flags"])
     notes = []
@@ -50,6 +59,7 @@ def build_lewis_structure(record: dict[str, Any]) -> LewisStructure:
             bond_orders=item["bond_orders"],
             lone_pairs=item["lone_pairs"],
             formal_charges=item["formal_charges"],
+            unpaired_electrons=item.get("unpaired_electrons") or [],
         )
         for i, item in enumerate(raw_resonance)
     ]

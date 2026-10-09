@@ -5,7 +5,7 @@ export function emptyMoleculeDraft(): MoleculeDraft {
     id: "", formula: "", charge: 0, name_vi: "", name_en: "", aliases: [],
     cas_rn: null, pubchem_cid: null, smiles: null, inchi: null, inchikey: null,
     atom_inventory: {}, atom_symbols: [], central_atom: "",
-    total_valence_electrons: 0, bond_orders: [], lone_pairs: [], formal_charges: [],
+    total_valence_electrons: 0, bond_orders: [], lone_pairs: [], formal_charges: [], unpaired_electrons: [],
     resonance_forms: 1, resonance_structures: [], resonance_note_vi: null, resonance_note_en: null,
     exception_flags: { electron_deficient: false, expanded_octet: false, odd_electron: false },
     bonding_domains: 0, lone_pair_domains: 0, steric_number: 0, ax_en: "",

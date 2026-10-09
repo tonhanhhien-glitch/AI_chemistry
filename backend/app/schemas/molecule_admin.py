@@ -45,6 +45,7 @@ class ResonanceStructureDraft(BaseModel):
     bond_orders: list[int]
     lone_pairs: list[int]
     formal_charges: list[int]
+    unpaired_electrons: list[int] = Field(default_factory=list)
 
 
 class ReviewProvenance(BaseModel):
@@ -83,6 +84,9 @@ class MoleculeDraft(BaseModel):
     bond_orders: list[int] = Field(default_factory=list)
     lone_pairs: list[int] = Field(default_factory=list)
     formal_charges: list[int] = Field(default_factory=list)
+    # Per-atom single (unpaired) electrons, for odd-electron species such as NO2 and
+    # ClO2. Empty means none -- every even-electron record leaves it out.
+    unpaired_electrons: list[int] = Field(default_factory=list)
     resonance_forms: int = 1
     resonance_structures: list[ResonanceStructureDraft] = Field(default_factory=list)
     resonance_note_vi: str | None = None

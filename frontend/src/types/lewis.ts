@@ -4,6 +4,8 @@ export interface LewisAtom {
   x: number;
   y: number;
   lone_pairs: number;
+  /** Single electrons of an odd-electron species (NO2, ClO2); absent or 0 otherwise. */
+  unpaired_electrons?: number;
   formal_charge: number;
 }
 
@@ -19,6 +21,7 @@ export interface ResonanceForm {
   bond_orders: number[];
   lone_pairs: number[];
   formal_charges: number[];
+  unpaired_electrons?: number[];
 }
 
 export interface LewisStructure {

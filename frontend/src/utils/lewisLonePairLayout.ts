@@ -25,7 +25,9 @@ export interface BondDirection {
 
 export interface LonePairPlacement {
   angle: number;
-  dots: [Point, Point];
+  /** Two dots for a lone pair; one for the single electron of an odd-electron species. */
+  dots: [Point, Point] | [Point];
+  single?: boolean;
 }
 
 type AtomLike = { id: string; x: number; y: number; lone_pairs: number };
@@ -395,6 +397,12 @@ export function lonePairDots(center: Point, angle: number, radius = LONE_PAIR_RA
   ];
 }
 
+/** The lone dot of an unpaired electron, at the same distance a lone pair sits. */
+export function singleElectronDot(center: Point, angle: number, radius = LONE_PAIR_RADIUS): Point {
+  const radians = (angle * Math.PI) / 180;
+  return { x: center.x + Math.cos(radians) * radius, y: center.y + Math.sin(radians) * radius };
+}
+
 export function isConfigurationCollisionFree(atom: Point, config: number[], geometry: CollisionGeometry): boolean {
   const atomClearance = ATOM_RADIUS + ATOM_STROKE / 2 + DOT_RADIUS + 2;
   for (const angle of config) {
@@ -440,15 +448,24 @@ export function placeLonePairs(atom: AtomLike, atoms: AtomLike[], bonds: BondLik
   return distributeAcrossFreeGaps(bondAngles, atom.lone_pairs).map(cleanAngle);
 }
 
-/** Lone-pair dot positions for every atom of a structure, keyed by atom id. */
+/**
+ * Lone-pair dot positions for every atom of a structure, keyed by atom id.
+ *
+ * An unpaired electron (NO2, ClO2) is searched for exactly like a lone pair -- it
+ * occupies a non-bonding direction too -- and is then drawn as a single dot.
+ */
 export function layoutLonePairs(structure: Pick<LewisStructure, "atoms" | "bonds">): Record<string, LonePairPlacement[]> {
   const geometry = buildCollisionGeometry(structure.atoms, structure.bonds);
   const layout: Record<string, LonePairPlacement[]> = {};
   for (const atom of structure.atoms) {
-    layout[atom.id] = placeLonePairs(atom, structure.atoms, structure.bonds, geometry).map((angle) => ({
-      angle,
-      dots: lonePairDots({ x: atom.x, y: atom.y }, angle),
-    }));
+    const unpaired = atom.unpaired_electrons ?? 0;
+    const slots = { ...atom, lone_pairs: atom.lone_pairs + unpaired };
+    const angles = placeLonePairs(slots, structure.atoms, structure.bonds, geometry);
+    layout[atom.id] = angles.map((angle, index): LonePairPlacement => (
+      index >= angles.length - unpaired
+        ? { angle, dots: [singleElectronDot({ x: atom.x, y: atom.y }, angle)], single: true }
+        : { angle, dots: lonePairDots({ x: atom.x, y: atom.y }, angle) }
+    ));
   }
   return layout;
 }

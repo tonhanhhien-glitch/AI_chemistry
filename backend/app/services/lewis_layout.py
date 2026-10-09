@@ -316,6 +316,10 @@ def compute_lewis_layout(record: dict[str, Any]) -> LewisLayout:
     symbols = record.get("atom_symbols") or []
     terminal_count = max(len(symbols) - 1, 0)
     lone_pairs = list(record.get("lone_pairs") or [])
+    # A single unpaired electron needs the same clearance as a lone pair.
+    for index, count in enumerate(record.get("unpaired_electrons") or []):
+        if index < len(lone_pairs):
+            lone_pairs[index] += count
     spec = LayoutSpec(
         molecular_geometry=str(record.get("molecular_geometry") or ""),
         bonding_domains=int(record.get("bonding_domains") or terminal_count),

@@ -212,3 +212,31 @@ def test_calculate_angle_rejects_zero_vector() -> None:
     center = Structure3DAtom(id="c", element="X", x=0, y=0, z=0)
     with pytest.raises(ValueError, match="non-zero"):
         calculate_angle(center, center, Structure3DAtom(id="b", element="X", x=1, y=0, z=0))
+
+
+@pytest.mark.parametrize(("typed", "molecule_id"), [("HCHO", "ch2o"), ("OCl2", "cl2o"), ("ClNO", "nocl"), ("F2O", "of2")])
+def test_a_typed_formula_in_another_atom_order_resolves_to_the_curated_species(
+    monkeypatch: pytest.MonkeyPatch, typed: str, molecule_id: str,
+) -> None:
+    def no_lookup(_parsed):
+        raise AssertionError("a curated composition must not fall through to PubChem")
+
+    monkeypatch.setattr(molecule_resolver, "lookup_pubchem_formula", no_lookup)
+    for request in (AnalysisRequest(formula=typed), AnalysisRequest(query=typed)):
+        result = analyze(request)
+        assert result.molecule.id == molecule_id
+        assert result.molecule.source == "curated"
+
+
+def test_a_pubchem_candidate_is_not_matched_to_a_curated_species_by_composition(monkeypatch: pytest.MonkeyPatch) -> None:
+    """HNC shares HCN's composition; an identified PubChem candidate keeps its own identity."""
+
+    class CandidatePathTaken(Exception):
+        pass
+
+    def build(_parsed, _candidate=None):
+        raise CandidatePathTaken
+
+    monkeypatch.setattr(molecule_resolver, "build_deterministic_record", build)
+    with pytest.raises(CandidatePathTaken):
+        molecule_resolver.resolve_molecule(parse_formula("CHN"), candidate=candidate(6432643, formula="CHN"))

@@ -2,7 +2,7 @@
   "_description": "Golden Lewis/VSEPR records used offline. Rule conclusions are deterministic; external expert sign-off is tracked separately.",
   "schema_version": "1.0",
   "expert_review_queue": [
-    "All 15 internal golden records require documented external chemistry-expert sign-off before being labelled externally verified.",
+    "All internal golden records require documented external chemistry-expert sign-off before being labelled externally verified.",
     "PubChem identifiers and measured reference properties are intentionally omitted until source verification."
   ],
   "molecules": [
@@ -1426,6 +1426,1683 @@
       "smiles": "[OH3+]",
       "teaching_note_vi": "H3O+ đẳng electron và đẳng cấu trúc với NH3 (cùng AX3E, cùng chóp tam giác) vì thêm một proton vào H2O đóng vai trò tương tự việc N có thêm một electron so với O. Đừng nhầm góc liên kết của H3O+ với góc 104,5° của H2O trung hoà.",
       "teaching_note_en": "H3O+ is isoelectronic and isostructural with NH3 (both AX3E, both trigonal pyramidal), because adding a proton to H2O plays a role analogous to N having one more electron than O. Do not confuse the H3O+ bond angle with the 104.5-degree angle of neutral H2O."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "n2o",
+      "name_vi": "Dinitrogen oxide",
+      "name_en": "Nitrous oxide",
+      "aliases": [
+        "nitrous oxide",
+        "dinitrogen monoxide",
+        "dinitrogen oxide",
+        "đinitơ oxit",
+        "khí cười",
+        "laughing gas"
+      ],
+      "formula": "N2O",
+      "charge": 0,
+      "atom_inventory": {
+        "N": 2,
+        "O": 1
+      },
+      "atom_symbols": [
+        "N",
+        "N",
+        "O"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 16,
+      "bond_orders": [
+        3,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        1,
+        3
+      ],
+      "formal_charges": [
+        1,
+        0,
+        -1
+      ],
+      "resonance_forms": 2,
+      "resonance_note_vi": "N2O được mô tả bằng hai công thức cộng hưởng chính: N≡N⁺–O⁻ (đóng góp lớn hơn) và ⁻N=N⁺=O. Độ dài liên kết thực nghiệm phù hợp với lai hoá cộng hưởng của hai dạng này: N–N (1,128 Å) nằm giữa liên kết đôi và liên kết ba, còn N–O (1,184 Å) nằm giữa liên kết đơn và liên kết đôi.",
+      "resonance_note_en": "N2O is described by two main resonance structures: N≡N⁺–O⁻ (the larger contributor) and ⁻N=N⁺=O. The measured bond lengths fit a hybrid of the two: N–N (1.128 Å) lies between a double and a triple bond, and N–O (1.184 Å) between a single and a double bond.",
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 0,
+      "steric_number": 2,
+      "ax_en": "AX2",
+      "electron_geometry": "linear",
+      "molecular_geometry": "linear",
+      "electron_geometry_vi": "thẳng",
+      "molecular_geometry_vi": "thẳng",
+      "ideal_angle": "180°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp",
+      "polarity_note_vi": "Phân tử phân cực yếu: tuy có dạng thẳng nhưng hai đầu N và O khác nhau nên các moment liên kết không triệt tiêu hoàn toàn.",
+      "polarity_note_en": "Weakly polar: although the molecule is linear, its two ends (N and O) differ, so the bond moments do not cancel completely.",
+      "smiles": "[N-]=[N+]=O",
+      "teaching_note_vi": "N2O đẳng electron với CO2 (16 electron hoá trị) và cũng có dạng thẳng (AX2), nhưng nguyên tử trung tâm là N chứ không phải O. Thứ tự N–N–O cho các điện tích hình thức nhỏ nhất, còn N–O–N buộc O (nguyên tử âm điện nhất) mang điện tích hình thức +2. Đây là ví dụ cho thấy công thức phân tử không tự quyết định nguyên tử trung tâm: cần dùng điện tích hình thức và dữ liệu thực nghiệm.",
+      "teaching_note_en": "N2O is isoelectronic with CO2 (16 valence electrons) and is also linear (AX2), but its central atom is N, not O. The N–N–O arrangement gives the smallest formal charges, whereas N–O–N would force the most electronegative atom, O, to carry a +2 formal charge. It shows that a molecular formula alone does not fix the central atom: formal charges and experimental data are needed."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "no2",
+      "name_vi": "Nitrogen dioxide",
+      "name_en": "Nitrogen dioxide",
+      "aliases": [
+        "nitrogen dioxide",
+        "nitơ đioxit",
+        "nitơ dioxit"
+      ],
+      "formula": "NO2",
+      "charge": 0,
+      "atom_inventory": {
+        "N": 1,
+        "O": 2
+      },
+      "atom_symbols": [
+        "N",
+        "O",
+        "O"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 17,
+      "bond_orders": [
+        2,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        3
+      ],
+      "unpaired_electrons": [
+        1,
+        0,
+        0
+      ],
+      "formal_charges": [
+        1,
+        0,
+        -1
+      ],
+      "resonance_forms": 2,
+      "resonance_note_vi": "Hai công thức cộng hưởng tương đương hoán đổi vị trí liên kết đôi N=O và liên kết đơn N–O⁻; hai liên kết N–O thực tế dài bằng nhau (1,193 Å).",
+      "resonance_note_en": "Two equivalent resonance structures swap the N=O double bond and the N–O⁻ single bond; the two N–O bonds are in fact equal in length (1.193 Å).",
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": true
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 1,
+      "steric_number": 3,
+      "ax_en": "AX2E",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~134.1°",
+      "distortion_note_vi": "Miền không liên kết trên N chỉ chứa một electron nên đẩy yếu hơn nhiều so với một cặp electron tự do; hai liên kết N–O vì vậy mở rộng ra và góc O–N–O thực nghiệm là 134,1°, lớn hơn cả 120°.",
+      "distortion_note_en": "The non-bonding domain on N holds a single electron, so it repels far less than a lone pair; the two N–O bonds spread apart and the measured O–N–O angle is 134.1°, larger even than 120°.",
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử phân cực (yếu) vì có dạng gấp khúc nên các moment liên kết N–O không triệt tiêu.",
+      "polarity_note_en": "The molecule is (weakly) polar because its bent shape leaves the N–O bond moments uncancelled.",
+      "smiles": "N(=O)[O]",
+      "teaching_note_vi": "NO2 có 17 electron hoá trị (số lẻ) nên luôn có một electron độc thân: đây là một gốc tự do. Vì thế khí NO2 màu nâu đỏ dễ dime hoá thành N2O4 không màu, khi hai electron độc thân ghép đôi thành liên kết N–N. Hãy so sánh với NO2⁺ (thẳng, 180°) và NO2⁻ (gấp khúc, khoảng 115°): miền không liên kết trên N lần lượt chứa 0, 1 và 2 electron, và góc O–N–O giảm dần 180° → 134° → 115°. Công thức Lewis đặt electron độc thân trên N vì cách vẽ này giải thích được góc 134°; thực tế electron này phân bố trên cả phân tử nhưng tập trung chủ yếu ở N.",
+      "teaching_note_en": "NO2 has 17 valence electrons (an odd number), so one electron is always unpaired: it is a free radical. That is why the red-brown gas readily dimerizes to colorless N2O4, the two unpaired electrons pairing up into an N–N bond. Compare it with NO2⁺ (linear, 180°) and NO2⁻ (bent, about 115°): the non-bonding domain on N holds 0, 1 and 2 electrons respectively, and the O–N–O angle shrinks 180° → 134° → 115°. The Lewis structure puts the unpaired electron on N because that picture explains the 134° angle; in reality the electron is spread over the molecule but concentrated mostly on N."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "no2-plus",
+      "name_vi": "Nitronium ion",
+      "name_en": "Nitronium ion",
+      "aliases": [
+        "nitronium",
+        "nitronium ion",
+        "ion nitroni",
+        "ion nitronium"
+      ],
+      "formula": "NO2+",
+      "charge": 1,
+      "atom_inventory": {
+        "N": 1,
+        "O": 2
+      },
+      "atom_symbols": [
+        "N",
+        "O",
+        "O"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 16,
+      "bond_orders": [
+        2,
+        2
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        2
+      ],
+      "formal_charges": [
+        1,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 0,
+      "steric_number": 2,
+      "ax_en": "AX2",
+      "electron_geometry": "linear",
+      "molecular_geometry": "linear",
+      "electron_geometry_vi": "thẳng",
+      "molecular_geometry_vi": "thẳng",
+      "ideal_angle": "180°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp",
+      "polarity_note_vi": "Ion thẳng và đối xứng: hai moment liên kết N=O giống hệt nhau, ngược chiều nên triệt tiêu.",
+      "polarity_note_en": "A linear, symmetric ion: the two identical N=O bond moments point in opposite directions and cancel.",
+      "smiles": "O=[N+]=O",
+      "teaching_note_vi": "NO2⁺ đẳng electron với CO2 (16 electron hoá trị) nên cũng có dạng thẳng, không có electron không liên kết trên N. Ion này là tác nhân nitro hoá trong hỗn hợp HNO3/H2SO4 đặc, và tồn tại trong các muối rắn: chẳng hạn N2O5 rắn thực chất là muối ion [NO2⁺][NO3⁻]. So sánh với NO2 (134°) và NO2⁻ (khoảng 115°) để thấy góc liên kết thay đổi theo số electron không liên kết trên N.",
+      "teaching_note_en": "NO2⁺ is isoelectronic with CO2 (16 valence electrons), so it is linear too, with no non-bonding electrons on N. It is the nitrating agent in concentrated HNO3/H2SO4 mixtures and exists in solid salts: solid N2O5, for example, is really the ionic salt [NO2⁺][NO3⁻]. Compare it with NO2 (134°) and NO2⁻ (about 115°) to see the bond angle follow the number of non-bonding electrons on N."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "no2-minus",
+      "name_vi": "Nitrite ion",
+      "name_en": "Nitrite ion",
+      "aliases": [
+        "nitrite",
+        "nitrite ion",
+        "nitrit",
+        "ion nitrit"
+      ],
+      "formula": "NO2-",
+      "charge": -1,
+      "atom_inventory": {
+        "N": 1,
+        "O": 2
+      },
+      "atom_symbols": [
+        "N",
+        "O",
+        "O"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 18,
+      "bond_orders": [
+        2,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        2,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        -1
+      ],
+      "resonance_forms": 2,
+      "resonance_note_vi": "Hai công thức cộng hưởng tương đương hoán đổi liên kết đôi N=O và liên kết đơn N–O⁻; điện tích âm phân bố đều trên hai nguyên tử O và hai liên kết N–O dài bằng nhau.",
+      "resonance_note_en": "Two equivalent resonance structures swap the N=O double bond and the N–O⁻ single bond; the negative charge is shared equally by the two O atoms and the two N–O bonds are equal in length.",
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 1,
+      "steric_number": 3,
+      "ax_en": "AX2E",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~115°",
+      "distortion_note_vi": "Cặp electron tự do trên N nén góc O–N–O xuống khoảng 115°, nhỏ hơn góc 120° của tam giác phẳng lý tưởng.",
+      "distortion_note_en": "The lone pair on N compresses the O–N–O angle to about 115°, below the ideal trigonal-planar 120°.",
+      "hybridization": "sp²",
+      "polarity_note_vi": "Ion có dạng gấp khúc nên các moment liên kết N–O không triệt tiêu.",
+      "polarity_note_en": "The ion is bent, so the N–O bond moments do not cancel.",
+      "smiles": "N(=O)[O-]",
+      "teaching_note_vi": "NO2⁻ có thêm một electron so với NO2, nên miền không liên kết trên N trở thành một cặp electron tự do đầy đủ. Dãy NO2⁺ (180°) → NO2 (134°) → NO2⁻ (khoảng 115°) là ví dụ kinh điển: miền không liên kết càng nhiều electron thì càng đẩy mạnh và góc O–N–O càng nhỏ.",
+      "teaching_note_en": "NO2⁻ has one electron more than NO2, so the non-bonding domain on N becomes a full lone pair. The series NO2⁺ (180°) → NO2 (134°) → NO2⁻ (about 115°) is a classic illustration: the more electrons the non-bonding domain holds, the harder it pushes and the smaller the O–N–O angle."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "nocl",
+      "name_vi": "Nitrosyl chloride",
+      "name_en": "Nitrosyl chloride",
+      "aliases": [
+        "nitrosyl chloride",
+        "nitrosyl clorua"
+      ],
+      "formula": "NOCl",
+      "charge": 0,
+      "atom_inventory": {
+        "N": 1,
+        "O": 1,
+        "Cl": 1
+      },
+      "atom_symbols": [
+        "N",
+        "O",
+        "Cl"
+      ],
+      "central_atom": "N",
+      "total_valence_electrons": 18,
+      "bond_orders": [
+        2,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        2,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 1,
+      "steric_number": 3,
+      "ax_en": "AX2E",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~113.3°",
+      "distortion_note_vi": "Cặp electron tự do trên N nén góc O–N–Cl xuống 113,3°, nhỏ hơn 120°.",
+      "distortion_note_en": "The lone pair on N compresses the O–N–Cl angle to 113.3°, below 120°.",
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử phân cực vì có dạng gấp khúc và hai phối tử khác nhau (O và Cl).",
+      "polarity_note_en": "The molecule is polar: it is bent and its two ligands (O and Cl) differ.",
+      "smiles": "N(=O)Cl",
+      "teaching_note_vi": "N nằm ở giữa (O=N–Cl), không phải O. Liên kết N–Cl trong NOCl rất dài (1,975 Å, so với khoảng 1,76 Å trong NCl3) nên yếu, và NOCl dễ phân li thành NO và Cl. NOCl là một trong những chất tạo nên màu và tính oxi hoá của nước cường toan (HNO3 + 3HCl).",
+      "teaching_note_en": "N is the central atom (O=N–Cl), not O. The N–Cl bond in NOCl is very long (1.975 Å, compared with about 1.76 Å in NCl3) and therefore weak, so NOCl readily splits into NO and Cl. NOCl is one of the species behind the color and oxidizing power of aqua regia (HNO3 + 3HCl)."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "clo2",
+      "name_vi": "Chlorine dioxide",
+      "name_en": "Chlorine dioxide",
+      "aliases": [
+        "chlorine dioxide",
+        "clo đioxit",
+        "clo dioxit"
+      ],
+      "formula": "ClO2",
+      "charge": 0,
+      "atom_inventory": {
+        "Cl": 1,
+        "O": 2
+      },
+      "atom_symbols": [
+        "Cl",
+        "O",
+        "O"
+      ],
+      "central_atom": "Cl",
+      "total_valence_electrons": 19,
+      "bond_orders": [
+        2,
+        2
+      ],
+      "lone_pairs": [
+        1,
+        2,
+        2
+      ],
+      "unpaired_electrons": [
+        1,
+        0,
+        0
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": true
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 2,
+      "steric_number": 4,
+      "ax_en": "AX2E2",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~117.4°",
+      "distortion_note_vi": "Mô hình VSEPR đơn giản (AX2E2) dự đoán góc nhỏ hơn 109,5°, nhưng góc O–Cl–O thực nghiệm là 117,4°. Một trong hai miền không liên kết trên Cl chỉ chứa một electron nên đẩy yếu hơn cặp electron tự do, và hai liên kết Cl–O mang đáng kể đặc tính liên kết bội, nên hai liên kết mở rộng ra. ClO2 cho thấy giới hạn của VSEPR với các gốc tự do.",
+      "distortion_note_en": "Simple VSEPR (AX2E2) predicts an angle below 109.5°, yet the measured O–Cl–O angle is 117.4°. One of the two non-bonding domains on Cl holds only a single electron and so repels less than a lone pair, and the two Cl–O bonds have considerable multiple-bond character, so the bonds open up. ClO2 shows the limits of VSEPR for free radicals.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực vì có dạng gấp khúc nên các moment liên kết Cl–O không triệt tiêu.",
+      "polarity_note_en": "The molecule is polar because its bent shape leaves the Cl–O bond moments uncancelled.",
+      "smiles": "O=Cl[O]",
+      "teaching_note_vi": "ClO2 có 19 electron hoá trị nên là một gốc tự do, nhưng khác với NO2, nó hầu như không dime hoá. Công thức Lewis O=Cl=O với một cặp electron tự do và một electron độc thân trên Cl cho mọi điện tích hình thức bằng 0, đổi lại Cl phải mở rộng octet (11 electron). ClO2 được dùng để tẩy trắng bột giấy và khử trùng nước.",
+      "teaching_note_en": "ClO2 has 19 valence electrons and is therefore a free radical, but unlike NO2 it hardly dimerizes at all. The Lewis structure O=Cl=O, with one lone pair and one unpaired electron on Cl, makes every formal charge zero at the cost of an expanded octet on Cl (11 electrons). ClO2 is used to bleach paper pulp and to disinfect water."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "cl2o",
+      "name_vi": "Dichlorine oxide",
+      "name_en": "Dichlorine monoxide",
+      "aliases": [
+        "dichlorine monoxide",
+        "dichlorine oxide",
+        "điclo oxit",
+        "clo(I) oxit"
+      ],
+      "formula": "Cl2O",
+      "charge": 0,
+      "atom_inventory": {
+        "Cl": 2,
+        "O": 1
+      },
+      "atom_symbols": [
+        "O",
+        "Cl",
+        "Cl"
+      ],
+      "central_atom": "O",
+      "total_valence_electrons": 20,
+      "bond_orders": [
+        1,
+        1
+      ],
+      "lone_pairs": [
+        2,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 2,
+      "steric_number": 4,
+      "ax_en": "AX2E2",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~110.9°",
+      "distortion_note_vi": "Hai cặp electron tự do trên O nén góc liên kết, nhưng góc Cl–O–Cl thực nghiệm (110,9°) lại lớn hơn H–O–H (104,5°) và F–O–F (103,1°). So với OF2, Cl kém âm điện hơn F nên cặp electron liên kết nằm gần O hơn và đẩy nhau mạnh hơn; so với H2O, hai nguyên tử Cl lớn chen lấn nhau về không gian nên góc mở rộng.",
+      "distortion_note_en": "The two lone pairs on O compress the bond angle, yet the measured Cl–O–Cl angle (110.9°) is larger than H–O–H (104.5°) and F–O–F (103.1°). Compared with OF2, Cl is less electronegative than F, so the bonding pairs sit closer to O and repel each other more; compared with H2O, the two large Cl atoms crowd each other and push the angle open.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực vì có dạng gấp khúc.",
+      "polarity_note_en": "The molecule is polar because it is bent.",
+      "smiles": "O(Cl)Cl",
+      "teaching_note_vi": "Nguyên tử trung tâm là O (Cl–O–Cl), dù O âm điện hơn Cl: mỗi Cl chỉ tạo một liên kết nên không thể nằm giữa. Cl2O là oxit axit của HClO (Cl2O + H2O ⇌ 2HClO). Bộ ba OF2 (103,1°) – H2O (104,5°) – Cl2O (110,9°) cùng dạng AX2E2 cho thấy góc liên kết phụ thuộc vào độ âm điện và kích thước của phối tử.",
+      "teaching_note_en": "The central atom is O (Cl–O–Cl) even though O is more electronegative than Cl: each Cl forms only one bond, so it cannot sit in the middle. Cl2O is the acid anhydride of HClO (Cl2O + H2O ⇌ 2HClO). The trio OF2 (103.1°) – H2O (104.5°) – Cl2O (110.9°), all AX2E2, shows how the bond angle depends on the electronegativity and size of the ligands."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "of2",
+      "name_vi": "Oxygen difluoride",
+      "name_en": "Oxygen difluoride",
+      "aliases": [
+        "oxygen difluoride",
+        "difluorine monoxide",
+        "oxi điflorua",
+        "oxi diflorua"
+      ],
+      "formula": "OF2",
+      "charge": 0,
+      "atom_inventory": {
+        "O": 1,
+        "F": 2
+      },
+      "atom_symbols": [
+        "O",
+        "F",
+        "F"
+      ],
+      "central_atom": "O",
+      "total_valence_electrons": 20,
+      "bond_orders": [
+        1,
+        1
+      ],
+      "lone_pairs": [
+        2,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 2,
+      "steric_number": 4,
+      "ax_en": "AX2E2",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~103.1°",
+      "distortion_note_vi": "F âm điện hơn H nên kéo cặp electron liên kết ra xa O, làm lực đẩy giữa hai cặp electron liên kết yếu đi; hai cặp electron tự do trên O vì vậy nén góc F–O–F xuống 103,1°, nhỏ hơn cả góc H–O–H trong H2O (104,5°).",
+      "distortion_note_en": "F is more electronegative than H, so it pulls the bonding pairs away from O and weakens the repulsion between them; the two lone pairs on O then compress the F–O–F angle to 103.1°, even smaller than H–O–H in water (104.5°).",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực yếu: dạng gấp khúc nên các moment liên kết không triệt tiêu, nhưng moment liên kết O–F nhỏ vì O và F có độ âm điện gần nhau.",
+      "polarity_note_en": "Weakly polar: the bent shape leaves the bond moments uncancelled, but each O–F bond moment is small because O and F have similar electronegativities.",
+      "smiles": "O(F)F",
+      "teaching_note_vi": "Trong OF2, O có số oxi hoá +2 vì F âm điện hơn O — một trong số ít hợp chất mà O mang số oxi hoá dương. Vì vậy chất này được gọi là oxygen difluoride chứ không phải 'flo oxit'. So sánh với H2O: cùng dạng AX2E2 nhưng góc nhỏ hơn, giống như NF3 so với NH3.",
+      "teaching_note_en": "In OF2 oxygen has oxidation state +2, because F is more electronegative than O — one of the few compounds in which O is positive. That is why it is named oxygen difluoride rather than 'fluorine oxide'. Compare it with H2O: the same AX2E2 shape but a smaller angle, just as NF3 compares with NH3."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "so3",
+      "name_vi": "Sulfur trioxide",
+      "name_en": "Sulfur trioxide",
+      "aliases": [
+        "sulfur trioxide",
+        "sulphur trioxide",
+        "lưu huỳnh trioxit",
+        "lưu huỳnh trioxide"
+      ],
+      "formula": "SO3",
+      "charge": 0,
+      "atom_inventory": {
+        "S": 1,
+        "O": 3
+      },
+      "atom_symbols": [
+        "S",
+        "O",
+        "O",
+        "O"
+      ],
+      "central_atom": "S",
+      "total_valence_electrons": 24,
+      "bond_orders": [
+        2,
+        2,
+        2
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        2,
+        2
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 0,
+      "steric_number": 3,
+      "ax_en": "AX3",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "trigonal planar",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "tam giác phẳng",
+      "ideal_angle": "120°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử không phân cực: ba moment liên kết S=O giống nhau, cách đều nhau 120° trong cùng một mặt phẳng nên triệt tiêu.",
+      "polarity_note_en": "Non-polar: the three identical S=O bond moments are 120° apart in one plane and cancel.",
+      "smiles": "O=S(=O)=O",
+      "teaching_note_vi": "So sánh với SO2 (AX2E, gấp khúc, 119,5°): thêm một nguyên tử O làm S không còn cặp electron tự do, phân tử trở thành tam giác phẳng và không phân cực. Công thức Lewis vẽ S với ba liên kết đôi (octet mở rộng, mọi điện tích hình thức bằng 0). Một cách mô tả khác tuân theo quy tắc octet dùng một liên kết đôi và hai liên kết đơn, S mang điện tích hình thức +2, và cần ba dạng cộng hưởng. Cả hai cách đều cho ba liên kết S–O dài bằng nhau (1,418 Å).",
+      "teaching_note_en": "Compare with SO2 (AX2E, bent, 119.5°): adding a third O leaves S with no lone pair, so the molecule becomes trigonal planar and non-polar. The Lewis structure draws S with three double bonds (expanded octet, every formal charge zero). An alternative octet-obeying description uses one double and two single bonds, gives S a +2 formal charge and needs three resonance forms. Both descriptions give three equal S–O bonds (1.418 Å)."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "h2s",
+      "name_vi": "Hydrogen sulfide",
+      "name_en": "Hydrogen sulfide",
+      "aliases": [
+        "hydrogen sulfide",
+        "hydrogen sulphide",
+        "sulfane",
+        "hiđro sunfua",
+        "hydro sulfide"
+      ],
+      "formula": "H2S",
+      "charge": 0,
+      "atom_inventory": {
+        "H": 2,
+        "S": 1
+      },
+      "atom_symbols": [
+        "S",
+        "H",
+        "H"
+      ],
+      "central_atom": "S",
+      "total_valence_electrons": 8,
+      "bond_orders": [
+        1,
+        1
+      ],
+      "lone_pairs": [
+        2,
+        0,
+        0
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 2,
+      "steric_number": 4,
+      "ax_en": "AX2E2",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "bent",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "gấp khúc",
+      "ideal_angle": "~92.1°",
+      "distortion_note_vi": "Góc H–S–H chỉ 92,1°, nhỏ hơn nhiều so với 104,5° của H2O dù cùng dạng AX2E2: S lớn và kém âm điện hơn O nên các cặp electron liên kết nằm xa S và ít đẩy nhau, còn hai cặp electron tự do nén góc mạnh hơn.",
+      "distortion_note_en": "The H–S–H angle is only 92.1°, far smaller than water's 104.5° even though both are AX2E2: S is larger and less electronegative than O, so the bonding pairs sit farther from S and repel each other less, while the two lone pairs compress the angle more.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực vì có dạng gấp khúc, nhưng phân cực yếu hơn H2O vì liên kết S–H ít phân cực hơn O–H.",
+      "polarity_note_en": "The molecule is polar because it is bent, but less polar than H2O because the S–H bond is far less polar than O–H.",
+      "smiles": "S",
+      "teaching_note_vi": "So sánh H2O (104,5°) với H2S (92,1°) và NH3 (107°) với PH3 (93,3°): đi xuống trong nhóm, góc liên kết với H giảm mạnh và tiến gần 90°. Nhãn lai hoá sp³ mô tả kém những phân tử này; mô hình VSEPR chỉ dự đoán đúng xu hướng 'nhỏ hơn 109,5°'.",
+      "teaching_note_en": "Compare H2O (104.5°) with H2S (92.1°), and NH3 (107°) with PH3 (93.3°): going down a group, the bond angle to H drops sharply towards 90°. The sp³ hybridization label describes these molecules poorly; VSEPR only gets the 'smaller than 109.5°' trend right."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "socl2",
+      "name_vi": "Thionyl chloride",
+      "name_en": "Thionyl chloride",
+      "aliases": [
+        "thionyl chloride",
+        "thionyl dichloride",
+        "sulfinyl dichloride",
+        "thionyl clorua"
+      ],
+      "formula": "SOCl2",
+      "charge": 0,
+      "atom_inventory": {
+        "S": 1,
+        "O": 1,
+        "Cl": 2
+      },
+      "atom_symbols": [
+        "S",
+        "O",
+        "Cl",
+        "Cl"
+      ],
+      "central_atom": "S",
+      "total_valence_electrons": 26,
+      "bond_orders": [
+        2,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        2,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "steric_number": 4,
+      "ax_en": "AX3E",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "chóp tam giác",
+      "ideal_angle": "~96.1°, ~106.3°",
+      "distortion_note_vi": "Cặp electron tự do trên S nén mọi góc xuống dưới 109,5°. Miền liên kết đôi S=O chứa nhiều electron hơn miền liên kết đơn nên đẩy mạnh hơn: góc O–S–Cl (106,3°) lớn hơn hẳn góc Cl–S–Cl (96,1°).",
+      "distortion_note_en": "The lone pair on S compresses every angle below 109.5°. The S=O double-bond domain holds more electrons than a single-bond domain and repels harder, so the O–S–Cl angle (106.3°) is clearly larger than Cl–S–Cl (96.1°).",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực vì có dạng chóp tam giác với các phối tử khác nhau.",
+      "polarity_note_en": "The molecule is polar: it is a trigonal pyramid with different ligands.",
+      "smiles": "O=S(Cl)Cl",
+      "teaching_note_vi": "SOCl2 là ví dụ AX3E có hai loại góc khác nhau: hình chóp tam giác không đều vì một trong ba miền liên kết là liên kết đôi. Trong phòng thí nghiệm, SOCl2 được dùng để chuyển axit cacboxylic thành clorua axit; nó phản ứng với nước tạo SO2 và HCl.",
+      "teaching_note_en": "SOCl2 is an AX3E example with two different angles: the trigonal pyramid is irregular because one of the three bonding domains is a double bond. In the laboratory SOCl2 converts carboxylic acids into acyl chlorides; it reacts with water to give SO2 and HCl."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "cs2",
+      "name_vi": "Carbon disulfide",
+      "name_en": "Carbon disulfide",
+      "aliases": [
+        "carbon disulfide",
+        "carbon disulphide",
+        "cacbon đisunfua",
+        "cacbon disulfide"
+      ],
+      "formula": "CS2",
+      "charge": 0,
+      "atom_inventory": {
+        "C": 1,
+        "S": 2
+      },
+      "atom_symbols": [
+        "C",
+        "S",
+        "S"
+      ],
+      "central_atom": "C",
+      "total_valence_electrons": 16,
+      "bond_orders": [
+        2,
+        2
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        2
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 0,
+      "steric_number": 2,
+      "ax_en": "AX2",
+      "electron_geometry": "linear",
+      "molecular_geometry": "linear",
+      "electron_geometry_vi": "thẳng",
+      "molecular_geometry_vi": "thẳng",
+      "ideal_angle": "180°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp",
+      "polarity_note_vi": "Phân tử không phân cực: hai moment liên kết C=S bằng nhau và ngược chiều nên triệt tiêu.",
+      "polarity_note_en": "Non-polar: the two equal C=S bond moments point in opposite directions and cancel.",
+      "smiles": "C(=S)=S",
+      "teaching_note_vi": "CS2 có cấu trúc giống hệt CO2 (AX2, thẳng, hai liên kết đôi) vì S cùng nhóm với O. Liên kết C=S (1,554 Å) dài hơn C=O trong CO2 vì nguyên tử S lớn hơn. Không giống CO2 là khí, CS2 là chất lỏng dễ bay hơi ở nhiệt độ phòng.",
+      "teaching_note_en": "CS2 has exactly the structure of CO2 (AX2, linear, two double bonds) because S is in the same group as O. The C=S bond (1.554 Å) is longer than C=O in CO2 because S is a larger atom. Unlike gaseous CO2, CS2 is a volatile liquid at room temperature."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "ph3",
+      "name_vi": "Phosphine",
+      "name_en": "Phosphine",
+      "aliases": [
+        "phosphine",
+        "phosphane",
+        "photphin",
+        "phosphin"
+      ],
+      "formula": "PH3",
+      "charge": 0,
+      "atom_inventory": {
+        "P": 1,
+        "H": 3
+      },
+      "atom_symbols": [
+        "P",
+        "H",
+        "H",
+        "H"
+      ],
+      "central_atom": "P",
+      "total_valence_electrons": 8,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "steric_number": 4,
+      "ax_en": "AX3E",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "chóp tam giác",
+      "ideal_angle": "~93.3°",
+      "distortion_note_vi": "Góc H–P–H chỉ 93,3°, nhỏ hơn nhiều so với 107° của NH3: P lớn và kém âm điện hơn N nên các cặp electron liên kết nằm xa P và ít đẩy nhau, còn cặp electron tự do nén góc mạnh hơn.",
+      "distortion_note_en": "The H–P–H angle is only 93.3°, far smaller than 107° in NH3: P is larger and less electronegative than N, so the bonding pairs sit farther from P and repel each other less, while the lone pair compresses the angle more.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực rất yếu: liên kết P–H gần như không phân cực vì P và H có độ âm điện xấp xỉ nhau.",
+      "polarity_note_en": "Only very weakly polar: the P–H bond is almost non-polar because P and H have nearly equal electronegativities.",
+      "smiles": "P",
+      "teaching_note_vi": "PH3 cùng dạng AX3E với NH3 nhưng góc liên kết gần 90° hơn. PH3 không tạo liên kết hiđro đáng kể nên sôi ở nhiệt độ thấp hơn NH3 nhiều, và là bazơ yếu hơn NH3 rất nhiều.",
+      "teaching_note_en": "PH3 has the same AX3E shape as NH3 but a bond angle much closer to 90°. PH3 forms no significant hydrogen bonds, so it boils far below NH3, and it is a much weaker base than NH3."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "pcl3",
+      "name_vi": "Phosphorus trichloride",
+      "name_en": "Phosphorus trichloride",
+      "aliases": [
+        "phosphorus trichloride",
+        "photpho triclorua",
+        "phospho triclorua"
+      ],
+      "formula": "PCl3",
+      "charge": 0,
+      "atom_inventory": {
+        "P": 1,
+        "Cl": 3
+      },
+      "atom_symbols": [
+        "P",
+        "Cl",
+        "Cl",
+        "Cl"
+      ],
+      "central_atom": "P",
+      "total_valence_electrons": 26,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        1,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 1,
+      "steric_number": 4,
+      "ax_en": "AX3E",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "trigonal pyramidal",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "chóp tam giác",
+      "ideal_angle": "~100.1°",
+      "distortion_note_vi": "Cặp electron tự do trên P nén góc Cl–P–Cl xuống 100,1°, nhỏ hơn góc tứ diện 109,5°.",
+      "distortion_note_en": "The lone pair on P compresses the Cl–P–Cl angle to 100.1°, below the tetrahedral 109.5°.",
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử phân cực vì có dạng chóp tam giác nên các moment liên kết P–Cl không triệt tiêu.",
+      "polarity_note_en": "The molecule is polar because its trigonal pyramidal shape leaves the P–Cl bond moments uncancelled.",
+      "smiles": "P(Cl)(Cl)Cl",
+      "teaching_note_vi": "So sánh PCl3 (AX3E, chóp tam giác) với PCl5 (AX5, lưỡng tháp tam giác): P có thể tạo 3 hoặc 5 liên kết, và PCl3 + Cl2 → PCl5. Góc Cl–P–Cl (100,1°) lớn hơn H–P–H trong PH3 (93,3°) vì các nguyên tử Cl lớn đẩy nhau về không gian.",
+      "teaching_note_en": "Compare PCl3 (AX3E, trigonal pyramidal) with PCl5 (AX5, trigonal bipyramidal): P can form 3 or 5 bonds, and PCl3 + Cl2 → PCl5. The Cl–P–Cl angle (100.1°) is larger than H–P–H in PH3 (93.3°) because the large Cl atoms crowd each other."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "pf5",
+      "name_vi": "Phosphorus pentafluoride",
+      "name_en": "Phosphorus pentafluoride",
+      "aliases": [
+        "phosphorus pentafluoride",
+        "photpho pentaflorua"
+      ],
+      "formula": "PF5",
+      "charge": 0,
+      "atom_inventory": {
+        "P": 1,
+        "F": 5
+      },
+      "atom_symbols": [
+        "P",
+        "F",
+        "F",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "P",
+      "total_valence_electrons": 40,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 5,
+      "lone_pair_domains": 0,
+      "steric_number": 5,
+      "ax_en": "AX5",
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "trigonal bipyramidal",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "lưỡng tháp tam giác",
+      "ideal_angle": "90°, 120°, 180°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp³d",
+      "polarity_note_vi": "Phân tử không phân cực: các moment liên kết P–F triệt tiêu theo đối xứng lưỡng tháp tam giác.",
+      "polarity_note_en": "Non-polar: the P–F bond moments cancel by the trigonal bipyramidal symmetry.",
+      "smiles": "FP(F)(F)(F)F",
+      "teaching_note_vi": "Không có cặp electron tự do nên các góc đúng bằng 90°, 120° và 180°, nhưng hai loại liên kết không tương đương: liên kết P–F trục (1,577 Å) dài hơn liên kết xích đạo (1,534 Å) vì mỗi F trục chịu lực đẩy của ba liên kết ở góc 90°. Trong dung dịch, F trục và F xích đạo đổi chỗ cho nhau rất nhanh (giả quay Berry).",
+      "teaching_note_en": "With no lone pairs the angles are exactly 90°, 120° and 180°, yet the two kinds of bond differ: the axial P–F bonds (1.577 Å) are longer than the equatorial ones (1.534 Å) because each axial F is pushed by three bonds at 90°. In solution the axial and equatorial F atoms swap places very rapidly (Berry pseudorotation)."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "bcl3",
+      "name_vi": "Boron trichloride",
+      "name_en": "Boron trichloride",
+      "aliases": [
+        "boron trichloride",
+        "trichloroborane",
+        "bo triclorua"
+      ],
+      "formula": "BCl3",
+      "charge": 0,
+      "atom_inventory": {
+        "B": 1,
+        "Cl": 3
+      },
+      "atom_symbols": [
+        "B",
+        "Cl",
+        "Cl",
+        "Cl"
+      ],
+      "central_atom": "B",
+      "total_valence_electrons": 24,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": true,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 0,
+      "steric_number": 3,
+      "ax_en": "AX3",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "trigonal planar",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "tam giác phẳng",
+      "ideal_angle": "120°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử không phân cực: ba moment liên kết B–Cl giống nhau, cách đều 120° nên triệt tiêu.",
+      "polarity_note_en": "Non-polar: the three identical B–Cl bond moments are 120° apart and cancel.",
+      "smiles": "B(Cl)(Cl)Cl",
+      "teaching_note_vi": "Giống BF3, B trong BCl3 chỉ có 6 electron xung quanh (thiếu electron so với octet) nên BCl3 là axit Lewis mạnh, dễ nhận một cặp electron từ bazơ Lewis như NH3 để đạt octet và chuyển sang dạng tứ diện.",
+      "teaching_note_en": "As in BF3, boron in BCl3 has only 6 electrons around it (short of an octet), so BCl3 is a strong Lewis acid that readily accepts an electron pair from a Lewis base such as NH3, completing its octet and becoming tetrahedral."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "ccl4",
+      "name_vi": "Carbon tetrachloride",
+      "name_en": "Carbon tetrachloride",
+      "aliases": [
+        "carbon tetrachloride",
+        "tetrachloromethane",
+        "cacbon tetraclorua",
+        "tetraclometan"
+      ],
+      "formula": "CCl4",
+      "charge": 0,
+      "atom_inventory": {
+        "C": 1,
+        "Cl": 4
+      },
+      "atom_symbols": [
+        "C",
+        "Cl",
+        "Cl",
+        "Cl",
+        "Cl"
+      ],
+      "central_atom": "C",
+      "total_valence_electrons": 32,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        3,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 4,
+      "lone_pair_domains": 0,
+      "steric_number": 4,
+      "ax_en": "AX4",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "tetrahedral",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "tứ diện",
+      "ideal_angle": "109.5°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử không phân cực: bốn liên kết C–Cl đều phân cực nhưng hướng về bốn đỉnh tứ diện đều nên các moment triệt tiêu.",
+      "polarity_note_en": "Non-polar: each C–Cl bond is polar, but the four point to the corners of a regular tetrahedron and their moments cancel.",
+      "smiles": "C(Cl)(Cl)(Cl)Cl",
+      "teaching_note_vi": "CCl4 là ví dụ điển hình cho thấy phân tử có liên kết phân cực vẫn có thể không phân cực nhờ đối xứng. Vì không phân cực, CCl4 từng được dùng làm dung môi cho các chất không phân cực như I2 và chất béo.",
+      "teaching_note_en": "CCl4 is the standard example of a molecule with polar bonds that is non-polar overall thanks to its symmetry. Being non-polar, it was once widely used as a solvent for non-polar substances such as I2 and fats."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "sif4",
+      "name_vi": "Silicon tetrafluoride",
+      "name_en": "Silicon tetrafluoride",
+      "aliases": [
+        "silicon tetrafluoride",
+        "tetrafluorosilane",
+        "silic tetraflorua"
+      ],
+      "formula": "SiF4",
+      "charge": 0,
+      "atom_inventory": {
+        "Si": 1,
+        "F": 4
+      },
+      "atom_symbols": [
+        "Si",
+        "F",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "Si",
+      "total_valence_electrons": 32,
+      "bond_orders": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        3,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 4,
+      "lone_pair_domains": 0,
+      "steric_number": 4,
+      "ax_en": "AX4",
+      "electron_geometry": "tetrahedral",
+      "molecular_geometry": "tetrahedral",
+      "electron_geometry_vi": "tứ diện",
+      "molecular_geometry_vi": "tứ diện",
+      "ideal_angle": "109.5°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp³",
+      "polarity_note_vi": "Phân tử không phân cực: các liên kết Si–F rất phân cực nhưng triệt tiêu theo đối xứng tứ diện.",
+      "polarity_note_en": "Non-polar: the Si–F bonds are strongly polar but cancel by tetrahedral symmetry.",
+      "smiles": "F[Si](F)(F)F",
+      "teaching_note_vi": "SiF4 cùng dạng AX4 với CH4 và CCl4. SiF4 sinh ra khi HF ăn mòn thuỷ tinh (SiO2 + 4HF → SiF4 + 2H2O), đó là lý do HF được đựng trong bình nhựa.",
+      "teaching_note_en": "SiF4 shares the AX4 shape of CH4 and CCl4. It forms when HF etches glass (SiO2 + 4HF → SiF4 + 2H2O), which is why HF is stored in plastic bottles."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "hcn",
+      "name_vi": "Hydrogen cyanide",
+      "name_en": "Hydrogen cyanide",
+      "aliases": [
+        "hydrogen cyanide",
+        "formonitrile",
+        "prussic acid",
+        "hiđro xianua",
+        "axit xianhiđric"
+      ],
+      "formula": "HCN",
+      "charge": 0,
+      "atom_inventory": {
+        "H": 1,
+        "C": 1,
+        "N": 1
+      },
+      "atom_symbols": [
+        "C",
+        "H",
+        "N"
+      ],
+      "central_atom": "C",
+      "total_valence_electrons": 10,
+      "bond_orders": [
+        1,
+        3
+      ],
+      "lone_pairs": [
+        0,
+        0,
+        1
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 2,
+      "lone_pair_domains": 0,
+      "steric_number": 2,
+      "ax_en": "AX2",
+      "electron_geometry": "linear",
+      "molecular_geometry": "linear",
+      "electron_geometry_vi": "thẳng",
+      "molecular_geometry_vi": "thẳng",
+      "ideal_angle": "180°",
+      "distortion_note_vi": null,
+      "distortion_note_en": null,
+      "hybridization": "sp",
+      "polarity_note_vi": "Phân tử phân cực mạnh: tuy thẳng nhưng hai đầu (H và N) khác nhau, và liên kết C≡N rất phân cực.",
+      "polarity_note_en": "Strongly polar: although linear, its two ends (H and N) differ and the C≡N bond is very polar.",
+      "smiles": "C#N",
+      "teaching_note_vi": "C là nguyên tử trung tâm (H–C≡N): H chỉ tạo một liên kết, còn cặp electron tự do nằm trên N chứ không phải trên C. Cũng là AX2 thẳng như CO2, nhưng HCN phân cực vì không đối xứng — dạng hình học giống nhau không có nghĩa là độ phân cực giống nhau.",
+      "teaching_note_en": "C is the central atom (H–C≡N): H forms only one bond, and the lone pair sits on N, not on C. HCN is linear AX2 like CO2, yet polar because it is unsymmetrical — the same shape does not mean the same polarity."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "cocl2",
+      "name_vi": "Carbonyl dichloride",
+      "name_en": "Phosgene",
+      "aliases": [
+        "phosgene",
+        "carbonyl dichloride",
+        "carbonyl chloride",
+        "photgen",
+        "cacbonyl điclorua"
+      ],
+      "formula": "COCl2",
+      "charge": 0,
+      "atom_inventory": {
+        "C": 1,
+        "O": 1,
+        "Cl": 2
+      },
+      "atom_symbols": [
+        "C",
+        "O",
+        "Cl",
+        "Cl"
+      ],
+      "central_atom": "C",
+      "total_valence_electrons": 24,
+      "bond_orders": [
+        2,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 0,
+      "steric_number": 3,
+      "ax_en": "AX3",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "trigonal planar",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "tam giác phẳng",
+      "ideal_angle": "~111.9°, ~124.0°",
+      "distortion_note_vi": "Miền liên kết đôi C=O chứa nhiều electron hơn miền liên kết đơn nên đẩy mạnh hơn: góc O–C–Cl mở rộng thành 124,0°, còn góc Cl–C–Cl bị nén xuống 111,9°, dù mô hình AX3 lý tưởng cho cả ba góc bằng 120°.",
+      "distortion_note_en": "The C=O double-bond domain holds more electrons than a single-bond domain and repels harder: the O–C–Cl angles open to 124.0° and the Cl–C–Cl angle closes to 111.9°, although the ideal AX3 model makes all three 120°.",
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử phân cực vì ba phối tử không giống nhau nên các moment liên kết không triệt tiêu.",
+      "polarity_note_en": "The molecule is polar because its three ligands are not identical, so the bond moments do not cancel.",
+      "smiles": "C(=O)(Cl)Cl",
+      "teaching_note_vi": "Phosgene là ví dụ AX3 tam giác phẳng nhưng không đều: hai loại góc khác nhau vì một miền liên kết là liên kết đôi. So sánh với BF3 hay SO3, nơi ba miền liên kết giống nhau và cả ba góc đúng bằng 120°. Phosgene là khí rất độc, được dùng trong công nghiệp để sản xuất polycacbonat và isoxianat.",
+      "teaching_note_en": "Phosgene is a trigonal planar AX3 molecule that is not regular: it has two different angles because one bonding domain is a double bond. Compare it with BF3 or SO3, whose three bonding domains are identical and whose angles are all exactly 120°. Phosgene is a highly toxic gas used industrially to make polycarbonates and isocyanates."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "ch2o",
+      "name_vi": "Methanal",
+      "name_en": "Formaldehyde",
+      "aliases": [
+        "formaldehyde",
+        "methanal",
+        "metanal",
+        "fomanđehit",
+        "anđehit fomic",
+        "HCHO"
+      ],
+      "formula": "CH2O",
+      "charge": 0,
+      "atom_inventory": {
+        "C": 1,
+        "H": 2,
+        "O": 1
+      },
+      "atom_symbols": [
+        "C",
+        "O",
+        "H",
+        "H"
+      ],
+      "central_atom": "C",
+      "total_valence_electrons": 12,
+      "bond_orders": [
+        2,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": false,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 0,
+      "steric_number": 3,
+      "ax_en": "AX3",
+      "electron_geometry": "trigonal planar",
+      "molecular_geometry": "trigonal planar",
+      "electron_geometry_vi": "tam giác phẳng",
+      "molecular_geometry_vi": "tam giác phẳng",
+      "ideal_angle": "~116.1°, ~121.9°",
+      "distortion_note_vi": "Miền liên kết đôi C=O đẩy mạnh hơn hai miền liên kết đơn C–H: góc H–C–O mở rộng thành 121,9°, còn góc H–C–H bị nén xuống 116,1°.",
+      "distortion_note_en": "The C=O double-bond domain repels harder than the two C–H single-bond domains: the H–C–O angles open to 121.9° and the H–C–H angle closes to 116.1°.",
+      "hybridization": "sp²",
+      "polarity_note_vi": "Phân tử phân cực vì liên kết C=O rất phân cực và không bị moment nào khác triệt tiêu.",
+      "polarity_note_en": "The molecule is polar because the strongly polar C=O bond is not cancelled by any other bond moment.",
+      "smiles": "C=O",
+      "teaching_note_vi": "HCHO là anđehit đơn giản nhất: C ở trung tâm, liên kết đôi với O và liên kết đơn với hai H, tạo tam giác phẳng (AX3). Dung dịch khoảng 37% HCHO trong nước gọi là fomalin. Giống phosgene, hai loại góc khác nhau cho thấy miền liên kết đôi 'chiếm chỗ' nhiều hơn miền liên kết đơn.",
+      "teaching_note_en": "HCHO is the simplest aldehyde: C sits in the center, double-bonded to O and single-bonded to two H atoms, giving a trigonal planar AX3 shape. A solution of about 37% HCHO in water is called formalin. As in phosgene, the two different angles show that a double-bond domain takes up more room than a single-bond domain."
+    },
+    {
+      "review_status": "internal_golden_pending_expert_signoff",
+      "pubchem_cid": null,
+      "source": "curated",
+      "confidence": "high",
+      "hybridization_warning_vi": "Nhãn lai hoá là mô hình sư phạm gần đúng theo VSEPR, không phải mô tả liên kết hiện đại đầy đủ.",
+      "hybridization_warning_en": "The hybridization label is an approximate VSEPR-style pedagogical model, not a full modern description of bonding.",
+      "three_d_source": {
+        "kind": "idealized_vsepr_template",
+        "verified_reference": false
+      },
+      "id": "brf3",
+      "name_vi": "Bromine trifluoride",
+      "name_en": "Bromine trifluoride",
+      "aliases": [
+        "bromine trifluoride",
+        "brom triflorua"
+      ],
+      "formula": "BrF3",
+      "charge": 0,
+      "atom_inventory": {
+        "Br": 1,
+        "F": 3
+      },
+      "atom_symbols": [
+        "Br",
+        "F",
+        "F",
+        "F"
+      ],
+      "central_atom": "Br",
+      "total_valence_electrons": 28,
+      "bond_orders": [
+        1,
+        1,
+        1
+      ],
+      "lone_pairs": [
+        2,
+        3,
+        3,
+        3
+      ],
+      "formal_charges": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resonance_forms": 1,
+      "resonance_note_vi": null,
+      "resonance_note_en": null,
+      "exception_flags": {
+        "electron_deficient": false,
+        "expanded_octet": true,
+        "odd_electron": false
+      },
+      "bonding_domains": 3,
+      "lone_pair_domains": 2,
+      "steric_number": 5,
+      "ax_en": "AX3E2",
+      "electron_geometry": "trigonal bipyramidal",
+      "molecular_geometry": "T-shaped",
+      "electron_geometry_vi": "lưỡng tháp tam giác",
+      "molecular_geometry_vi": "chữ T",
+      "ideal_angle": "~86.2°, ~172.4°",
+      "distortion_note_vi": "Hai cặp electron tự do ở vị trí xích đạo đẩy hai F trục về phía F xích đạo: góc F(trục)–Br–F(xích đạo) chỉ 86,2° thay vì 90°. Liên kết Br–F trục (1,810 Å) cũng dài hơn liên kết xích đạo (1,721 Å).",
+      "distortion_note_en": "The two equatorial lone pairs push the two axial F atoms towards the equatorial F: the F(axial)–Br–F(equatorial) angle is only 86.2° instead of 90°. The axial Br–F bonds (1.810 Å) are also longer than the equatorial one (1.721 Å).",
+      "hybridization": "sp³d",
+      "polarity_note_vi": "Phân tử phân cực vì có dạng chữ T nên các moment liên kết không triệt tiêu.",
+      "polarity_note_en": "The molecule is polar because its T shape leaves the bond moments uncancelled.",
+      "smiles": "FBr(F)F",
+      "teaching_note_vi": "BrF3 cùng dạng AX3E2 (chữ T) với ClF3; góc trục–xích đạo của BrF3 (86,2°) nhỏ hơn của ClF3 (87,5°). Ở thể lỏng, BrF3 tự ion hoá: 2BrF3 ⇌ BrF2⁺ + BrF4⁻, nên dẫn điện.",
+      "teaching_note_en": "BrF3 shares the T-shaped AX3E2 geometry of ClF3; its axial–equatorial angle (86.2°) is smaller than in ClF3 (87.5°). Liquid BrF3 self-ionizes, 2BrF3 ⇌ BrF2⁺ + BrF4⁻, and therefore conducts electricity."
     }
   ]
 }

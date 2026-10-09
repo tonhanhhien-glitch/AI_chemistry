@@ -96,7 +96,8 @@ describe("geometry-aware bonded-atom layout", () => {
     const fixture = get(formula);
     expect(fixture.bonds).toHaveLength(fixture.bonding_domains);
     expect(fixture.atoms).toHaveLength(fixture.bonding_domains + 1);
-    expect(place(fixture, fixture.central_atom_id)).toHaveLength(fixture.lone_pair_domains);
+    // A non-bonding domain is a lone pair or, for NO2 and ClO2, a single electron.
+    expect(layoutLonePairs(fixture)[fixture.central_atom_id]).toHaveLength(fixture.lone_pair_domains);
   });
 
   it.each(every)("keeps every %s atom inside the viewBox", (formula) => {
@@ -452,13 +453,27 @@ describe("edge cases", () => {
 });
 
 describe("structure layout", () => {
-  it("emits two dots per lone pair for every atom", () => {
+  it("emits two dots per lone pair and one per unpaired electron for every atom", () => {
     for (const fixture of Object.values(molecules)) {
       const layout = layoutLonePairs(fixture as unknown as Pick<LewisStructure, "atoms" | "bonds">);
       for (const atom of fixture.atoms) {
-        expect(layout[atom.id]).toHaveLength(atom.lone_pairs);
-        for (const pair of layout[atom.id]) expect(pair.dots).toHaveLength(2);
+        const unpaired = atom.unpaired_electrons ?? 0;
+        expect(layout[atom.id]).toHaveLength(atom.lone_pairs + unpaired);
+        expect(layout[atom.id].filter((pair) => pair.single)).toHaveLength(unpaired);
+        for (const pair of layout[atom.id]) expect(pair.dots).toHaveLength(pair.single ? 1 : 2);
       }
     }
+  });
+
+  it("draws the odd electron of NO2 as a single dot on nitrogen, clear of both bonds", () => {
+    const fixture = get("NO2");
+    const layout = layoutLonePairs(fixture as unknown as Pick<LewisStructure, "atoms" | "bonds">);
+    const center = fixture.atoms.find((atom) => atom.id === fixture.central_atom_id)!;
+    const [single] = layout[center.id];
+    expect(layout[center.id]).toHaveLength(1);
+    expect(single.single).toBe(true);
+    expect(single.dots).toHaveLength(1);
+    const bondAngles = getBondAngles(center.id, fixture.atoms, fixture.bonds).map((bond) => bond.angle);
+    for (const angle of bondAngles) expect(angularDistance(single.angle, angle)).toBeGreaterThan(60);
   });
 });

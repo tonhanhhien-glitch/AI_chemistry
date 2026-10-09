@@ -23,6 +23,7 @@ export interface ResonanceStructureDraft {
   bond_orders: number[];
   lone_pairs: number[];
   formal_charges: number[];
+  unpaired_electrons?: number[];
 }
 
 export interface ReviewProvenance {
@@ -58,6 +59,9 @@ export interface MoleculeDraft {
   bond_orders: number[];
   lone_pairs: number[];
   formal_charges: number[];
+  /** Per-atom single electrons of an odd-electron species. Records loaded from the
+   * catalog omit it when there are none, so it may be missing. */
+  unpaired_electrons?: number[];
   resonance_forms: number;
   resonance_structures: ResonanceStructureDraft[];
   resonance_note_vi: string | null;

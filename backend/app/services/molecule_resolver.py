@@ -120,6 +120,14 @@ def resolve_molecule(
         return _resolved(record), record
 
     curated = [record for record in curated_records() if record["formula"] == parsed.formula]
+    if not curated and candidate is None and pubchem_cid is None:
+        # A typed formula written in another atom order ("HCHO", "OCl2", "ClNO") still
+        # names the curated species. Only a typed formula falls back to composition: a
+        # PubChem candidate carries its own identity, which may be a different isomer.
+        curated = [
+            record for record in curated_records()
+            if record["atom_inventory"] == parsed.atoms and record["charge"] == parsed.charge
+        ]
     if len(curated) > 1:
         raise AmbiguousMoleculeError([_summary(record).model_dump() for record in curated])
     if len(curated) == 1:

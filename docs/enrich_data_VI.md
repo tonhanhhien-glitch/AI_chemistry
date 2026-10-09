@@ -140,6 +140,7 @@ len(atom_symbols)   = N
 len(bond_orders)    = N - 1
 len(lone_pairs)     = N
 len(formal_charges) = N
+len(unpaired_electrons) = N   (chỉ khi có trường này)
 ```
 
 Ngoài ra:
@@ -162,6 +163,38 @@ bonding_domains + lone_pair_domains = steric_number
 ```
 
 Liên kết đôi hoặc liên kết ba vẫn chỉ được tính là **một miền liên kết** trong VSEPR.
+
+### Phân tử có số electron lẻ (NO2, ClO2)
+
+Chất có tổng số electron hoá trị lẻ luôn có một electron không thuộc liên kết nào và cũng không thuộc cặp electron tự do nào. Ghi electron này vào mảng tuỳ chọn `unpaired_electrons`, theo cùng thứ tự với `atom_symbols`:
+
+```json
+"atom_symbols": ["N", "O", "O"],
+"bond_orders": [2, 1],
+"lone_pairs": [0, 2, 3],
+"unpaired_electrons": [1, 0, 0],
+"formal_charges": [1, 0, -1],
+"exception_flags": {"electron_deficient": false, "expanded_octet": false, "odd_electron": true}
+```
+
+Bản ghi có số electron chẵn thì bỏ trường này. Khi có trường này, phép đếm electron trở thành:
+
+```text
+2 × sum(bond_orders) + 2 × sum(lone_pairs) + sum(unpaired_electrons)
+= total_valence_electrons
+```
+
+và electron độc thân trên nguyên tử trung tâm được tính là một miền không liên kết trong VSEPR:
+
+```text
+lone_pair_domains = lone_pairs[0] + unpaired_electrons[0]
+```
+
+Vì vậy NO2 là `AX2E` (gấp khúc, đo được 134,1°) và ClO2 là `AX2E2`. `odd_electron` phải là `true` khi và chỉ khi `total_valence_electrons` là số lẻ. Công thức Lewis vẽ electron này bằng một chấm, còn mô hình 3D hiển thị một thuỳ chứa một electron.
+
+### Chỉ hỗ trợ phân tử một nguyên tử trung tâm
+
+Mỗi bản ghi mô tả một nguyên tử trung tâm liên kết với tất cả các nguyên tử còn lại (`bond_orders[i]` là liên kết giữa nguyên tử trung tâm và nguyên tử `i + 1`). Các phân tử có từ hai trung tâm trở lên như N2O5 (O2N–O–NO2), H2O2 hay N2O4 hiện chưa biểu diễn được theo định dạng này.
 
 ### Góc riêng của phân tử
 
@@ -737,6 +770,7 @@ Trước khi commit một phân tử đã được bổ sung dữ liệu, hãy k
 - [ ] Nguyên tử trung tâm nằm đầu tiên trong `atom_symbols`.
 - [ ] Bậc liên kết Lewis đúng.
 - [ ] Số cặp electron tự do đúng.
+- [ ] Chất có số electron lẻ ghi electron độc thân trong `unpaired_electrons` và đặt `odd_electron`.
 - [ ] Điện tích hình thức đúng và tổng bằng điện tích toàn phân tử/ion.
 - [ ] Tổng số electron hóa trị đúng.
 - [ ] Thông tin cộng hưởng đúng.

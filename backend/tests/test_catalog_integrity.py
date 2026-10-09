@@ -26,6 +26,12 @@ RECORDS = list(curated_records())
 RECORD_IDS = [record["id"] for record in RECORDS]
 
 
+def _unpaired(record: dict) -> list[int]:
+    """Per-atom single electrons; even-electron records omit the field entirely."""
+
+    return record.get("unpaired_electrons") or [0] * len(record["atom_symbols"])
+
+
 @pytest.mark.parametrize("record", RECORDS, ids=RECORD_IDS)
 def test_formula_parses_and_matches_declared_charge(record: dict) -> None:
     parsed = parse_formula(record["formula"])
@@ -48,6 +54,8 @@ def test_bond_lone_pair_and_formal_charge_arrays_align_with_atoms(record: dict) 
     assert len(record["bond_orders"]) == n_atoms - 1
     assert len(record["lone_pairs"]) == n_atoms
     assert len(record["formal_charges"]) == n_atoms
+    assert len(_unpaired(record)) == n_atoms
+    assert all(count >= 0 for count in _unpaired(record))
 
 
 @pytest.mark.parametrize("record", RECORDS, ids=RECORD_IDS)
@@ -60,8 +68,9 @@ def test_total_valence_electrons_matches_independent_computation(record: dict) -
     expected = total_valence_electrons(record["atom_inventory"], record["charge"])
     assert record["total_valence_electrons"] == expected
     # The Lewis structure itself must also account for exactly that many electrons:
-    # each bond order contributes 2 electrons per order, each lone pair contributes 2.
-    represented = 2 * sum(record["bond_orders"]) + 2 * sum(record["lone_pairs"])
+    # each bond order contributes 2 electrons per order, each lone pair contributes 2,
+    # each unpaired electron of an odd-electron species contributes 1.
+    represented = 2 * sum(record["bond_orders"]) + 2 * sum(record["lone_pairs"]) + sum(_unpaired(record))
     assert represented == expected
 
 
@@ -76,6 +85,9 @@ def test_domain_counts_agree_with_steric_number_and_axnem(record: dict) -> None:
     assert record["molecular_geometry_vi"] == rule.molecular_geometry_vi
     # bonding_domains must equal the number of ligand atoms actually drawn.
     assert record["bonding_domains"] == len(record["atom_symbols"]) - 1
+    # Every non-bonding domain must be drawn on the central atom: a lone pair, or the
+    # single electron of an odd-electron species (which still occupies a VSEPR domain).
+    assert record["lone_pair_domains"] == record["lone_pairs"][0] + _unpaired(record)[0]
 
 
 @pytest.mark.parametrize("record", RECORDS, ids=RECORD_IDS)
@@ -88,7 +100,7 @@ def test_exception_flags_are_chemically_consistent(record: dict) -> None:
     """
 
     flags = record["exception_flags"]
-    central_electron_count = 2 * record["lone_pairs"][0] + 2 * sum(record["bond_orders"])
+    central_electron_count = 2 * record["lone_pairs"][0] + 2 * sum(record["bond_orders"]) + _unpaired(record)[0]
     if flags["expanded_octet"]:
         assert central_electron_count > 8, f"{record['id']}: expanded_octet flagged but only {central_electron_count} electrons drawn"
     elif not flags["electron_deficient"]:
@@ -99,8 +111,9 @@ def test_exception_flags_are_chemically_consistent(record: dict) -> None:
     if flags["electron_deficient"]:
         assert central_electron_count < 8, f"{record['id']}: electron_deficient flagged but {central_electron_count} electrons drawn"
     assert isinstance(flags["odd_electron"], bool)
-    if flags["odd_electron"]:
-        assert record["total_valence_electrons"] % 2 == 1
+    assert flags["odd_electron"] == (record["total_valence_electrons"] % 2 == 1), (
+        f"{record['id']}: odd_electron must be flagged exactly when the valence-electron count is odd"
+    )
 
 
 @pytest.mark.parametrize("record", RECORDS, ids=RECORD_IDS)

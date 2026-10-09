@@ -103,9 +103,9 @@ def test_water_keeps_two_bonds_and_two_illustrative_lone_pair_domains() -> None:
 
 
 def test_generic_vsepr_angle_is_used_when_no_molecule_specific_value_exists() -> None:
-    """H2S has neither an experimental record nor a curated angle, so it keeps the ideal."""
+    """SCl2 has neither an experimental record nor a curated angle, so it keeps the ideal."""
 
-    result = analyze(AnalysisRequest(formula="H2S"))
+    result = analyze(AnalysisRequest(formula="SCl2"))
     reference = result.structure3d.reference_bond_angle
     assert reference is not None
     assert (reference.category, reference.value_deg) == ("ideal_vsepr", 109.5)
