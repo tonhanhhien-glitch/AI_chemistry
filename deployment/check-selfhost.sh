@@ -8,7 +8,7 @@
 set -eu
 
 LOCAL_BASE="${LOCAL_BASE:-http://127.0.0.1:8081}"
-PUBLIC_BASE="${PUBLIC_BASE:-https://vsepr.hungntt.me}"
+PUBLIC_BASE="${PUBLIC_BASE:-https://vsepr.parxyz.sarl}"
 CHECK_PUBLIC="${CHECK_PUBLIC:-false}"
 
 failures=0

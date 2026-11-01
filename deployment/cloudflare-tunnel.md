@@ -1,13 +1,13 @@
 # Self-hosting VSEPR-AI with Cloudflare Tunnel
 
 Runs the whole application on your own machine and publishes it at
-<https://vsepr.hungntt.me> through a Cloudflare Tunnel. Nothing is deployed to
+<https://vsepr.parxyz.sarl> through a Cloudflare Tunnel. Nothing is deployed to
 Render, Railway, Vercel, Netlify, or AWS.
 
 ## Architecture
 
 ```
-Browser ──> https://vsepr.hungntt.me
+Browser ──> https://vsepr.parxyz.sarl
               │
               ▼
         Cloudflare edge (TLS terminates here)
@@ -22,7 +22,7 @@ Browser ──> https://vsepr.hungntt.me
 ```
 
 Single origin: the SPA and the API share the hostname
-`vsepr.hungntt.me`. There is no separate public backend hostname, and the
+`vsepr.parxyz.sarl`. There is no separate public backend hostname, and the
 browser never talks to port 8000.
 
 Port exposure:
@@ -30,7 +30,7 @@ Port exposure:
 | Service     | Host port           | Reachable from |
 | ----------- | ------------------- | -------------- |
 | backend     | none (`expose` only)| other containers only |
-| frontend    | `127.0.0.1:8080`    | this machine only |
+| frontend    | `127.0.0.1:8081`    | this machine only |
 | cloudflared | none                | nothing inbound |
 
 No router port forwarding, no static public IP, and no inbound firewall rules
@@ -38,6 +38,39 @@ are needed. `cloudflared` dials *out* to Cloudflare and traffic returns over
 that connection.
 
 ## 1. Create the tunnel (manual, in the Cloudflare dashboard)
+
+### Change the domain of an existing deployment
+
+For an existing tunnel, keep the current connector and token. In the Cloudflare
+dashboard, open that tunnel's **Published application routes** and add:
+
+- Subdomain: `vsepr`
+- Domain: `parxyz.sarl`
+- Service: `http://frontend:80` (type **HTTP**)
+
+The `parxyz.sarl` zone must be active in the same Cloudflare account as the
+tunnel. Confirm the proxied `vsepr` CNAME points to
+`<TUNNEL-UUID>.cfargotunnel.com` in that zone. Cloudflare normally creates it when
+you save the route. A DNS record alone does not configure the tunnel route.
+
+Update the existing root `.env` to use
+`CORS_ORIGINS=https://vsepr.parxyz.sarl,http://localhost:8081`, then apply it:
+
+```sh
+docker compose up -d --no-deps backend
+CHECK_PUBLIC=true sh deployment/check-selfhost.sh
+```
+
+The frontend uses relative `/api/v1` URLs, so no frontend rebuild is needed.
+After the new hostname passes the public checks, remove the old published
+application route and DNS record if you no longer want that hostname served.
+If the new zone belongs to a different Cloudflare account, create a tunnel in
+that account and replace `CLOUDFLARE_TUNNEL_TOKEN` in the root `.env`, then run
+`docker compose up -d --no-deps cloudflared` as well.
+
+Reference: [Cloudflare Tunnel routing](https://developers.cloudflare.com/tunnel/concepts/routing/).
+
+### Create a tunnel for a new deployment
 
 1. Log in to the Cloudflare dashboard.
 2. Go to **Networking → Tunnels**.
@@ -63,18 +96,18 @@ Still inside the tunnel, open **Published application routes** and add a route:
 
 | Field       | Value                |
 | ----------- | -------------------- |
-| Hostname    | `vsepr.hungntt.me`   |
+| Hostname    | `vsepr.parxyz.sarl`   |
 | Service type| `HTTP`               |
 | Service URL | `http://frontend:80` |
 
-Use `http://frontend:80`, **not** `http://localhost:8080`. `cloudflared` runs in
+Use `http://frontend:80`, **not** `http://localhost:8081`. `cloudflared` runs in
 its own container, where `localhost` means the cloudflared container itself. The
 Compose service name `frontend` resolves to the nginx container over the shared
 default network.
 
 ## 3. Confirm the DNS route
 
-Go to **DNS → Records** for `hungntt.me` and look for:
+Go to **DNS → Records** for `parxyz.sarl` and look for:
 
 | Type  | Name    | Target                          | Proxy status |
 | ----- | ------- | ------------------------------- | ------------ |
@@ -103,7 +136,7 @@ Edit `.env` (`nano .env`) and fill in:
 
 ```
 CLOUDFLARE_TUNNEL_TOKEN=<the real tunnel token from step 1>
-CORS_ORIGINS=https://vsepr.hungntt.me,http://localhost:8080
+CORS_ORIGINS=https://vsepr.parxyz.sarl,http://localhost:8081
 TEACHER_EXPORT_TOKEN=<the openssl output>
 OPENROUTER_API_KEY=
 OPENROUTER_MODEL=google/gemma-4-31b-it:free
@@ -161,8 +194,8 @@ docker compose config --services   # backend, frontend, cloudflared
 ## 6. Test locally
 
 ```sh
-curl --fail http://127.0.0.1:8080/healthz          # -> ok
-curl --fail http://127.0.0.1:8080/api/v1/health     # -> backend JSON
+curl --fail http://127.0.0.1:8081/healthz          # -> ok
+curl --fail http://127.0.0.1:8081/api/v1/health     # -> backend JSON
 ```
 
 Or run the bundled script:
@@ -171,7 +204,7 @@ Or run the bundled script:
 sh deployment/check-selfhost.sh
 ```
 
-Then open <http://127.0.0.1:8080> and analyse a molecule such as `CO2`.
+Then open <http://127.0.0.1:8081> and analyse a molecule such as `CO2`.
 
 Do **not** test the backend at `http://localhost:8000` — port 8000 is
 deliberately no longer published. Its absence is the security fix, not a bug.
@@ -179,16 +212,16 @@ deliberately no longer published. Its absence is the security fix, not a bug.
 ## 7. Test publicly
 
 ```sh
-curl --fail https://vsepr.hungntt.me/api/v1/health
+curl --fail https://vsepr.parxyz.sarl/api/v1/health
 CHECK_PUBLIC=true sh deployment/check-selfhost.sh
 ```
 
-Then open <https://vsepr.hungntt.me> and check:
+Then open <https://vsepr.parxyz.sarl> and check:
 
 - The homepage loads.
 - React routes survive a page refresh (deep-link, then F5).
 - Molecule analysis works.
-- In browser devtools, API calls go to `https://vsepr.hungntt.me/api/v1/...`
+- In browser devtools, API calls go to `https://vsepr.parxyz.sarl/api/v1/...`
   and **nothing** is requested from `localhost:8000`.
 - The mobile layout works.
 - Survey and feedback data survive `docker compose restart`.
