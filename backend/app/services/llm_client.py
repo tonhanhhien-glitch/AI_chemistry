@@ -5,10 +5,10 @@ already immutable. This module therefore does one job -- turn a system prompt
 plus messages into text, or raise a sanitized error so callers fall back to the
 deterministic templates.
 
-OpenRouter is tried first and OpenAI second, so the paid key is spent only when
-the free tier is down, rate limited, or out of credit. Both speak the same
-``/chat/completions`` dialect, so one request builder covers both, and each
-provider is skipped unless its own enable flag and key are set -- either one can
+Claude (Anthropic) is tried first, then OpenRouter, then OpenAI. Claude goes
+through the official Anthropic SDK; the other two speak the same
+``/chat/completions`` dialect, so one request builder covers both. Each provider
+is skipped unless its own enable flag and key are set -- any one of them can
 therefore run alone.
 """
 
@@ -16,13 +16,14 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
+import anthropic
 import httpx
 
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-ProviderName = Literal["openrouter", "openai"]
+ProviderName = Literal["anthropic", "openrouter", "openai"]
 
 # Suffixes are provider-prefixed before they leave this module, so a fallback
 # reason always names the provider that produced it.
@@ -61,6 +62,16 @@ def _providers() -> list[_Provider]:
     """Return the enabled providers in fallback order (may be empty)."""
 
     chain: list[_Provider] = []
+    if settings.ENABLE_ANTHROPIC and settings.ANTHROPIC_API_KEY:
+        chain.append(
+            _Provider(
+                "anthropic",
+                settings.ANTHROPIC_API_KEY,
+                settings.ANTHROPIC_MODEL,
+                "",
+                settings.ANTHROPIC_TIMEOUT_SECONDS,
+            )
+        )
     if settings.ENABLE_OPENROUTER and settings.OPENROUTER_API_KEY:
         headers: dict[str, str] = {}
         if settings.OPENROUTER_SITE_URL:
@@ -100,12 +111,64 @@ def model_fingerprint() -> str:
     return ",".join(f"{provider.name}:{provider.model}" for provider in _providers())
 
 
+# Claude thinks adaptively and thinking counts toward max_tokens, so its cap
+# gets headroom on top of the answer budget callers size for the reply itself.
+_ANTHROPIC_THINKING_HEADROOM = 2048
+
+
+def _anthropic_client(provider: _Provider) -> anthropic.Anthropic:
+    # No SDK retries: a failure should fall through to the next provider fast,
+    # inside the same timeout budget the other providers get.
+    return anthropic.Anthropic(api_key=provider.api_key, timeout=provider.timeout, max_retries=0)
+
+
+def _complete_anthropic(provider: _Provider, system: str, messages: list[dict[str, str]], max_tokens: int) -> str:
+    """Call Claude through the Anthropic SDK.
+
+    Sampling parameters are not sent: current Claude models reject them, so
+    output determinism comes from the prompt and the downstream validator.
+    """
+
+    try:
+        response = _anthropic_client(provider).messages.create(
+            model=provider.model,
+            max_tokens=max_tokens + _ANTHROPIC_THINKING_HEADROOM,
+            system=system,
+            messages=messages,
+            output_config={"effort": settings.ANTHROPIC_EFFORT},
+        )
+    except anthropic.APITimeoutError as exc:
+        logger.warning("anthropic timed out for model %s: %s", provider.model, type(exc).__name__)
+        raise LLMError("anthropic_timeout") from exc
+    except anthropic.APIStatusError as exc:
+        status = exc.status_code
+        suffix = _STATUS_REASONS.get(status, "unavailable" if status >= 500 else "request_rejected")
+        logger.warning("anthropic HTTP %s for model %s: %.200s", status, provider.model, exc.message)
+        raise LLMError(f"anthropic_{suffix}") from exc
+    except anthropic.APIConnectionError as exc:
+        logger.warning("anthropic transport error: %s", type(exc).__name__)
+        raise LLMError("anthropic_unreachable") from exc
+
+    if response.stop_reason == "refusal":
+        logger.warning("anthropic declined the request for model %s", provider.model)
+        raise LLMError("anthropic_refused")
+    # A response can open with thinking blocks, so read text blocks by type.
+    text = "".join(block.text for block in response.content if block.type == "text")
+    if not text.strip():
+        logger.warning("anthropic returned empty content for model %s (stop_reason=%s)", provider.model, response.stop_reason)
+        raise LLMError("anthropic_empty_content")
+    return text.strip()
+
+
 def _complete_one(provider: _Provider, system: str, messages: list[dict[str, str]], temperature: float, max_tokens: int) -> str:
     """Call one provider, or raise :class:`LLMError` with a provider-tagged reason.
 
     Never lets an API key, header dump, or raw provider payload escape: the
     caller turns the reason string into user-visible fallback text.
     """
+
+    if provider.name == "anthropic":
+        return _complete_anthropic(provider, system, messages, max_tokens)
 
     payload: dict[str, Any] = {
         "model": provider.model,

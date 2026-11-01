@@ -7,6 +7,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
+    # Claude is the primary narrator; OpenRouter and OpenAI are only tried after
+    # it fails. Effort stays low because the model restates fixed facts rather
+    # than reasoning about them, which keeps latency inside the timeout budget.
+    ANTHROPIC_API_KEY: str = ""
+    ANTHROPIC_MODEL: str = "claude-haiku-5-5"
+    ANTHROPIC_EFFORT: str = "low"
+    ANTHROPIC_TIMEOUT_SECONDS: float = 20.0
     OPENROUTER_API_KEY: str = ""
     OPENROUTER_MODEL: str = "google/gemma-4-31b-it:free"
     OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
@@ -45,6 +52,7 @@ class Settings(BaseSettings):
     ENABLE_RDKIT: bool = False
     ENABLE_NIST_CCCBDB: bool = False
     ENABLE_PUBCHEM_PROPERTIES: bool = False
+    ENABLE_ANTHROPIC: bool = False
     ENABLE_OPENROUTER: bool = False
     ENABLE_OPENAI: bool = False
     MAX_INPUT_LENGTH: int = 80

@@ -4,7 +4,7 @@ import pytest
 
 from app.core.config import settings
 
-_EXTERNAL_FLAGS = ("ENABLE_PUBCHEM", "ENABLE_RDKIT", "ENABLE_OPENROUTER", "ENABLE_OPENAI")
+_EXTERNAL_FLAGS = ("ENABLE_PUBCHEM", "ENABLE_RDKIT", "ENABLE_ANTHROPIC", "ENABLE_OPENROUTER", "ENABLE_OPENAI")
 
 
 @pytest.fixture(autouse=True)

@@ -10,6 +10,10 @@ services:
       DATA_DIR: /data
       CACHE_DIR: /app/app/cache
       TEACHER_EXPORT_TOKEN: ${TEACHER_EXPORT_TOKEN:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-5-5}
+      ANTHROPIC_EFFORT: ${ANTHROPIC_EFFORT:-low}
+      ENABLE_ANTHROPIC: ${ENABLE_ANTHROPIC:-false}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemma-4-31b-it:free}
       OPENROUTER_BASE_URL: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}

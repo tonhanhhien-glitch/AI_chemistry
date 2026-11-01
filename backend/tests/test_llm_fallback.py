@@ -1,7 +1,9 @@
-"""Provider fallback: OpenRouter first, OpenAI second, deterministic template last."""
+"""Provider fallback: Claude first, OpenRouter second, OpenAI third, deterministic template last."""
 
+from types import SimpleNamespace
 from typing import Any, Callable
 
+import anthropic
 import httpx
 import pytest
 
@@ -79,4 +81,67 @@ def test_unconfigured_chain_is_not_configured(monkeypatch: pytest.MonkeyPatch) -
     _enable(monkeypatch, openrouter=False, openai=False)
     assert not llm_client.is_configured()
     with pytest.raises(llm_client.LLMError, match="llm_not_configured"):
+        llm_client.complete("rules", [{"role": "user", "content": "hi"}], temperature=0, max_tokens=10)
+
+
+class _FakeClaude:
+    """Stands in for ``anthropic.Anthropic``; records every create() call."""
+
+    def __init__(self, respond: Callable[[dict[str, Any]], Any]) -> None:
+        self.calls: list[dict[str, Any]] = []
+        self._respond = respond
+        self.messages = self
+
+    def create(self, **kwargs: Any) -> Any:
+        self.calls.append(kwargs)
+        return self._respond(kwargs)
+
+
+def _claude_message(text: str, stop_reason: str = "end_turn") -> SimpleNamespace:
+    # A thinking block first, as Claude Haiku 5.5 can return, so the text must be found by type.
+    blocks = [SimpleNamespace(type="thinking", thinking=""), SimpleNamespace(type="text", text=text)]
+    return SimpleNamespace(content=blocks, stop_reason=stop_reason)
+
+
+def _enable_claude(monkeypatch: pytest.MonkeyPatch, fake: _FakeClaude) -> None:
+    monkeypatch.setattr(settings, "ENABLE_ANTHROPIC", True)
+    monkeypatch.setattr(settings, "ANTHROPIC_API_KEY", "test-anthropic-key")
+    monkeypatch.setattr(settings, "ANTHROPIC_MODEL", "claude-haiku-5-5")
+    monkeypatch.setattr(llm_client, "_anthropic_client", lambda _provider: fake)
+
+
+def test_claude_answers_first_without_touching_fallbacks(monkeypatch: pytest.MonkeyPatch) -> None:
+    _enable(monkeypatch)
+    fake = _FakeClaude(lambda _kwargs: _claude_message("from claude"))
+    _enable_claude(monkeypatch, fake)
+    seen = _route(monkeypatch, lambda _request: _reply("should not be used"))
+    completion = llm_client.complete("rules", [{"role": "user", "content": "hi"}], temperature=0.2, max_tokens=10)
+    assert (completion.provider, completion.text) == ("anthropic", "from claude")
+    assert seen == []
+    call = fake.calls[0]
+    assert call["model"] == "claude-haiku-5-5"
+    assert call["system"] == "rules"
+    # Sampling parameters are rejected by current Claude models, so none are sent.
+    assert "temperature" not in call
+    assert llm_client.model_fingerprint().startswith("anthropic:claude-haiku-5-5,")
+
+
+def test_openrouter_takes_over_when_claude_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    _enable(monkeypatch)
+
+    def overloaded(_kwargs: dict[str, Any]) -> Any:
+        request = httpx.Request("POST", "https://api.anthropic.com/v1/messages")
+        raise anthropic.RateLimitError("rate limited", response=httpx.Response(429, request=request), body=None)
+
+    _enable_claude(monkeypatch, _FakeClaude(overloaded))
+    seen = _route(monkeypatch, lambda _request: _reply("from openrouter"))
+    completion = llm_client.complete("rules", [{"role": "user", "content": "hi"}], temperature=0, max_tokens=10)
+    assert (completion.provider, completion.text) == ("openrouter", "from openrouter")
+    assert [request.url.host for request in seen] == ["openrouter.ai"]
+
+
+def test_claude_refusal_is_a_sanitized_fallback_reason(monkeypatch: pytest.MonkeyPatch) -> None:
+    _enable(monkeypatch, openrouter=False, openai=False)
+    _enable_claude(monkeypatch, _FakeClaude(lambda _kwargs: _claude_message("", stop_reason="refusal")))
+    with pytest.raises(llm_client.LLMError, match="^anthropic_refused$"):
         llm_client.complete("rules", [{"role": "user", "content": "hi"}], temperature=0, max_tokens=10)
